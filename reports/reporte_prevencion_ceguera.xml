@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report
+                id="menu_report_prevencion_ceguera"
+                model="informe.report.prevencion.ceguera"
+                string="Prevencion Ceguera"
+                report_type="qweb-html"
+                name="consultas_pnc.report_prevencion_ceguera"
+                menu="False"
+        />
+
+        <template id="consultas_pnc.report_prevencion_ceguera">
+            <div class="page" align="center">
+
+                <t t-call="consultas_pnc.styles"/>
+
+                <t t-if="not o or not 'company_id' in o">
+                    <t t-set="company" t-value="res_company"></t>
+                </t>
+                <div>
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                         style="max-height: 45px;"/>
+                </div>
+                <h3>Patronato Nacional de Ciegos, INC</h3>
+                Informe Prevencion Ceguera
+                <p>Desde
+                    <p>Desde <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_inicial,'%Y-%m-%d'))"/> hasta <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_final,'%Y-%m-%d'))"/></p>
+                </p>
+
+                <table width="100%" class="tg">
+                    <t t-foreach="docs.get_data()[0]" t-as="programa">
+                        <tr>
+                            <th class="tg-yw4l" align="center" colspan="3">
+                                <span t-esc="programa['programa']"/>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th class="tg-yw4l" align="left">Operativo</th>
+                            <th class="tg-yw4l">Realizados</th>
+                            <th class="tg-yw4l">Personas Atendidas</th>
+                        </tr>
+                        <t t-set='count' t-value='1'/>
+                        <t t-foreach="programa['data']" t-as="data">
+                            <t t-if="(count%2) == 1">
+                                <t t-set="cl" t-value="'tg-6k2t'"/>
+                            </t>
+                            <t t-if="(count%2) != 1">
+                                <t t-set="cl" t-value="'tg-yw4l'"/>
+                            </t>
+                            <tr>
+                                <td t-att-class='cl'>
+                                    <p t-esc="data[0]"/>
+                                </td>
+                                <td t-att-class='cl'>
+                                    <p t-esc="data[1]"/>
+                                </td>
+                                <td t-att-class='cl'>
+                                    <p t-esc="data[2]"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-set='count' t-value='count+1'/>
+                    </t>
+                </table>
+            </div>
+        </template>
+    </data>
+</openerp>

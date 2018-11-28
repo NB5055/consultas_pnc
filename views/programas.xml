@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+<!--========================================================================-->
+    <!-- View Formulario Programas-->
+<!--========================================================================-->
+        <record model='ir.ui.view' id='programa_programa_form'>
+            <field name="name">Formulario registro de Programas</field>
+            <field name="model">programa.programa</field>
+            <field name="arch" type="xml">
+                <form string="Registro Programas">
+                    <sheet>
+                        <group col="2" string="Programas">
+                            <field name="name"/>
+                            <field name="encargado"/>
+                            <field name="provincia" widget="many2many_tags"/>
+                            <field name="participantes" readonly="1">
+                                <tree string="Gastos Fijos">
+                                    <field name="name"/>
+                                    <field name="job_id"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <field name="notas"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='programa_programa_tree'>
+            <field name="name">Lista de Programas</field>
+            <field name="model">programa.programa</field>
+            <field name="arch" type="xml">
+                <tree string="Programas">
+                    <field name="name"/>
+                    <field name="encargado"/>
+                    <field name="provincia" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='programa_programa_search'>
+            <field name="name">Buscar Programa</field>
+            <field name="model">programa.programa</field>
+            <field name="arch" type="xml">
+                <search string="Programas" >
+                    <field name="name"/>
+                    <field name="encargado"/>
+                    <field name="provincia" />
+                </search>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='programa_programa_act'>
+            <field name="name">Programas</field>
+            <field name="res_model">programa.programa</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Haga Click Para Crear Nuevo Programa.
+              </p>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!--========================================================================-->
+        <!-- View Formulario consultas consultas-->
+        <!--========================================================================-->
+        <record model='ir.ui.view' id='consultas_consultas_form'>
+            <field name="name">Registro Consultas o Atenciones</field>
+            <field name="model">consultas.consultas</field>
+            <field name="arch" type="xml">
+                <form string="Registro Consultas o Atenciones ">
+                    <sheet>
+                        <group col="4" string="Registro Consultas o Atenciones">
+
+                            <field name="fecha"/>
+                            <field name="programa" options="{'no_create_edit': True,'no_open': True}"/>
+                            <field name="name" options="{'no_create_edit': True}"/>
+                            <field name="employee_id" options="{'no_create_edit': True,'no_open': True}"/>
+                            <field name="edad"/>
+                            <field name="sexo"/>
+                        </group>
+                        <!--<field name="tratamiento" colspan="4">-->
+                            <!--<tree editable="top">-->
+                                <!--<field name="name"/>-->
+                            <!--</tree>-->
+                        <!--</field>-->
+                        <field name="tratamiento" colspan="4" string="Tratamiento / Seguimiento / Referimiento"
+                               required="1">
+                            <tree editable="top">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='consultas_consultas_tree'>
+            <field name="name">Registro Consultas o Atenciones</field>
+            <field name="model">consultas.consultas</field>
+            <field name="arch" type="xml">
+                <tree string="Consultas ">
+                    <field name="name"/>
+                    <field name="programa"/>
+                    <field name="fecha"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='consultas_consultas_search'>
+            <field name="name">Registro Consultas o Atenciones</field>
+            <field name="model">consultas.consultas</field>
+            <field name="arch" type="xml">
+                <search string="Consultas ">
+                    <field name="name"/>
+                    <field name="programa"/>
+                    <field name="fecha"/>
+                    <field name="employee_id"/>
+                    <field name="edad"/>
+                    <field name="sexo"/>
+
+                    <group expand="0" string="Group By">
+                        <filter string="Paciente" domain="" context="{'group_by':'name'}"/>
+                        <filter string="Fecha" domain="" context="{'group_by':'fecha'}"/>
+                        <filter string="Programa" domain="" context="{'group_by':'programa'}"/>
+                        <filter string="Sexo" domain="" context="{'group_by':'sexo'}"/>
+                        <filter string="Edad" domain="" context="{'group_by':'edad'}"/>
+                        <filter string="Médico / Profesor" domain="" context="{'group_by':'employee_id'}"/>
+                        <filter string="Edad" context="{'group_by':'edad'}"/>
+                        <filter string="Sexo" context="{'group_by':'sexo'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='consultas_consultas_act'>
+            <field name="name">Consultas o Atenciones</field>
+            <field name="res_model">consultas.consultas</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Haga Click Para Crear Nuevo Registro Consultas o Atenciones.
+                </p>
+            </field>
+        </record>
+
+
+        <!--========================================================================-->
+        <!-- View Formulario Tratamientos -->
+        <!--========================================================================-->
+        <record model='ir.ui.view' id='consultas_tratamiento_form'>
+            <field name="name">Tratamientos</field>
+            <field name="model">consultas.tratamiento</field>
+            <field name="arch" type="xml">
+                <form string="Tratamientos">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="proyeccion">
+                                <tree editable="top">
+                                    <field name="proyeccion"/>
+                                    <field name="year"/>
+                                    <field name="programa"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='consultas_tratamiento_act'>
+            <field name="name">Tratamientos</field>
+            <field name="res_model">consultas.tratamiento</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Haga Click Para Crear Nuevo Registro.
+                </p>
+            </field>
+        </record>
+
+        <!--========================================================================-->
+        <!-- View Formulario Referimientos-->
+        <!--========================================================================-->
+        <record model='ir.ui.view' id='consultas_referimiento_form'>
+            <field name="name">Referimientos</field>
+            <field name="model">consultas.referimiento</field>
+            <field name="arch" type="xml">
+                <form string="Referimientos">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="proyeccion">
+                                <tree editable="top">
+                                    <field name="proyeccion"/>
+                                    <field name="year"/>
+                                    <field name="programa"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='consultas_referimiento_act'>
+            <field name="name">Referimientos</field>
+            <field name="res_model">consultas.referimiento</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Haga Click Para Crear Nuevo Registro.
+                </p>
+            </field>
+        </record>
+
+        <!--========================================================================-->
+        <!-- View Formulario Diagnosticos-->
+        <!--========================================================================-->
+        <record model='ir.actions.act_window' id='consultas_diagnostico_act'>
+            <field name="name">Diagnosticos</field>
+            <field name="res_model">consultas.diagnostico</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Haga Click Para Crear Nuevo Registro.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</openerp>

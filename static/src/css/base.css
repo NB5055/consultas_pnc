@@ -1,0 +1,5 @@
+.openerp .oe_list_content td.oe_number {
+  text-align: left !important;
+  white-space: nowrap !important;
+  max-width: 100px;
+}

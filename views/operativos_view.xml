@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="operativo_form" model="ir.ui.view">
+            <field name="name">Prevencion de Ceguera</field>
+            <field name="model">operativos</field>
+            <field name="arch" type="xml">
+                <form string="Prevencion de Ceguera">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="atendidos"/>
+                            <field name="fecha"/>
+                            <field name="programa"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="operativo_tree" model="ir.ui.view">
+            <field name="name">Prevencion de Ceguera</field>
+            <field name="model">operativos</field>
+            <field name="arch" type="xml">
+                <tree string="">
+                    <field name="name"/>
+                    <field name="atendidos"/>
+                    <field name="fecha"/>
+                    <field name="programa"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="operativo_act" model="ir.actions.act_window">
+            <field name="name">Prevencion de Ceguera</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">operativos</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    </data>
+</openerp>

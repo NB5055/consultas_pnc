@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="citas_form_view" model="ir.ui.view">
+            <field name="name">citas.citas</field>
+            <field name="model">citas.citas</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group col="4">
+                            <field name="paciente_id"/>
+                            <field name="programa_id"/>
+                            <label for="fecha_desde" string="Duracion"/>
+                            <div colspan="2">
+                                <field name="fecha_desde" class="oe_inline"/>
+                                <label string="-" class="oe_inline"/>
+                                <field name="fecha_hasta" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_citas_calendar" model="ir.ui.view">
+            <field name="name">Citas</field>
+            <field name="model">citas.citas</field>
+            <field name="arch" type="xml">
+                <calendar string="Leave Request" color="paciente_id"
+                          date_start="fecha_desde" date_stop="fecha_hasta"
+                          mode="month"
+                          quick_add="False" avatar_model="citas.citas">
+                    <field name="paciente_id"/>
+                    <field name="programa_id"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_citas">
+            <field name="name">Citas</field>
+            <field name="res_model">citas.citas</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar</field>
+        </record>
+
+
+
+
+    </data>
+</openerp>

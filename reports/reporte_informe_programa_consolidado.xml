@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report
+                id="menu_report_programa_consolidado"
+                model="informe.report.programa.consolidado"
+                string="Informe Consolidado"
+                report_type="qweb-html"
+                name="consultas_pnc.report_programa_consolidado"
+                menu="False"
+        />
+
+        <template id="consultas_pnc.report_programa_consolidado">
+            <div class="page" align="center">
+
+                <t t-call="consultas_pnc.styles"/>
+
+                <t t-if="not o or not 'company_id' in o">
+                    <t t-set="company" t-value="res_company"></t>
+                </t>
+                <div>
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                         style="max-height: 45px;"/>
+                </div>
+                <h3>Patronato Nacional de Ciegos, INC</h3>
+                Informe Consolidado
+                <p>Desde
+                    <p>Desde <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_inicial,'%Y-%m-%d'))"/> hasta <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_final,'%Y-%m-%d'))"/></p>
+                </p>
+
+                <table width="100%" class="tg">
+                    <tr>
+                        <th class="tg-yw4l" align="left">Departamento</th>
+                        <th class="tg-yw4l">Total Periodo</th>
+                        <th class="tg-yw4l">Total General</th>
+                    </tr>
+                    <t t-set='count' t-value='1'/>
+                    <t t-foreach="docs.get_consultas()" t-as="o">
+                        <t t-foreach="o" t-as="obj">
+                            <t t-if="obj[1] > 0">
+                                <t t-if="(count%2) == 1">
+                                    <t t-set="cl" t-value="'tg-6k2t'"/>
+                                </t>
+                                <t t-if="(count%2) != 1">
+                                    <t t-set="cl" t-value="'tg-yw4l'"/>
+                                </t>
+
+                                <tr>
+                                    <td t-att-class='cl'>
+                                        <p t-esc="obj[0]"/>
+                                    </td>
+                                    <td t-att-class='cl'>
+                                        <p t-esc="obj[1]"/>
+                                    </td>
+                                    <td t-att-class='cl'>
+                                        <p t-esc="obj[2]"/>
+                                    </td>
+                                </tr>
+                                <t t-set='count' t-value='count+1'/>
+                            </t>
+                        </t>
+                    </t>
+                </table>
+            </div>
+        </template>
+    </data>
+</openerp>

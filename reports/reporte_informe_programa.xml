@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report
+            id="menu_report_programa"
+            model="informe.report.programa"
+            string="Informe por Programa"
+            report_type="qweb-html"
+            name="consultas_pnc.report_programa"
+            menu="False"
+        />
+
+        <template id="consultas_pnc.report_programa">
+            <div class="page" align="center">
+
+                <t t-call="consultas_pnc.styles"/>
+
+                <t t-if="not o or not 'company_id' in o">
+                    <t t-set="company" t-value="res_company"></t>
+                </t>
+                <div>
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>
+                </div>
+                <h3>Patronato Nacional de Ciegos, INC</h3>
+                Estadistica por Programa
+                <p>Desde <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_inicial,'%Y-%m-%d'))"/> hasta <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_final,'%Y-%m-%d'))"/></p>
+
+                <table width="100%" class="tg">
+                    <t t-if="docs.programa_ids">
+                        <t t-foreach="docs.programa_ids" t-as="programa" >
+                            <t t-set='consulta_ids' t-value="docs.get_consultas(programa.id)"/>
+                            <t t-if="len(consulta_ids[0]) > 0">
+                                <tr>
+                                    <th class="tg-yw4l" colspan="3"><span t-field="programa.name"/></th>
+                                </tr>
+                                <tr>
+                                    <th class="tg-yw4l">Departamento</th>
+                                    <th class="tg-yw4l">Total Periodo</th>
+                                    <th class="tg-yw4l">Total General</th>
+                                </tr>
+                                <t t-set='count' t-value='1'/>
+                                <t t-foreach="consulta_ids" t-as="o">
+                                    <t t-foreach="o" t-as="obj">
+                                        <t t-if="programa.id == obj[2]">
+                                        <t t-if="(count%2) == 1">
+                                            <t t-set="cl" t-value="'tg-6k2t'"/>
+                                        </t>
+                                        <t t-if="(count%2) != 1">
+                                            <t t-set="cl" t-value="'tg-yw4l'"/>
+                                        </t>
+                                            <tr>
+                                                <td t-att-class='cl'><p t-esc="obj[0]"/></td>
+                                                <td t-att-class='cl'><p t-esc="obj[1]"/></td>
+                                                <td t-att-class='cl'><p t-esc="obj[4]"/></td>
+                                            </tr>
+                                        </t>
+                                        <t t-set='count' t-value='count+1'/>
+                                    </t>
+                                </t>
+                            </t>
+                            <p style="page-break-before:always;"> </p>
+                        </t>
+                    </t>
+                </table>
+            </div>
+        </template>
+    </data>
+</openerp>

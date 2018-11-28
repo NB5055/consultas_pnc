@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="0">
+<!--===============================================================================-->
+        <!--===Regiones===-->
+<!--===============================================================================-->
+        <record id="cibao" model="region.region">
+            <field name="name">Cibao</field>
+        </record>
+
+        <record id="sur" model="region.region">
+            <field name="name">Sur</field>
+        </record>
+
+        <record id="oriental" model="region.region">
+            <field name="name">Oriental</field>
+        </record>
+<!--===============================================================================-->
+        <!--===Sub-Regiones===-->
+<!--===============================================================================-->
+        <record id="cibao_norte" model="region.subregion">
+            <field name="name">Cibao Norte</field>
+            <field name="region" ref="cibao" />
+        </record>
+
+        <record id="cibao_sur" model="region.subregion">
+            <field name="name">Cibao Sur</field>
+            <field name="region" ref="cibao" />
+        </record>
+
+        <record id="cibao_nordeste" model="region.subregion">
+            <field name="name">Cibao Nordeste</field>
+            <field name="region" ref="cibao" />
+        </record>
+
+        <record id="cibao_noroeste" model="region.subregion">
+            <field name="name">Cibao Noroeste</field>
+            <field name="region" ref="cibao" />
+        </record>
+
+        <record id="valdesia" model="region.subregion">
+            <field name="name">Valdesia</field>
+            <field name="region" ref="sur" />
+        </record>
+
+        <record id="el_valle" model="region.subregion">
+            <field name="name">El Valle</field>
+            <field name="region" ref="sur" />
+        </record>
+
+        <record id="enriquillo" model="region.subregion">
+            <field name="name">Enriquillo</field>
+            <field name="region" ref="sur" />
+        </record>
+
+        <record id="yuma" model="region.subregion">
+            <field name="name">Yuma</field>
+            <field name="region" ref="oriental" />
+        </record>
+
+        <record id="higuamo" model="region.subregion">
+            <field name="name">Higuamo</field>
+            <field name="region" ref="cibao" />
+        </record>
+
+        <record id="ozama" model="region.subregion">
+            <field name="name">Ozama</field>
+            <field name="region" ref="oriental" />
+        </record>
+
+<!--===============================================================================-->
+        <!--===Provincias===-->
+<!--===============================================================================-->
+
+        <record id="espaillat" model="region.provincia">
+            <field name="name">Espaillat</field>
+            <field name="subregion" ref="cibao_norte" />
+        </record>
+
+        <record id="puerto_plata" model="region.provincia">
+            <field name="name">Puerto Plata</field>
+            <field name="subregion" ref="cibao_norte" />
+        </record>
+
+        <record id="santiago" model="region.provincia">
+            <field name="name">Santiago</field>
+            <field name="subregion" ref="cibao_norte" />
+        </record>
+
+        <record id="la_vega" model="region.provincia">
+            <field name="name">La Vega</field>
+            <field name="subregion" ref="cibao_sur" />
+        </record>
+
+        <record id="monsenor_nouel" model="region.provincia">
+            <field name="name">Monsenor Nouel</field>
+            <field name="subregion" ref="cibao_sur" />
+        </record>
+
+        <record id="sanchez_ramirez" model="region.provincia">
+            <field name="name">Sánchez Ramírez</field>
+            <field name="subregion" ref="cibao_sur" />
+        </record>
+
+        <record id="duarte" model="region.provincia">
+            <field name="name">Duarte</field>
+            <field name="subregion" ref="cibao_nordeste" />
+        </record>
+
+        <record id="hermanas_mirabal" model="region.provincia">
+            <field name="name">Hermanas Mirabal</field>
+            <field name="subregion" ref="cibao_nordeste" />
+        </record>
+
+        <record id="maria_trinidad_sanchez" model="region.provincia">
+            <field name="name">Maria Trinidad Sánchez</field>
+            <field name="subregion" ref="cibao_nordeste" />
+        </record>
+
+        <record id="samana" model="region.provincia">
+            <field name="name">Samaná</field>
+            <field name="subregion" ref="cibao_nordeste" />
+        </record>
+
+        <record id="dajabon" model="region.provincia">
+            <field name="name">Dajabón</field>
+            <field name="subregion" ref="cibao_noroeste" />
+        </record>
+
+        <record id="monte_cristi" model="region.provincia">
+            <field name="name">Monte Cristi</field>
+            <field name="subregion" ref="cibao_noroeste" />
+        </record>
+
+        <record id="santiago_rodriguez" model="region.provincia">
+            <field name="name">Santiago Rodriguez</field>
+            <field name="subregion" ref="cibao_noroeste" />
+        </record>
+
+        <record id="valverde" model="region.provincia">
+            <field name="name">Valverde</field>
+            <field name="subregion" ref="cibao_noroeste" />
+        </record>
+
+        <record id="azua" model="region.provincia">
+            <field name="name">Azua</field>
+            <field name="subregion" ref="valdesia" />
+        </record>
+
+        <record id="peravia" model="region.provincia">
+            <field name="name">Peravia</field>
+            <field name="subregion" ref="valdesia" />
+        </record>
+
+        <record id="san_jose_de_ocoa" model="region.provincia">
+            <field name="name">San Jose de Ocoa</field>
+            <field name="subregion" ref="valdesia" />
+        </record>
+
+        <record id="san_cristobal" model="region.provincia">
+            <field name="name">San Cristóbal</field>
+            <field name="subregion" ref="valdesia" />
+        </record>
+
+        <record id="elias_pina" model="region.provincia">
+            <field name="name">Elias Pina</field>
+            <field name="subregion" ref="el_valle" />
+        </record>
+
+        <record id="san_juan" model="region.provincia">
+            <field name="name">San Juan</field>
+            <field name="subregion" ref="el_valle" />
+        </record>
+
+        <record id="barahona" model="region.provincia">
+            <field name="name">Barahona</field>
+            <field name="subregion" ref="enriquillo" />
+        </record>
+
+        <record id="bahoruco" model="region.provincia">
+            <field name="name">Bahoruco</field>
+            <field name="subregion" ref="enriquillo" />
+        </record>
+
+        <record id="independencia" model="region.provincia">
+            <field name="name">Independencia</field>
+            <field name="subregion" ref="enriquillo" />
+        </record>
+
+        <record id="pedernales" model="region.provincia">
+            <field name="name">Pedernales</field>
+            <field name="subregion" ref="enriquillo" />
+        </record>
+
+        <record id="el_seibo" model="region.provincia">
+            <field name="name">El Seibo</field>
+            <field name="subregion" ref="yuma" />
+        </record>
+
+        <record id="la_romana" model="region.provincia">
+            <field name="name">La Romana</field>
+            <field name="subregion" ref="yuma" />
+        </record>
+
+        <record id="la_altagracia" model="region.provincia">
+            <field name="name">La Altagracia</field>
+            <field name="subregion" ref="yuma" />
+        </record>
+
+        <record id="hato_mayor" model="region.provincia">
+            <field name="name">Hato Mayor</field>
+            <field name="subregion" ref="higuamo" />
+        </record>
+
+        <record id="monte_plata" model="region.provincia">
+            <field name="name">Monte Plata</field>
+            <field name="subregion" ref="higuamo" />
+        </record>
+
+        <record id="san_pedro_de_macoris" model="region.provincia">
+            <field name="name">San Pedro de Macoris</field>
+            <field name="subregion" ref="higuamo" />
+        </record>
+
+        <record id="distrito_nacional" model="region.provincia">
+            <field name="name">Distrito Nacional</field>
+            <field name="subregion" ref="ozama" />
+        </record>
+
+        <record id="santo_domingo" model="region.provincia">
+            <field name="name">Santo Domingo</field>
+            <field name="subregion" ref="ozama" />
+        </record>
+
+    </data>
+</openerp>

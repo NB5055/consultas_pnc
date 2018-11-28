@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model='ir.ui.view' id='informe_report_form'>
+            <field name="name">informe.report.programa</field>
+            <field name="model">informe.report.programa</field>
+            <field name="arch" type="xml">
+                <form string="Informe">
+                    <sheet>
+                        <group col="4">
+                            <field name="fecha_inicial"/>
+                            <field name="fecha_final"/>
+                        </group>
+                        <field name="programa_ids" widget="many2many_tags" placeholder="Programas"
+                               options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                    </sheet>
+                    <footer>
+                        <button name="check_report" string="Print" type="object" default_focus="1"
+                                class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='proyeccion_report_form'>
+            <field name="name">proyeccion.report.programa</field>
+            <field name="model">proyeccion.report.programa</field>
+            <field name="arch" type="xml">
+                <form string="Cierre">
+                    <sheet>
+                        <group col="4">
+                            <field name="month"/>
+                            <field name="year"/>
+                        </group>
+                        <field name="programa_ids"
+                               widget="many2many_tags" placeholder="Programas"
+                               options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                    </sheet>
+                    <footer>
+                        <button name="check_report" string="Print" type="object" default_focus="1"
+                                class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='informe_report_consolidado_form'>
+            <field name="name">informe.report.programa.consolidado</field>
+            <field name="model">informe.report.programa.consolidado</field>
+            <field name="arch" type="xml">
+                <form string="Informe">
+                    <sheet>
+                        <group col="4">
+                            <field name="fecha_inicial"/>
+                            <field name="fecha_final"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="check_report" string="Print" type="object" default_focus="1"
+                                class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='informe_report_prevencion_ceguera_form'>
+            <field name="name">informe.report.prevencion.ceguera</field>
+            <field name="model">informe.report.prevencion.ceguera</field>
+            <field name="arch" type="xml">
+                <form string="Informe">
+                    <sheet>
+                        <group col="4">
+                            <field name="fecha_inicial"/>
+                            <field name="fecha_final"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="check_report" string="Print" type="object" default_focus="1"
+                                class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="informes_action" model="ir.actions.act_window">
+            <field name="name">Informe</field>
+            <field name="res_model">informe.report.programa</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="proyeccion_action" model="ir.actions.act_window">
+            <field name="name">Proyeccion</field>
+            <field name="res_model">proyeccion.report.programa</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="consolidado_action" model="ir.actions.act_window">
+            <field name="name">Consolidado</field>
+            <field name="res_model">informe.report.programa.consolidado</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="prevencion_ceguera_action" model="ir.actions.act_window">
+            <field name="name">Prevencion Ceguera</field>
+            <field name="res_model">informe.report.prevencion.ceguera</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Informe General" parent="menu_reportes" id="menu_informes" action="informes_action"/>
+        <menuitem name="Informe de Resultado" parent="menu_reportes" id="menu_proyeccion" action="proyeccion_action"/>
+        <menuitem name="Informe Consolidado" parent="menu_reportes" id="menu_consolidado" action="consolidado_action"/>
+        <!--<menuitem name="Informe Prevencion Ceguera" parent="menu_reportes" id="menu_prevencion_ceguera"-->
+                  <!--action="prevencion_ceguera_action"/>-->
+
+        <template id="consultas_pnc.styles">
+            <style type="text/css">
+                .tg {border-collapse:collapse;border-spacing:0;border-color:#999;margin:0px auto;}
+                .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px
+                        5px;border-style:solid;border-width:0px;
+                        overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;
+                        border-top-width:1px;border-bottom-width:1px;}
+                .tg th{font-family:Arial, sans-serif, bold;font-size:18px;font-weight:bold;padding:10px
+                5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#999;color:#fff;background-color:#26ADE4;border-top-width:1px;border-bottom-width:1px;}
+                .tg .tg-baqh{text-align:center;vertical-align:top}
+                .tg .tg-vn4c{background-color:#D2E4FC}
+                .tg .tg-yw4l{vertical-align:top;text-align:center}
+                .tg .tg-6k2t{background-color:#D2E4FC;vertical-align:top;text-align:center}
+            </style>
+        </template>
+
+    </data>
+</openerp>
