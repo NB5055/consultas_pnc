@@ -19,15 +19,10 @@
                             <field name="edad"/>
                             <field name="sexo"/>
                         </group>
-                        <!--<field name="tratamiento" colspan="4">-->
-                            <!--<tree editable="top">-->
-                                <!--<field name="name"/>-->
-                            <!--</tree>-->
-                        <!--</field>-->
-                        <field name="tratamiento" colspan="4" string="Tratamiento / Seguimiento / Referimiento"
+                        <field name="tratamiento" colspan="4"
                                required="1">
                             <tree editable="top">
-                                <field name="name"/>
+                                <field name="name" string="Tratamiento / Seguimiento / Referimiento" required="1"/>
                             </tree>
                         </field>
 
