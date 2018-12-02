@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--<record id="consultas_tratamiento_line_act" model="ir.actions.act_window">-->
+            <!--<field name="name">consultas.tratamiento.line</field>-->
+            <!--<field name="type">ir.actions.act_window</field>-->
+            <!--<field name="res_model">consultas.tratamiento.line</field>-->
+            <!--<field name="view_mode">tree,form</field>-->
+        <!--</record>-->
+
+        <!--<menuitem id="tratamiento_line_menu" name="Tratamiento Line" parent="consulta_tratamiento_menu"-->
+                  <!--action="consultas_tratamiento_line_act"/>-->
+
+        <!--<record id="consultas_referimiento_line_act" model="ir.actions.act_window">-->
+            <!--<field name="name">consultas.referimiento.line</field>-->
+            <!--<field name="type">ir.actions.act_window</field>-->
+            <!--<field name="res_model">consultas.referimiento.line</field>-->
+            <!--<field name="view_mode">tree,form</field>-->
+        <!--</record>-->
+
+        <!--<menuitem id="referimiento_line_menu" name="Tratamiento Line" parent="consulta_referimiento_menu"-->
+                  <!--action="consultas_referimiento_line_act"/>-->
+
+        <record id="consultas_proyeccion_act" model="ir.actions.act_window">
+            <field name="name">consultas.proyeccion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">consultas.proyeccion</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="consultas_proyeccion_menu" name="proyecciones" parent="consulta_tratamiento_menu"
+                  action="consultas_proyeccion_act"/>
+    </data>
+</openerp>

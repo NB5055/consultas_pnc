@@ -7,7 +7,7 @@ class consultas_consultas(models.Model):
     _name = "consultas.consultas"
     _description = "Registro de Consultas"
     _inherit = ["mail.thread"]
-    _order = "fecha,name"
+    _order = "fecha desc,name"
 
     name = fields.Many2one('ficha.paciente', string='Paciente / Participante', required=True)
     programa = fields.Many2one("programa.programa", string="Programa",
@@ -67,7 +67,7 @@ class consultas_referimiento_line(models.Model):
     _name = "consultas.referimiento.line"
     _description = ""
 
-    name = fields.Many2one("consultas.referimiento", string="Referimiento")
+    name = fields.Many2one("consultas.referimiento", ondelete="cascade", string="Referimiento")
     consulta_id = fields.Many2one("consultas.consultas")
 
 
@@ -87,7 +87,7 @@ class consultas_tratamiento_line(models.Model):
     _name = "consultas.tratamiento.line"
     _description = ""
 
-    name = fields.Many2one("consultas.tratamiento",
+    name = fields.Many2one("consultas.tratamiento", ondelete="cascade",
                            string="Tratamiento / Seguimiento")
     consulta_id = fields.Many2one("consultas.consultas")
 

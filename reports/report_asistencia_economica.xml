@@ -107,24 +107,6 @@
                                 <t t-set='count' t-value='count+1'/>
                             </t>
                         </t>
-
-
-                        <!--<t t-if="(count%2) == 1">-->
-                        <!--<t t-set="cl" t-value="'tg-6k2t'"/>-->
-                        <!--</t>-->
-                        <!--<t t-if="(count%2) != 1">-->
-                        <!--<t t-set="cl" t-value="'tg-yw4l'"/>-->
-                        <!--</t>-->
-                        <!--<tr>-->
-                        <!--<td t-att-class='cl'><p t-esc="obj.name.name"/></td>-->
-                        <!--<td t-att-class='cl'><p t-esc="obj.parentesco.name"/></td>-->
-                        <!--<td t-att-class='cl'><p t-esc="obj.monto"/></td>-->
-                        <!--<td t-att-class='cl'><p t-esc="obj.ayuda_economica_id.display_name"/></td>-->
-                        <!--<td t-att-class='cl'><p t-esc="obj.fecha"/></td>-->
-                        <!--&lt;!&ndash;<td t-att-class='cl'><p t-esc="obj[2]"/></td>&ndash;&gt;-->
-                        <!--</tr>-->
-                        <!--<t t-set='count' t-value='count+1'/>-->
-                        <!--</t>-->
                     </t>
                 </table>
             </div>

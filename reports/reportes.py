@@ -33,35 +33,12 @@ class InformeReport(models.TransientModel):
     @api.one
     def get_consultas(self, programa):
         year = datetime.strptime(self.fecha_inicial, '%Y-%m-%d').date().year
-        query = """(select cr.name,count(cr.name)+COALESCE((select sum(atendidos) from operativos o
-                                where fecha >= '""" + self.fecha_inicial + """' and
-                                      fecha <= '""" + self.fecha_final + """'
-                                      and programa = pp.id and o.name = cr.id),0),pp.id,cr.id,
-                   (select count(cr2.name)+COALESCE((select sum(atendidos) from operativos o
-                                where fecha >= '""" + str(year) + '-01-01' + """' and
-                                      fecha <= '""" + self.fecha_final + """'
-                                      and programa = pp.id and o.name = cr2.id),0) from consultas_consultas cc
-                    	inner join consultas_referimiento_line crl on crl.consulta_id = cc.id
-                    	inner join consultas_referimiento cr2 on crl.name = cr2.id
-                    	left join programa_programa pp on cc.programa = pp.id
-                    	where fecha >= '""" + str(year) + '-01-01' + """' and fecha <= '""" + self.fecha_final + """'
-                    	and programa = """ + str(programa) + """ and cr2.id = cr.id
-                    	group by cr.name,cr2.id,pp.id)
-                    from consultas_consultas cc
-                    	inner join consultas_referimiento_line crl on crl.consulta_id = cc.id
-                    	inner join consultas_referimiento cr on crl.name = cr.id
-                    	left join programa_programa pp on cc.programa = pp.id
-                    	where fecha >= '""" + self.fecha_inicial + """' and fecha <= '""" + self.fecha_final + """'
-                    	and programa = """ + str(programa) + """
-                    	group by cr.name,pp.id,cr.id order by cr.name,pp.id)
-                union
-                    (select ct.name,count(ct.name),pp.id,ct.id,
+        query = """(select ct.name,count(ct.name),pp.id,ct.id,
                            (select count(ct2.name) from consultas_consultas cc
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                     	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
                     	left join programa_programa pp on cc.programa = pp.id
-                    	where fecha >= '""" + str(year) + '-01-01' + """' and fecha <= '""" + self.fecha_final + """'
-                    	and programa = """ + str(programa) + """ and ct2.id = ct.id
+                    	where programa = """ + str(programa) + """ and ct2.id = ct.id
                     	group by ct.name)
                     from consultas_consultas cc
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
@@ -226,94 +203,3 @@ class ProyeccionReport(models.TransientModel):
         }
 
 
-class InformeReportConsolidado(models.TransientModel):
-    _name = "informe.report.programa.consolidado"
-    _description = "Informes"
-    # Informe Consolidado
-
-    fecha_inicial = fields.Date(string="Fecha Inicial", required=True)
-    fecha_final = fields.Date(string="Fecha Final", required=True)
-
-    def _print_report(self, data):
-        raise UserError('Error!')
-
-    @api.one
-    def get_consultas(self):
-        year = datetime.strptime(self.fecha_inicial, '%Y-%m-%d').date().year
-        query = """select cr.name,(coalesce((select sum(atendidos) 
-                        from operativos op where cr.id = op.name and 
-                                     fecha >= '""" + self.fecha_inicial + """' and 
-                                     fecha <= '""" + self.fecha_final + """'),0)+ 
-                    (select count(cc.id) from consultas_consultas cc 
-                        inner join consultas_referimiento_line crl on crl.consulta_id = cc.id 
-                        where crl.name = cr.id and fecha >= '""" + self.fecha_inicial + """' and 
-                                                   fecha <= '""" + self.fecha_final + """')),
-                    (coalesce((select sum(atendidos) 
-                        from operativos op where cr.id = op.name and 
-                                     fecha >= '""" + str(year) + '-01-01' + """' and 
-                                     fecha <= '""" + self.fecha_final + """'),0)+ 
-                    (select count(cc.id) from consultas_consultas cc 
-                        inner join consultas_referimiento_line crl on crl.consulta_id = cc.id 
-                        where crl.name = cr.id and fecha >= '""" + str(year) + '-01-01' + """' and 
-                                     fecha <= '""" + self.fecha_final + """'))
-                from consultas_referimiento cr group by cr.id"""
-
-        self.env.cr.execute(query)
-
-        def getKey(item):
-            return item[0]
-
-        obj = self.env.cr.fetchall()
-        return sorted(obj, key=getKey)
-
-    @api.multi
-    def check_report(self):
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'consultas_pnc.report_programa_consolidado',
-            'target': 'new',
-            'report_type': 'qweb-html',
-        }
-
-
-class PrevencionCegueraReport(models.TransientModel):
-    _name = "informe.report.prevencion.ceguera"
-    _description = "Informes"
-
-    fecha_inicial = fields.Date(string="Fecha Inicial", required=True)
-    fecha_final = fields.Date(string="Fecha Final", required=True)
-
-    def _print_report(self, data):
-        raise UserError('Error!')
-
-    @api.one
-    def get_data(self):
-        programa_ids = self.env['programa.programa'].search_read([], ['name'])
-        data = []
-        for programa in programa_ids:
-            query = """select cr.name,count(*),sum(o.atendidos) 
-                          from operativos o 
-                          join consultas_referimiento cr on o.name = cr.id
-                          where fecha >= '%s' and 
-                                fecha <= '%s' and 
-                                programa = %s  
-                          group by cr.name;""" % (self.fecha_inicial, self.fecha_final, programa.get('id'))
-            self.env.cr.execute(query)
-
-            def getKey(item):
-                return item[0]
-
-            obj = self.env.cr.fetchall()
-            if obj:
-                data.append({'programa': programa.get('name'),
-                             'data': sorted(obj, key=getKey)})
-        return data
-
-    @api.multi
-    def check_report(self):
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'consultas_pnc.report_prevencion_ceguera',
-            'target': 'new',
-            'report_type': 'qweb-html',
-        }

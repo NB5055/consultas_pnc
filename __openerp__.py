@@ -30,7 +30,7 @@
         'reports/reporte_proyeccion.xml',
         'reports/reporte_prevencion_ceguera.xml',
         'views/webclient_templates.xml',
-        'reports/report_asistencia_economica.xml'
+        'reports/report_asistencia_economica.xml',
     ],
     'demo': [],
 
