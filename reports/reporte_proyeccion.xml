@@ -2,12 +2,12 @@
 <openerp>
     <data>
         <report
-            id="menu_report_proyeccion"
-            model="proyeccion.report.programa"
-            string="Proyeccion por Programa"
-            report_type="qweb-html"
-            name="consultas_pnc.report_proyeccion"
-            menu="False"
+                id="menu_report_proyeccion"
+                model="proyeccion.report.programa"
+                string="Proyeccion por Programa"
+                report_type="qweb-html"
+                name="consultas_pnc.report_proyeccion"
+                menu="False"
         />
 
         <template id="consultas_pnc.report_proyeccion">
@@ -17,32 +17,48 @@
                 </t>
                 <t t-call="consultas_pnc.styles"/>
                 <div>
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                         style="max-height: 45px;"/>
                 </div>
                 <h3>Patronato Nacional de Ciegos, INC</h3>
                 Estadistica por Programa
-                <p><t t-esc="docs.month_string"/> / <t t-esc="docs.year"/></p>
+                <p>
+                    <t t-esc="docs.month_string"/>
+                    /
+                    <t t-esc="docs.year"/>
+                </p>
 
                 <t t-if="docs.programa_ids">
                     <t t-foreach="docs.programa_ids" t-as="programa">
-                        <table class="tg">
+                        <table class="tg" width="100%">
                             <t t-set='consulta_ids' t-value="docs.get_consultas(programa.id)"/>
                             <t t-if="len(consulta_ids[0]) > 0">
-                                <tr >
+                                <tr>
                                     <th colspan="7" class="tg-yw4l">
                                         <span t-field="programa.name"/>
                                     </th>
                                 </tr>
                                 <tr>
-                                    <th class="tg-yw4l" align="left">Departamento</th>
-                                    <th class="tg-yw4l">Mes</th>
-                                    <th class="tg-yw4l">Acumulado Año</th>
-                                    <th class="tg-yw4l">Proyección Mes</th>
-                                    <th class="tg-yw4l">Proyección Año</th>
-                                    <th class="tg-yw4l">Porcentaje Mes</th>
-                                    <th class="tg-yw4l">Porcentaje Año</th>
+                                    <th class="tg-yw4l" rowspan="2">Departamento y/o Servicio</th>
+                                    <th class="tg-yw4l-2" colspan="2">Acumulado</th>
+                                    <th class="tg-yw4l-2" colspan="2">Proyección</th>
+                                    <th class="tg-yw4l-2" colspan="2">Porcentaje</th>
+                                </tr>
+                                <tr>
+                                    <th class="tg-yw4l-2">Mes</th>
+                                    <th class="tg-yw4l-2">Año</th>
+                                    <th class="tg-yw4l-2">Mes</th>
+                                    <th class="tg-yw4l-2">Año</th>
+                                    <th class="tg-yw4l-2">Mes</th>
+                                    <th class="tg-yw4l-2">Año</th>
                                 </tr>
                                 <t t-set='count' t-value='1'/>
+                                <t t-set="acumulado_mes" t-value="0"/>
+                                <t t-set="acumulado_ano" t-value="0"/>
+                                <t t-set="proyeccion_mes" t-value="0"/>
+                                <t t-set="proyeccion_ano" t-value="0"/>
+                                <t t-set="porcentaje_mes" t-value="0.0"/>
+                                <t t-set="porcentaje_ano" t-value="0.0"/>
                                 <t t-foreach="consulta_ids" t-as="obj">
                                     <t t-foreach="obj" t-as="consulta_obj">
                                         <t t-if="(count%2) == 1">
@@ -52,18 +68,63 @@
                                             <t t-set="cl" t-value="'tg-yw4l'"/>
                                         </t>
                                         <tr>
-                                            <td t-att-class='cl'><p t-esc="consulta_obj['description']"/></td>
-                                            <td t-att-class='cl'><p t-esc="consulta_obj['month']"/></td>
-                                            <td t-att-class='cl'><p t-esc="consulta_obj['year']"/></td>
-                                            <td t-att-class='cl'><p t-esc="consulta_obj['proyection_month']"/></td>
-                                            <td t-att-class='cl'><p t-esc="consulta_obj['proyection_year']"/></td>
-                                            <td t-att-class='cl'><p t-esc="consulta_obj['percent_month']"/></td>
-                                            <td t-att-class='cl'><p t-esc="consulta_obj['percent_year']"/></td>
+                                            <td t-att-class='cl'>
+                                                <p t-esc="consulta_obj['description']"/>
+                                            </td>
+                                            <td t-att-class='cl'>
+                                                <p t-esc="consulta_obj['month']"/>
+                                            </td>
+                                            <td t-att-class='cl'>
+                                                <p t-esc="consulta_obj['year']"/>
+                                            </td>
+                                            <td t-att-class='cl'>
+                                                <p t-esc="consulta_obj['proyection_month']"/>
+                                            </td>
+                                            <td t-att-class='cl'>
+                                                <p t-esc="consulta_obj['proyection_year']"/>
+                                            </td>
+                                            <td t-att-class='cl'>
+                                                <p t-esc="consulta_obj['percent_month']"/>
+                                            </td>
+                                            <td t-att-class='cl'>
+                                                <p t-esc="consulta_obj['percent_year']"/>
+                                            </td>
                                         </tr>
                                         <t t-set='count' t-value='count+1'/>
+                                        <t t-set="acumulado_mes" t-value="acumulado_mes + int(consulta_obj['month'])"/>
+                                        <t t-set="acumulado_ano" t-value="acumulado_ano + int(consulta_obj['year'])"/>
+                                        <t t-set="proyeccion_mes"
+                                           t-value="proyeccion_mes + int(consulta_obj['proyection_month'])"/>
+                                        <t t-set="proyeccion_ano"
+                                           t-value="proyeccion_ano + int(consulta_obj['proyection_year'])"/>
+                                        <t t-set="porcentaje_mes"
+                                           t-value="porcentaje_mes + float(consulta_obj['percent_month'])"/>
+                                        <t t-set="porcentaje_ano"
+                                           t-value="porcentaje_ano + float(consulta_obj['percent_year'])"/>
                                     </t>
                                 </t>
                             </t>
+                            <tr>
+                                <th class="tg-yw4l">Totales</th>
+                                <th class="tg-yw4l">
+                                    <t t-esc="acumulado_mes"/>
+                                </th>
+                                <th class="tg-yw4l">
+                                    <t t-esc="acumulado_ano"/>
+                                </th>
+                                <th class="tg-yw4l">
+                                    <t t-esc="proyeccion_mes"/>
+                                </th>
+                                <th class="tg-yw4l">
+                                    <t t-esc="proyeccion_ano"/>
+                                </th>
+                                <th class="tg-yw4l">
+                                    <t t-esc="porcentaje_mes"/>
+                                </th>
+                                <th class="tg-yw4l">
+                                    <t t-esc="porcentaje_ano"/>
+                                </th>
+                            </tr>
                         </table>
                     </t>
                 </t>

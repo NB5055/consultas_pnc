@@ -126,20 +126,22 @@
         <menuitem name="Informe de Resultado" parent="menu_reportes" id="menu_proyeccion" action="proyeccion_action"/>
         <menuitem name="Informe Consolidado" parent="menu_reportes" id="menu_consolidado" action="consolidado_action"/>
         <!--<menuitem name="Informe Prevencion Ceguera" parent="menu_reportes" id="menu_prevencion_ceguera"-->
-                  <!--action="prevencion_ceguera_action"/>-->
+        <!--action="prevencion_ceguera_action"/>-->
 
         <template id="consultas_pnc.styles">
             <style type="text/css">
                 .tg {border-collapse:collapse;border-spacing:0;border-color:#999;margin:0px auto;}
                 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px
-                        5px;border-style:solid;border-width:0px;
-                        overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;
-                        border-top-width:1px;border-bottom-width:1px;}
+                5px;border-style:solid;border-width:2px 2px 2px 2px;
+                overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;
+                border-top-width:1px;border-bottom-width:1px;}
                 .tg th{font-family:Arial, sans-serif, bold;font-size:18px;font-weight:bold;padding:10px
-                5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#999;color:#fff;background-color:#26ADE4;border-top-width:1px;border-bottom-width:1px;}
+                5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#999;
+                color:#fff;background-color:#26ADE4;border-top-width:1px;border-bottom-width:1px;border-left-width: 1px;border-right-width: 1px;}
                 .tg .tg-baqh{text-align:center;vertical-align:top}
                 .tg .tg-vn4c{background-color:#D2E4FC}
-                .tg .tg-yw4l{vertical-align:top;text-align:center}
+                .tg .tg-yw4l{vertical-align:middle;text-align:center;}
+                .tg .tg-yw4l-2{border-top-width:0px !important;border-bottom-width:0px !important}
                 .tg .tg-6k2t{background-color:#D2E4FC;vertical-align:top;text-align:center}
             </style>
         </template>
