@@ -45,12 +45,12 @@
                                     <th class="tg-yw4l-2" colspan="2">Porcentaje</th>
                                 </tr>
                                 <tr>
-                                    <th class="tg-yw4l-2">Mes</th>
-                                    <th class="tg-yw4l-2">Año</th>
-                                    <th class="tg-yw4l-2">Mes</th>
-                                    <th class="tg-yw4l-2">Año</th>
-                                    <th class="tg-yw4l-2">Mes</th>
-                                    <th class="tg-yw4l-2">Año</th>
+                                    <th class="tg-yw4l-3">Mes</th>
+                                    <th class="tg-yw4l-3">Año</th>
+                                    <th class="tg-yw4l-3">Mes</th>
+                                    <th class="tg-yw4l-3">Año</th>
+                                    <th class="tg-yw4l-3">Mes</th>
+                                    <th class="tg-yw4l-3">Año</th>
                                 </tr>
                                 <t t-set='count' t-value='1'/>
                                 <t t-set="acumulado_mes" t-value="0"/>

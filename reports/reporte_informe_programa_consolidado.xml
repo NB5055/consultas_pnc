@@ -34,11 +34,16 @@
 
                 <table width="100%" class="tg">
                     <tr>
-                        <th class="tg-yw4l" align="left">Departamento</th>
-                        <th class="tg-yw4l">Total Periodo</th>
-                        <th class="tg-yw4l">Total General</th>
+                        <th class="tg-yw4l" rowspan="2">Departamento y/o Servicio</th>
+                        <th class="tg-yw4l-2" colspan="2">Acumulado</th>
+                    </tr>
+                    <tr>
+                        <th class="tg-yw4l-3">Mes</th>
+                        <th class="tg-yw4l-3">Año</th>
                     </tr>
                     <t t-set='count' t-value='1'/>
+                    <t t-set="total_mes" t-value="0"/>
+                    <t t-set="total_ano" t-value="0"/>
                     <t t-foreach="docs.get_consultas()" t-as="o">
                         <t t-foreach="o" t-as="obj">
                             <t t-if="(count%2) == 1">
@@ -50,18 +55,29 @@
 
                             <tr>
                                 <td t-att-class='cl'>
-                                    <p t-esc="obj[0]"/>
-                                </td>
-                                <td t-att-class='cl'>
                                     <p t-esc="obj[1]"/>
                                 </td>
                                 <td t-att-class='cl'>
                                     <p t-esc="obj[2]"/>
                                 </td>
+                                <td t-att-class='cl'>
+                                    <p t-esc="obj[3]"/>
+                                </td>
                             </tr>
                             <t t-set='count' t-value='count+1'/>
+                            <t t-set="total_mes" t-value="total_mes + obj[2]"/>
+                            <t t-set="total_ano" t-value="total_ano + obj[3]"/>
                         </t>
                     </t>
+                    <tr>
+                        <th class="tg-yw4l">Totales</th>
+                        <th class="tg-yw4l">
+                            <t t-esc="total_mes"/>
+                        </th>
+                        <th class="tg-yw4l">
+                            <t t-esc="total_ano"/>
+                        </th>
+                    </tr>
                 </table>
             </div>
         </template>

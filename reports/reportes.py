@@ -10,12 +10,31 @@ def no_operations(self, obj, programa):
     for ob in obj:
         departamento.append(ob[0])
     for t in self.env['consultas.tratamiento'].search([]):
-
         if t.name not in departamento:
             obj.append(tuple((t.name, 0, programa, t.id, 0)))
-    for r in self.env['consultas.referimiento'].search([]):
-        if r.name not in departamento:
-            obj.append(tuple((r.name, 0, programa, r.id, 0)))
+
+
+def _get_operativos(self, programa, tratamiento_id, data, month, proyeccion, year):
+    last_day = calendar.monthrange(int(year), int(month))[1]
+    date_start = year + '-' + month + '-01'
+    atendidos = 0.0
+    operativo_month_ids = self.env['operativos'].search([('name', '=', tratamiento_id.id),
+                                                         ('programa', '=', programa),
+                                                         ('fecha', '>=', date_start),
+                                                         ('fecha', '<=',
+                                                          year + '-' + month + '-' + str(last_day))])
+    if operativo_month_ids:
+        for operativo_id in operativo_month_ids:
+            atendidos += operativo_id.atendidos
+        if data.get(tratamiento_id.name):
+            data[tratamiento_id.name] += atendidos
+        else:
+            proyeccion[tratamiento_id.name] = self.env['consultas.proyeccion'].search([('year', '=', year),
+                                                                                       ('tratamiento_id', '=',
+                                                                                        tratamiento_id.id),
+                                                                                       ("programa", "=",
+                                                                                        programa)]).proyeccion or 0
+            data[tratamiento_id.name] = atendidos
 
 
 class InformeReport(models.TransientModel):
@@ -50,7 +69,7 @@ class InformeReport(models.TransientModel):
                 union
                     (select cr.name,count(*),programa,cr.id,sum(o.atendidos)
                           from operativos o
-                          join consultas_referimiento cr on o.name = cr.id
+                          join consultas_tratamiento cr on o.name = cr.id
                           where fecha >= '""" + self.fecha_inicial + """' and
                                 fecha <= '""" + self.fecha_final + """' and
                                 programa = """ + str(programa) + """
@@ -102,32 +121,6 @@ class ProyeccionReport(models.TransientModel):
     def _print_report(self, data):
         raise UserError('Error!')
 
-    def _get_operativos(self, programa, referimiento_id, data, month, proyeccion):
-        last_day = calendar.monthrange(self.year, int(self.month))[1]
-        date_start = ""
-        if month:
-            date_start = str(self.year) + '-' + self.month + '-01'
-        else:
-            date_start = str(self.year) + '-01-01'
-        atendidos = 0.0
-        operativo_month_ids = self.env['operativos'].search([('name', '=', referimiento_id.id),
-                                                             ('programa', '=', programa),
-                                                             ('fecha', '>=', date_start),
-                                                             ('fecha', '<=',
-                                                              str(self.year) + '-' + self.month + '-' + str(last_day))])
-        if operativo_month_ids:
-            for operativo_id in operativo_month_ids:
-                atendidos += operativo_id.atendidos
-            if data.get(referimiento_id.name):
-                data[referimiento_id.name] += atendidos
-            else:
-                proyeccion[referimiento_id.name] = self.env['consultas.proyeccion'].search([('year', '=', self.year),
-                                                                                            ('referimiento_id', '=',
-                                                                                             referimiento_id.id),
-                                                                                            ("programa", "=",
-                                                                                             programa)]).proyeccion or 0
-                data[referimiento_id.name] = atendidos
-
     @api.one
     def get_consultas(self, programa):
         consulta_obj = self.env['consultas.consultas']
@@ -135,15 +128,14 @@ class ProyeccionReport(models.TransientModel):
         data_month = {}
         proyeccion = {}
         result = []
-        referimiento_ids = self.env['consultas.referimiento'].search([])
+        tratamiento_ids = self.env['consultas.tratamiento'].search([])
         consulta_data = consulta_obj.search([('programa', '=', programa),
                                              ('fecha', '>=', str(self.year) + '-01-01')])
         for consulta_id in consulta_data:
             self._get_data_proyeccion(consulta_id, 'tratamiento', data, data_month, proyeccion, programa)
-            self._get_data_proyeccion(consulta_id, 'referimiento', data, data_month, proyeccion, programa)
-        for referimiento_id in referimiento_ids:
-            self._get_operativos(programa, referimiento_id, data_month, True, proyeccion)
-            self._get_operativos(programa, referimiento_id, data, False, proyeccion)
+        for tratamiento_id in tratamiento_ids:
+            _get_operativos(self, programa, tratamiento_id, data_month, str(self.month), proyeccion, str(self.year))
+            _get_operativos(self, programa, tratamiento_id, data, "01", proyeccion, str(self.year))
         for a in data:
             proyeccion_mensual = proyeccion.get(a, 1) / 12
             obj = {
@@ -201,5 +193,3 @@ class ProyeccionReport(models.TransientModel):
             'target': 'new',
             'report_type': 'qweb-html',
         }
-
-

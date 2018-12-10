@@ -16,23 +16,21 @@ class InformeReportConsolidado(models.TransientModel):
 
     @api.one
     def get_consultas(self):
-        year = datetime.strptime(self.fecha_inicial, '%Y-%m-%d').date().year
-        query = """select cr.name,(coalesce((select sum(atendidos) 
-                        from operativos op where cr.id = op.name and 
+        query = """select ct.id,ct.name,(coalesce((select sum(atendidos) 
+                        from operativos op where ct.id = op.name and 
                                      fecha >= '""" + self.fecha_inicial + """' and 
                                      fecha <= '""" + self.fecha_final + """'),0)+ 
                     (select count(cc.id) from consultas_consultas cc 
-                        inner join consultas_tratamiento_line crl on crl.consulta_id = cc.id 
-                        where crl.name = cr.id and fecha >= '""" + self.fecha_inicial + """' and 
+                        inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id 
+                        where ctl.name = ct.id and fecha >= '""" + self.fecha_inicial + """' and 
                                                    fecha <= '""" + self.fecha_final + """')),
-                    (coalesce((select sum(atendidos) from operativos op where cr.id = op.name),0)+ 
+                    (coalesce((select sum(atendidos) from operativos op where ct.id = op.name),0)+ 
                     (select count(cc.id) from consultas_consultas cc 
-                        inner join consultas_tratamiento_line crl on crl.consulta_id = cc.id 
-                        where crl.name = cr.id))
-                from consultas_tratamiento cr group by cr.id"""
+                        inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id 
+                        where ctl.name = ct.id))
+                from consultas_tratamiento ct group by ct.id"""
 
         self.env.cr.execute(query)
-
         def getKey(item):
             return item[0]
         obj = self.env.cr.fetchall()

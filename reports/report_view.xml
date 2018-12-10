@@ -141,7 +141,8 @@
                 .tg .tg-baqh{text-align:center;vertical-align:top}
                 .tg .tg-vn4c{background-color:#D2E4FC}
                 .tg .tg-yw4l{vertical-align:middle;text-align:center;}
-                .tg .tg-yw4l-2{border-top-width:0px !important;border-bottom-width:0px !important}
+                .tg .tg-yw4l-2{border-bottom-width:0px !important}
+                .tg .tg-yw4l-3{border-top-width:0px !important;border-bottom-width:0px !important}
                 .tg .tg-6k2t{background-color:#D2E4FC;vertical-align:top;text-align:center}
             </style>
         </template>

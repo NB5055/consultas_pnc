@@ -67,22 +67,23 @@
                     <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_final,'%Y-%m-%d'))"/>
                 </p>
 
-                <table width="100%" class="tg">
-                    <t t-set='asistencias_ids' t-value="docs.get_asistencias()"/>
-                    <t t-foreach="asistencias_ids" t-as="asistencia">
-                        <t t-foreach="asistencia" t-as="o">
+                <t t-set='asistencias_ids' t-value="docs.get_asistencias()"/>
+                <t t-foreach="asistencias_ids" t-as="asistencia">
+                    <t t-foreach="asistencia" t-as="o">
+                        <table width="100%" class="tg">
                             <tr>
-                                <th colspan="4" class="tg-yw4l">
+                                <th colspan="5" class="tg-yw4l">
                                     <span t-field="o.display_name"/>
                                 </th>
                             </tr>
                             <tr>
-                                <th class="tg-yw4l">Patrocinador</th>
+                                <th class="tg-yw4l" colspan="2">Patrocinador</th>
                                 <th class="tg-yw4l">Concepto</th>
                                 <th class="tg-yw4l">Monto</th>
                                 <th class="tg-yw4l">Fecha Ayuda</th>
                             </tr>
                             <t t-set='count' t-value='1'/>
+                            <t t-set="total" t-value="0"/>
                             <t t-foreach="asistencia.get(o)" t-as="asistencia_id">
                                 <t t-if="(count%2) == 1">
                                     <t t-set="cl" t-value="'tg-6k2t'"/>
@@ -91,6 +92,9 @@
                                     <t t-set="cl" t-value="'tg-yw4l'"/>
                                 </t>
                                 <tr>
+                                    <td>
+                                        <t t-esc="count"/>
+                                    </td>
                                     <td t-att-class='cl'>
                                         <p t-esc="asistencia_id.name.name"/>
                                     </td>
@@ -105,10 +109,19 @@
                                     </td>
                                 </tr>
                                 <t t-set='count' t-value='count+1'/>
+                                <t t-set="total" t-value="total + asistencia_id.monto"/>
                             </t>
-                        </t>
+                            <tr>
+                                <th class="tg-yw4l" colspan="3">Totales</th>
+                                <th class="tg-yw4l" colspan="2">
+                                    <t t-esc="total"/>
+                                </th>
+                            </tr>
+                        </table>
+                        <br/>
+                        <br/>
                     </t>
-                </table>
+                </t>
             </div>
         </template>
 

@@ -30,6 +30,7 @@
                     <field name="programa"/>
                 </tree>
             </field>
+
         </record>
 
         <record id="operativo_act" model="ir.actions.act_window">
