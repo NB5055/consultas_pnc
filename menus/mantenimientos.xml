@@ -27,7 +27,7 @@
                 <menuitem action="region_provincia_act" id="provincias_menu" parent="ubicacion_mant"/>
             <menuitem name="Consultas" parent="mantenimientos" id="programa_consulta" sequence="3"/>
                 <menuitem action="consultas_diagnostico_act" parent="programa_consulta" id="consulta_diagnostico_menu"/>
-                <menuitem action="consultas_referimiento_act" parent="programa_consulta" id="consulta_referimiento_menu"/>
+                <!--<menuitem action="consultas_referimiento_act" parent="programa_consulta" id="consulta_referimiento_menu"/>-->
                 <menuitem action="consultas_tratamiento_act" parent="programa_consulta" id="consulta_tratamiento_menu"/>
             <!--<menuitem name="Asistencia Economica" parent="mantenimientos" id="asistencia_economica"/>-->
                 <!--<menuitem action="" parent="asistencia_economica" name="Conceptos" id="concepto"/>-->

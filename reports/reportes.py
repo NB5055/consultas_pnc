@@ -11,7 +11,7 @@ def no_operations(self, obj, programa):
         departamento.append(ob[0])
     for t in self.env['consultas.tratamiento'].search([]):
         if t.name not in departamento:
-            obj.append(tuple((t.name, 0, programa, t.id, 0)))
+            obj.append(tuple((t.name, 0, programa, t.id, 0, 0, 0)))
 
 
 def _get_operativos(self, programa, tratamiento_id, data, month, proyeccion, year):
@@ -37,6 +37,33 @@ def _get_operativos(self, programa, tratamiento_id, data, month, proyeccion, yea
             data[tratamiento_id.name] = atendidos
 
 
+def _get_data_proyeccion(self, consulta_id, param, data, data_month, proyeccion, programa, month, year):
+    if consulta_id[param]:
+        for consulta_param in consulta_id[param]:
+            if data.get(consulta_param.name.name):
+                if datetime.strptime(consulta_id.fecha, '%Y-%m-%d').month <= int(month):
+                    data[consulta_param.name.name] += 1.0
+                if datetime.strptime(consulta_id.fecha, '%Y-%m-%d').month == int(month):
+                    if consulta_param.name.name in data_month:
+                        data_month[consulta_param.name.name] += 1.0
+                    else:
+                        data_month[consulta_param.name.name] = 1.0
+            else:
+                if datetime.strptime(consulta_id.fecha, '%Y-%m-%d').month <= int(month):
+                    data[consulta_param.name.name] = 1.0
+                if datetime.strptime(consulta_id.fecha, '%Y-%m-%d').month == int(month):
+                    data_month[consulta_param.name.name] = 1.0
+            if consulta_param.name:
+                proyeccion[consulta_param.name.name] = consulta_param.name.proyeccion.search(
+                    [('year', '=', year),
+                     (param + '_id', '=',
+                      consulta_param.name.id),
+                     ("programa", "=",
+                      programa)]).proyeccion or 0
+            else:
+                proyeccion[consulta_param.name.name] = 0
+
+
 class InformeReport(models.TransientModel):
     _name = "informe.report.programa"
     _description = "Informes"
@@ -51,14 +78,19 @@ class InformeReport(models.TransientModel):
 
     @api.one
     def get_consultas(self, programa):
-        year = datetime.strptime(self.fecha_inicial, '%Y-%m-%d').date().year
-        query = """(select ct.name,count(ct.name),pp.id,ct.id,
+        year = fields.date.today().year
+        query = """(select ct.name as tratamiento,count(ct.name) as sumatoria,pp.id as programa,ct.id as consulta_id,
                            (select count(ct2.name) from consultas_consultas cc
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                     	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
                     	left join programa_programa pp on cc.programa = pp.id
                     	where programa = """ + str(programa) + """ and ct2.id = ct.id
-                    	group by ct.name)
+                    	 and extract(year from fecha) = '""" + str(year) + """'
+                    	group by ct.name) as year,
+                    	(coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(year) + """'),0)) as proyeccion_year,
+                    	(coalesce(((select proyeccion from consultas_proyeccion where programa = """ + str(
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(year) + """') / 10),0)) as proyeccion_mes
                     from consultas_consultas cc
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                     	inner join consultas_tratamiento ct on ctl.name = ct.id
@@ -67,21 +99,28 @@ class InformeReport(models.TransientModel):
                     	and programa = """ + str(programa) + """
                     	group by ct.name,pp.id,ct.id order by ct.name,pp.id)
                 union
-                    (select cr.name,count(*),programa,cr.id,sum(o.atendidos)
+                    (select ct.name  as tratamiento,sum(o.atendidos) as sumatoria,programa as programa,ct.id as consulta_id,
+                            (select sum(atendidos) from operativos 
+                                where programa = """ + str(programa) + """ 
+                                and extract(year from fecha) = '""" + str(year) + """') as year,
+                            (coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(year) + """'),0)) as proyeccion_year,
+                    	(coalesce(((select proyeccion from consultas_proyeccion where programa = """ + str(
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(year) + """') / 10),0)) as proyeccion_mes
                           from operativos o
-                          join consultas_tratamiento cr on o.name = cr.id
+                          join consultas_tratamiento ct on o.name = ct.id
                           where fecha >= '""" + self.fecha_inicial + """' and
                                 fecha <= '""" + self.fecha_final + """' and
                                 programa = """ + str(programa) + """
-                          group by cr.name,programa,cr.id)
+                          group by ct.name,programa,ct.id)
                 """
-
         self.env.cr.execute(query)
 
         def getKey(item):
             return item[0]
 
         obj = self.env.cr.fetchall()
+        print(query)
         no_operations(self, obj, programa)
 
         return sorted(obj, key=getKey)
@@ -123,65 +162,47 @@ class ProyeccionReport(models.TransientModel):
 
     @api.one
     def get_consultas(self, programa):
-        consulta_obj = self.env['consultas.consultas']
-        data = {}
-        data_month = {}
-        proyeccion = {}
-        result = []
-        tratamiento_ids = self.env['consultas.tratamiento'].search([])
-        consulta_data = consulta_obj.search([('programa', '=', programa),
-                                             ('fecha', '>=', str(self.year) + '-01-01')])
-        for consulta_id in consulta_data:
-            self._get_data_proyeccion(consulta_id, 'tratamiento', data, data_month, proyeccion, programa)
-        for tratamiento_id in tratamiento_ids:
-            _get_operativos(self, programa, tratamiento_id, data_month, str(self.month), proyeccion, str(self.year))
-            _get_operativos(self, programa, tratamiento_id, data, "01", proyeccion, str(self.year))
-        for a in data:
-            proyeccion_mensual = proyeccion.get(a, 1) / 12
-            obj = {
-                'description': a,
-                'month': int(data_month.get(a, 0)),
-                'year': int(data.get(a, 0)),
-                'proyection_month': proyeccion_mensual,
-                'proyection_year': proyeccion.get(a, 0),
-                'percent_month': ("{:,.2f}".format(
-                    (float(data_month.get(a, 0)) / float(proyeccion_mensual)) * 100)) if proyeccion_mensual != 0 else 0,
-                'percent_year': (
-                    "{:,.2f}".format((float(data.get(a, 0)) / float(proyeccion.get(a, 0))) * 100)) if proyeccion.get(
-                    a) != 0 else 0
-            }
-            result.append(obj)
+        query = """(select ct.name as tratamiento,count(ct.name) as sumatoria,pp.id as programa,ct.id as consulta_id,
+                           (select count(ct2.name) from consultas_consultas cc
+                    	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
+                    	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
+                    	left join programa_programa pp on cc.programa = pp.id
+                    	where programa = """ + str(programa) + """ and ct2.id = ct.id
+                    	 and extract(year from fecha) = '""" + str(self.year) + """'
+                    	group by ct.name) as year,
+                    	(coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(self.year) + """'),0)) as proyeccion_year,
+                    	(coalesce(((select proyeccion from consultas_proyeccion where programa = """ + str(
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(self.year) + """') / 10),0)) as proyeccion_mes
+                    from consultas_consultas cc
+                    	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
+                    	inner join consultas_tratamiento ct on ctl.name = ct.id
+                    	left join programa_programa pp on cc.programa = pp.id
+                    	where extract(month from fecha) = '""" + self.month + """' 
+                    	and programa = """ + str(programa) + """
+                    	group by ct.name,pp.id,ct.id order by ct.name,pp.id)
+                union
+                    (select ct.name  as tratamiento,sum(o.atendidos) as sumatoria,programa as programa,ct.id as consulta_id,
+                            (select sum(atendidos) from operativos 
+                                where programa = """ + str(programa) + """ 
+                                and extract(year from fecha) = '""" + str(self.year) + """') as year,
+                            (coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(self.year) + """'),0)) as proyeccion_year,
+                    	(coalesce(((select proyeccion from consultas_proyeccion where programa = """ + str(
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(self.year) + """') / 10),0)) as proyeccion_mes
+                          from operativos o
+                          join consultas_tratamiento ct on o.name = ct.id
+                          where extract(month from fecha) = '""" + self.month + """' and
+                                programa = """ + str(programa) + """
+                          group by ct.name,programa,ct.id)
+                """
+        self.env.cr.execute(query)
 
         def getKey(item):
-            return item.get('description')
+            return item[0]
 
-        return sorted(result, key=getKey)
-
-    def _get_data_proyeccion(self, consulta_id, param, data, data_month, proyeccion, programa):
-        if consulta_id[param]:
-            for consulta_param in consulta_id[param]:
-                if data.get(consulta_param.name.name):
-                    if datetime.strptime(consulta_id.fecha, '%Y-%m-%d').month <= int(self.month):
-                        data[consulta_param.name.name] += 1.0
-                    if datetime.strptime(consulta_id.fecha, '%Y-%m-%d').month == int(self.month):
-                        if consulta_param.name.name in data_month:
-                            data_month[consulta_param.name.name] += 1.0
-                        else:
-                            data_month[consulta_param.name.name] = 1.0
-                else:
-                    if datetime.strptime(consulta_id.fecha, '%Y-%m-%d').month <= int(self.month):
-                        data[consulta_param.name.name] = 1.0
-                    if datetime.strptime(consulta_id.fecha, '%Y-%m-%d').month == int(self.month):
-                        data_month[consulta_param.name.name] = 1.0
-                if consulta_param.name:
-                    proyeccion[consulta_param.name.name] = consulta_param.name.proyeccion.search(
-                        [('year', '=', self.year),
-                         (param + '_id', '=',
-                          consulta_param.name.id),
-                         ("programa", "=",
-                          programa)]).proyeccion or 0
-                else:
-                    proyeccion[consulta_param.name.name] = 0
+        obj = self.env.cr.fetchall()
+        return sorted(obj, key=getKey)
 
     @api.multi
     def check_report(self):

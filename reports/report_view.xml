@@ -130,6 +130,9 @@
 
         <template id="consultas_pnc.styles">
             <style type="text/css">
+                tr:first-child {
+                    background-color:#D2E4FC;
+                }
                 .tg {border-collapse:collapse;border-spacing:0;border-color:#999;margin:0px auto;}
                 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px
                 5px;border-style:solid;border-width:2px 2px 2px 2px;
@@ -138,14 +141,20 @@
                 .tg th{font-family:Arial, sans-serif, bold;font-size:18px;font-weight:bold;padding:10px
                 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#999;
                 color:#fff;background-color:#26ADE4;border-top-width:1px;border-bottom-width:1px;border-left-width: 1px;border-right-width: 1px;}
-                .tg .tg-baqh{text-align:center;vertical-align:top}
                 .tg .tg-vn4c{background-color:#D2E4FC}
-                .tg .tg-yw4l{vertical-align:middle;text-align:center;}
+                .tg .tg-yw4l{vertical-align:middle;}
                 .tg .tg-yw4l-2{border-bottom-width:0px !important}
                 .tg .tg-yw4l-3{border-top-width:0px !important;border-bottom-width:0px !important}
-                .tg .tg-6k2t{background-color:#D2E4FC;vertical-align:top;text-align:center}
+                .tg .tg-6k2t{background-color:#D2E4FC;vertical-align:top;}
             </style>
         </template>
+
+        <record id="reports_landscape" model="report.paperformat">
+            <field name="name">Landscape</field>
+            <field name="default" eval="True"/>
+            <field name="format">Letter</field>
+            <field name="orientation">Landscape</field>
+        </record>
 
     </data>
 </openerp>

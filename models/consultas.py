@@ -103,5 +103,5 @@ class consulta_proyeccion(models.Model):
     year = fields.Selection([(num, str(num)) for num in range(2000, (datetime.now().year) + 1)], string='Año')
 
     _sql_constraints = [
-        ('unique_name', "unique(tratamiento_id,referimiento_id,proyeccion,year,programa)","Proyeccion Existe")
+        ('unique_name', "unique(tratamiento_id,referimiento_id,proyeccion,year,programa)", "Proyeccion Existe")
     ]
