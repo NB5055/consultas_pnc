@@ -1,7 +1,5 @@
 from openerp import models, fields, api
 from openerp.exceptions import UserError
-from datetime import datetime
-import calendar
 
 
 class InformeReportConsolidado(models.TransientModel):

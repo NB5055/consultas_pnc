@@ -7,9 +7,10 @@
             <field name="arch" type="xml">
                 <form string="Informe">
                     <sheet>
-                        <group col="4">
+                        <group col="6">
                             <field name="fecha_inicial"/>
                             <field name="fecha_final"/>
+                            <field name="comparativo"/>
                         </group>
                         <field name="programa_ids" widget="many2many_tags" placeholder="Programas"
                                options="{'no_quick_create': True, 'no_create_edit' : True}"/>
@@ -148,13 +149,6 @@
                 .tg .tg-6k2t{background-color:#D2E4FC;vertical-align:top;}
             </style>
         </template>
-
-        <record id="reports_landscape" model="report.paperformat">
-            <field name="name">Landscape</field>
-            <field name="default" eval="True"/>
-            <field name="format">Letter</field>
-            <field name="orientation">Landscape</field>
-        </record>
 
     </data>
 </openerp>

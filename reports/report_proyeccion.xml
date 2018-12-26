@@ -8,7 +8,6 @@
                 report_type="qweb-html"
                 name="consultas_pnc.report_proyeccion"
                 menu="False"
-                paperformat="consultas_pnc.reports_landscape"
         />
 
         <template id="consultas_pnc.report_proyeccion">
@@ -121,10 +120,10 @@
                                     <t t-esc="proyeccion_ano"/>
                                 </th>
                                 <th class="tg-yw4l">
-                                    <t t-esc="'{:,.2f}'.format(float(porcentaje_mes))"/> %
+                                    <t t-esc="'{:,.2f}'.format(float(porcentaje_mes or 0))"/> %
                                 </th>
                                 <th class="tg-yw4l">
-                                    <t t-esc="'{:,.2f}'.format((porcentaje_ano))"/> %
+                                    <t t-esc="'{:,.2f}'.format((porcentaje_ano or 0))"/> %
                                 </th>
                             </tr>
                         </table>
