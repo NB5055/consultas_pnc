@@ -96,8 +96,8 @@
                                         </tr>
 
                                         <t t-set='count' t-value='count+1'/>
-                                        <t t-set="acumulado_mes" t-value="acumulado_mes + int(obj[1])"/>
-                                        <t t-set="acumulado_ano" t-value="acumulado_ano + int(obj[4])"/>
+                                        <t t-set="acumulado_mes" t-value="acumulado_mes + int(obj[1] or 0)"/>
+                                        <t t-set="acumulado_ano" t-value="acumulado_ano + int(obj[4] or 0)"/>
                                         <t t-set="proyeccion_mes"
                                            t-value="proyeccion_mes + int(obj[6])"/>
                                         <t t-set="proyeccion_ano"
