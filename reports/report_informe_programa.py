@@ -19,7 +19,7 @@ class InformeReport(models.TransientModel):
     fecha_inicial = fields.Date(string="Fecha Inicial", required=True)
     fecha_final = fields.Date(string="Fecha Final", required=True)
     programa_ids = fields.Many2many('programa.programa', string="Programas", required=True)
-    comparativo = fields.Boolean(string="Comparativo", default=False)
+    comparativo = fields.Boolean(string="Unificado Centro RBC", default=False)
 
     def _print_report(self, data):
         raise UserError('Error!')

@@ -25,7 +25,11 @@ class ProyeccionReport(models.TransientModel):
     year = fields.Selection([(num, str(num)) for num in range(2000, (datetime.now().year) + 1)], string='Año',
                             required=True, default=datetime.now().year)
     programa_ids = fields.Many2many('programa.programa', string="Programas", required=True)
-    month_string = fields.Char(string='Month String')
+    month_string = fields.Char(string='Month String', compute="_get_month_string")
+
+    def _get_month_string(self):
+        labels = self.fields_get(["month"])['month']['selection']
+        self.month_string = [x[1] for x in labels if x[0] == self.month][0]
 
     def _print_report(self, data):
         raise UserError('Error!')
@@ -54,7 +58,7 @@ class ProyeccionReport(models.TransientModel):
                 union
                     (select ct.name  as tratamiento,sum(o.atendidos) as sumatoria,programa as programa,ct.id as consulta_id,
                             (select sum(atendidos) from operativos 
-                                where programa = """ + str(programa) + """ 
+                                where programa = """ + str(programa) + """ and name = ct.id 
                                 and extract(year from fecha) = '""" + str(self.year) + """') as year,
                             (coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
             programa) + """ and tratamiento_id = ct.id and year = '""" + str(self.year) + """'),0)) as proyeccion_year,

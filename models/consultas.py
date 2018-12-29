@@ -21,7 +21,7 @@ class consultas_consultas(models.Model):
     referimiento = fields.One2many("consultas.referimiento.line", 'consulta_id',
                                    string="Referimiento", copy=True)
     tratamiento = fields.One2many("consultas.tratamiento.line", 'consulta_id',
-                                  string="Tratamiento / Seguimiento", copy=True)
+                                  string="Tratamiento / Seguimiento / Referimiento", copy=True)
     employee_id = fields.Many2one("hr.employee", string="Médico / Profesor",
                                   default=lambda self: self._get_employee())
 
