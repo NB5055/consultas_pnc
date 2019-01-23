@@ -103,11 +103,11 @@
                                         <t t-if="consulta[0] == tratamiento.name">
                                             <td t-att-class='cl'>
                                                 <span t-esc="consulta[1]"/>
-                                                <t t-set="acumulado_mes" t-value="acumulado_mes + consulta[1]"/>
+                                                <t t-set="acumulado_mes" t-value="acumulado_mes + (consulta[1] or 0.0)"/>
                                             </td>
                                             <td t-att-class='cl'>
                                                 <span t-esc="consulta[4]"/>
-                                                <t t-set="acumulado_ano" t-value="acumulado_ano + consulta[4]"/>
+                                                <t t-set="acumulado_ano" t-value="acumulado_ano + (consulta[4] or 0.0)"/>
                                             </td>
                                         </t>
                                     </t>
@@ -207,8 +207,8 @@
                             <t t-foreach="docs.programa_ids" t-as="programa">
                                 <t t-foreach="consultas.get(programa.id)" t-as="consulta_ids">
                                     <t t-foreach="consulta_ids" t-as="consulta">
-                                        <t t-set="total_acumulado_mes" t-value="total_acumulado_mes + consulta[1]"/>
-                                        <t t-set="total_acumulado_ano" t-value="total_acumulado_ano + consulta[4]"/>
+                                        <t t-set="total_acumulado_mes" t-value="total_acumulado_mes + (consulta[1] or 0.0)"/>
+                                        <t t-set="total_acumulado_ano" t-value="total_acumulado_ano + (consulta[4] or 0.0)"/>
                                     </t>
                                     <th>
                                         <span t-esc="total_acumulado_mes"/>
@@ -231,8 +231,8 @@
                             <t t-foreach="docs.programa_ids" t-as="programa">
                                 <t t-foreach="consultas.get(programa.id)" t-as="consulta_ids">
                                     <t t-foreach="consulta_ids" t-as="consulta">
-                                        <t t-set="total_proyeccion_mes" t-value="total_proyeccion_mes + consulta[1]"/>
-                                        <t t-set="total_proyeccion_ano" t-value="total_proyeccion_ano + consulta[4]"/>
+                                        <t t-set="total_proyeccion_mes" t-value="total_proyeccion_mes + (consulta[1] or 0.0)"/>
+                                        <t t-set="total_proyeccion_ano" t-value="total_proyeccion_ano + (consulta[4] or 0.0)"/>
                                     </t>
                                     <th>
                                         <span t-esc="total_proyeccion_mes"/>
