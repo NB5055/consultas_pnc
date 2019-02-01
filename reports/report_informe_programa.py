@@ -1,5 +1,9 @@
 from openerp import models, fields, api
 from openerp.exceptions import UserError
+from datetime import datetime as dt
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
+import calendar
+
 
 
 def no_operations(self, obj, programa):
@@ -27,18 +31,23 @@ class InformeReport(models.TransientModel):
     @api.one
     def get_consultas(self, programa):
         year = fields.date.today().year
+        start_date = dt.strptime(self.fecha_inicial, DATE_FORMAT)
+        end_date = dt.strptime(self.fecha_final, DATE_FORMAT)
+        end_day = calendar.monthrange(end_date.year, end_date.month)[1]
+
         query = """(select ct.name as tratamiento,count(ct.name) as sumatoria,pp.id as programa,ct.id as consulta_id,
                            (select count(ct2.name) from consultas_consultas cc
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                     	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
                     	left join programa_programa pp on cc.programa = pp.id
                     	where programa = """ + str(programa) + """ and ct2.id = ct.id
-                    	 and extract(year from fecha) = '""" + str(year) + """'
+                    	 and fecha >= '""" + str(start_date.year) + """-01-01' 
+                    	 and fecha <= '"""+str(end_date.year)+"""-"""+str(end_date.month)+"""-"""+str(end_day)+"""'
                     	group by ct.name) as year,
                     	(coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(year) + """'),0)) as proyeccion_year,
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(end_date.year) + """'),0)) as proyeccion_year,
                     	(coalesce(((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(year) + """') / 10),0)) as proyeccion_mes
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(end_date.year) + """') / 10),0)) as proyeccion_mes
                     from consultas_consultas cc
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                     	inner join consultas_tratamiento ct on ctl.name = ct.id
@@ -50,11 +59,12 @@ class InformeReport(models.TransientModel):
                     (select ct.name  as tratamiento,sum(o.atendidos) as sumatoria,programa as programa,ct.id as consulta_id,
                             (select sum(atendidos) from operativos 
                                 where programa = """ + str(programa) + """ 
-                                and extract(year from fecha) = '""" + str(year) + """') as year,
+                                and fecha >= '""" + str(start_date.year) + """-01-01' 
+                    	 and fecha <= '"""+str(end_date.year)+"""-"""+str(end_date.month)+"""-"""+str(end_day)+"""') as year,
                             (coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(year) + """'),0)) as proyeccion_year,
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(end_date.year) + """'),0)) as proyeccion_year,
                     	(coalesce(((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(year) + """') / 10),0)) as proyeccion_mes
+            programa) + """ and tratamiento_id = ct.id and year = '""" + str(end_date.year) + """') / 10),0)) as proyeccion_mes
                           from operativos o
                           join consultas_tratamiento ct on o.name = ct.id
                           where fecha >= '""" + self.fecha_inicial + """' and
@@ -68,7 +78,8 @@ class InformeReport(models.TransientModel):
             return item[0]
 
         obj = self.env.cr.fetchall()
-        no_operations(self, obj, programa)
+
+        # no_operations(self, obj, programa)
         return sorted(obj, key=getKey)
 
     def get_tratamientos(self):
@@ -78,6 +89,7 @@ class InformeReport(models.TransientModel):
         consultas = {}
         for programa in self.programa_ids:
             consultas[programa.id] = self.get_consultas(programa.id)
+
         return consultas
 
     @api.multi

@@ -24,6 +24,7 @@
                 </div>
                 <h3>Patronato Nacional de Ciegos, INC</h3>
                 Estadistica por Programa
+                Informe General
                 <p>Desde
                     <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_inicial,'%Y-%m-%d'))"/>
                     hasta
