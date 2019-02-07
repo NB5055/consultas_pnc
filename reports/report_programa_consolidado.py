@@ -1,5 +1,8 @@
 from openerp import models, fields, api
 from openerp.exceptions import UserError
+from datetime import datetime as dt
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
+import calendar
 
 
 class InformeReportConsolidado(models.TransientModel):
@@ -14,6 +17,10 @@ class InformeReportConsolidado(models.TransientModel):
 
     @api.one
     def get_consultas(self):
+        start_date = dt.strptime(self.fecha_inicial, DATE_FORMAT)
+        end_date = dt.strptime(self.fecha_final, DATE_FORMAT)
+        end_day = calendar.monthrange(end_date.year, end_date.month)[1]
+
         query = """select ct.id,ct.name,(coalesce((select sum(atendidos) 
                         from operativos op where ct.id = op.name and 
                                      fecha >= '""" + self.fecha_inicial + """' and 
@@ -22,16 +29,25 @@ class InformeReportConsolidado(models.TransientModel):
                         inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id 
                         where ctl.name = ct.id and fecha >= '""" + self.fecha_inicial + """' and 
                                                    fecha <= '""" + self.fecha_final + """')),
-                    (coalesce((select sum(atendidos) from operativos op where ct.id = op.name),0)+ 
+                    (coalesce((select sum(atendidos) from operativos op 
+                        where ct.id = op.name
+                        and fecha >= '""" + str(start_date.year) + """-01-01' 
+                    	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
+            end_day) + """'),0)+ 
                     (select count(cc.id) from consultas_consultas cc 
                         inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id 
-                        where ctl.name = ct.id))
+                        where ctl.name = ct.id
+                        and fecha >= '""" + str(start_date.year) + """-01-01' 
+                    	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
+            end_day) + """'))
                 from consultas_tratamiento ct group by ct.id"""
 
         self.env.cr.execute(query)
         def getKey(item):
             return item[0]
+
         obj = self.env.cr.fetchall()
+        print(obj.mapped)
         return sorted(obj, key=getKey)
 
     @api.multi

@@ -79,7 +79,7 @@ class InformeReport(models.TransientModel):
 
         obj = self.env.cr.fetchall()
 
-        # no_operations(self, obj, programa)
+        no_operations(self, obj, programa)
         return sorted(obj, key=getKey)
 
     def get_tratamientos(self):

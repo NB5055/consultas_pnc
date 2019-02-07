@@ -42,31 +42,35 @@ class ProyeccionReport(models.TransientModel):
                     	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
                     	left join programa_programa pp on cc.programa = pp.id
                     	where programa = """ + str(programa) + """ and ct2.id = ct.id
-                    	 and extract(year from fecha) = '""" + str(self.year) + """'
+                    	 and extract(year from fecha) = """ + str(self.year) + """
+                    	 and extract(month from fecha) <= """ + str(self.month) + """
                     	group by ct.name) as year,
                     	(coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(self.year) + """'),0)) as proyeccion_year,
+            programa) + """ and tratamiento_id = ct.id and year = """ + str(self.year) + """),0)) as proyeccion_year,
                     	(coalesce(((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(self.year) + """') / 10),0)) as proyeccion_mes
+            programa) + """ and tratamiento_id = ct.id and year = """ + str(self.year) + """) / 10),0)) as proyeccion_mes
                     from consultas_consultas cc
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                     	inner join consultas_tratamiento ct on ctl.name = ct.id
                     	left join programa_programa pp on cc.programa = pp.id
-                    	where extract(month from fecha) = '""" + self.month + """' 
-                    	and programa = """ + str(programa) + """
+                    	where extract(month from fecha) = """ + self.month + """ and
+                    	extract(year from fecha) = """ + str(self.year) + """ and
+                    	programa = """ + str(programa) + """
                     	group by ct.name,pp.id,ct.id order by ct.name,pp.id)
                 union
                     (select ct.name  as tratamiento,sum(o.atendidos) as sumatoria,programa as programa,ct.id as consulta_id,
                             (select sum(atendidos) from operativos 
                                 where programa = """ + str(programa) + """ and name = ct.id 
-                                and extract(year from fecha) = '""" + str(self.year) + """') as year,
+                                and extract(year from fecha) = """ + str(self.year) + """
+                                and extract(month from fecha) <= """ + str(self.month) + """) as year,
                             (coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(self.year) + """'),0)) as proyeccion_year,
+            programa) + """ and tratamiento_id = ct.id and year = """ + str(self.year) + """),0)) as proyeccion_year,
                     	(coalesce(((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(self.year) + """') / 10),0)) as proyeccion_mes
+            programa) + """ and tratamiento_id = ct.id and year = """ + str(self.year) + """) / 10),0)) as proyeccion_mes
                           from operativos o
                           join consultas_tratamiento ct on o.name = ct.id
-                          where extract(month from fecha) = '""" + self.month + """' and
+                          where extract(month from fecha) = """ + self.month + """ and
+                          extract(year from fecha) = """ + str(self.year) + """ and
                                 programa = """ + str(programa) + """
                           group by ct.name,programa,ct.id)
                 """
@@ -76,6 +80,7 @@ class ProyeccionReport(models.TransientModel):
             return item[0]
 
         obj = self.env.cr.fetchall()
+        no_operations(self, obj, programa)
         return sorted(obj, key=getKey)
 
     @api.multi
@@ -86,4 +91,3 @@ class ProyeccionReport(models.TransientModel):
             'target': 'new',
             'report_type': 'qweb-html',
         }
-

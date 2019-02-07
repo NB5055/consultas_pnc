@@ -29,7 +29,7 @@
             <field name="name">proyeccion.report.programa</field>
             <field name="model">proyeccion.report.programa</field>
             <field name="arch" type="xml">
-                <form string="Cierre">
+                <form string="">
                     <sheet>
                         <group col="4">
                             <field name="month"/>
@@ -100,7 +100,7 @@
         </record>
 
         <record id="proyeccion_action" model="ir.actions.act_window">
-            <field name="name">Proyeccion</field>
+            <field name="name">Resultados y Proyecciones</field>
             <field name="res_model">proyeccion.report.programa</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>

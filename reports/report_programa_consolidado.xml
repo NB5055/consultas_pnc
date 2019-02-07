@@ -24,7 +24,7 @@
                 </div>
                 <h3>Patronato Nacional de Ciegos, INC</h3>
                 Informe Consolidado
-                <p>Desde
+                <p>
                     <p>Desde
                         <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_inicial,'%Y-%m-%d'))"/>
                         hasta
@@ -38,8 +38,8 @@
                         <th class="tg-yw4l-2" colspan="2">Acumulado</th>
                     </tr>
                     <tr>
-                        <th class="tg-yw4l-3">Mes</th>
-                        <th class="tg-yw4l-3">Año</th>
+                        <th class="tg-yw4l-3">Periodo</th>
+                        <th class="tg-yw4l-3">Total</th>
                     </tr>
                     <t t-set='count' t-value='1'/>
                     <t t-set="total_mes" t-value="0"/>
