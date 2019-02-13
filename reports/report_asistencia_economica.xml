@@ -112,10 +112,15 @@
                                 <t t-set="total" t-value="total + asistencia_id.monto"/>
                             </t>
                             <tr>
-                                <th class="tg-yw4l" colspan="3">Totales</th>
-                                <th class="tg-yw4l" colspan="2">
-                                    <t t-esc="total"/>
+                                <th colspan="3" style="text-align:right !important;">
+                                    <strong>Total :</strong>
                                 </th>
+                                <th class="tg-yw4l" style="text-align:left !important;">
+                                    <strong>
+                                        <t t-esc="total"/>
+                                    </strong>
+                                </th>
+                                <th></th>
                             </tr>
                         </table>
                         <br/>
