@@ -78,6 +78,7 @@ class consultas_tratamiento(models.Model):
     name = fields.Char(string="Tratamiento")
     proyeccion = fields.One2many('consultas.proyeccion', 'tratamiento_id',
                                  string="Proyeccion Anual")
+    programa_ids = fields.Many2many('programa.programa', string="Programas")
     _sql_constraints = [
         ('unique_name', 'unique(name)', """Tratamiento Existe""")
     ]

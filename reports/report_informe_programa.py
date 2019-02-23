@@ -5,13 +5,12 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 import calendar
 
 
-
 def no_operations(self, obj, programa):
     departamento = []
     for ob in obj:
         departamento.append(ob[0])
     for t in self.env['consultas.tratamiento'].search([]):
-        if t.name not in departamento:
+        if t.name not in departamento and programa in t.programa_ids.ids:
             obj.append(tuple((t.name, 0, programa, t.id, 0, 0, 0)))
 
 
@@ -42,7 +41,8 @@ class InformeReport(models.TransientModel):
                     	left join programa_programa pp on cc.programa = pp.id
                     	where programa = """ + str(programa) + """ and ct2.id = ct.id
                     	 and fecha >= '""" + str(start_date.year) + """-01-01' 
-                    	 and fecha <= '"""+str(end_date.year)+"""-"""+str(end_date.month)+"""-"""+str(end_day)+"""'
+                    	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
+            end_day) + """'
                     	group by ct.name) as year,
                     	(coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
             programa) + """ and tratamiento_id = ct.id and year = '""" + str(end_date.year) + """'),0)) as proyeccion_year,
@@ -60,7 +60,8 @@ class InformeReport(models.TransientModel):
                             (select sum(atendidos) from operativos 
                                 where programa = """ + str(programa) + """ 
                                 and fecha >= '""" + str(start_date.year) + """-01-01' 
-                    	 and fecha <= '"""+str(end_date.year)+"""-"""+str(end_date.month)+"""-"""+str(end_day)+"""') as year,
+                    	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
+            end_day) + """') as year,
                             (coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
             programa) + """ and tratamiento_id = ct.id and year = '""" + str(end_date.year) + """'),0)) as proyeccion_year,
                     	(coalesce(((select proyeccion from consultas_proyeccion where programa = """ + str(

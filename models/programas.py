@@ -17,6 +17,7 @@ class programa_programa(models.Model):
                                     string="Médico / Profesor")
     notas = fields.Text(string="Notas")
     paciente_id = fields.Many2one("ficha.paciente")
+    tratamiento_ids = fields.Many2many('consultas.tratamiento', string="Tratamientos")
 
     _sql_constraints = [
             ('name_uniq', 'unique(name)', "Este programa ya existe")

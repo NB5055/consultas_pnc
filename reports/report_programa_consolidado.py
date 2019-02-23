@@ -47,7 +47,6 @@ class InformeReportConsolidado(models.TransientModel):
             return item[0]
 
         obj = self.env.cr.fetchall()
-        print(obj.mapped)
         return sorted(obj, key=getKey)
 
     @api.multi

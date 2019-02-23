@@ -98,15 +98,24 @@
                         <group>
                             <field name="name"/>
                         </group>
-                        <group>
-                            <field name="proyeccion">
-                                <tree editable="top">
-                                    <field name="proyeccion"/>
-                                    <field name="year"/>
-                                    <field name="programa"/>
-                                </tree>
-                            </field>
-                        </group>
+                        <notebook>
+                            <page string="Proyeccion">
+                                <field name="proyeccion">
+                                    <tree editable="top">
+                                        <field name="proyeccion"/>
+                                        <field name="year"/>
+                                        <field name="programa"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Programas">
+                                <field name="programa_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>

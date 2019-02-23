@@ -14,16 +14,25 @@
                             <field name="name"/>
                             <field name="encargado"/>
                             <field name="provincia" widget="many2many_tags"/>
-                            <field name="participantes" readonly="1">
-                                <tree string="Gastos Fijos">
-                                    <field name="name"/>
-                                    <field name="job_id"/>
-                                </tree>
-                            </field>
-                        </group>
-                        <group>
                             <field name="notas"/>
                         </group>
+                        <notebook>
+                            <page string="Médico / Profesor">
+                                <field name="participantes" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="job_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Tratamientos">
+                                <field name="tratamiento_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
