@@ -5,13 +5,14 @@ from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 import calendar
 
 
-def no_operations(self, obj, programa):
+def no_operations(self, obj, programa, year):
     departamento = []
     for ob in obj:
         departamento.append(ob[0])
     for t in self.env['consultas.tratamiento'].search([]):
         if t.name not in departamento and programa in t.programa_ids.ids:
-            obj.append(tuple((t.name, 0, programa, t.id, 0, 0, 0)))
+            proyeccion = t.proyeccion.filtered(lambda x: year == x.year)
+            obj.append(tuple((t.name, 0, programa, t.id, 0, proyeccion.proyeccion, proyeccion.proyeccion / 10)))
 
 
 class InformeReport(models.TransientModel):
@@ -80,17 +81,20 @@ class InformeReport(models.TransientModel):
 
         obj = self.env.cr.fetchall()
 
-        no_operations(self, obj, programa)
+        no_operations(self, obj, programa, end_date.year)
         return sorted(obj, key=getKey)
 
-    def get_tratamientos(self):
-        return self.env['consultas.tratamiento'].search([], order="name")
+    def get_tratamientos(self, consultas):
+        tratamiento_ids = []
+        for consulta in consultas:
+            for tratamiento in consultas[consulta][0]:
+                tratamiento_ids.append(tratamiento[3])
+        return self.env['consultas.tratamiento'].search([('id', 'in', tratamiento_ids)], order="name")
 
     def get_consultas_comparativo(self):
         consultas = {}
         for programa in self.programa_ids:
             consultas[programa.id] = self.get_consultas(programa.id)
-
         return consultas
 
     @api.multi

@@ -6,7 +6,7 @@ class Operativos(models.Model):
     _description = "Operativos"
     _order = "name, fecha"
 
-    name = fields.Many2one("consultas.tratamiento", string="Consulta")
-    atendidos = fields.Integer(string="Cantidad")
-    fecha = fields.Date(string="Fecha")
-    programa = fields.Many2one('programa.programa', string="Programa")
+    name = fields.Many2one("consultas.tratamiento", string="Consulta", required=True)
+    atendidos = fields.Integer(string="Cantidad", required=True)
+    fecha = fields.Date(string="Fecha", required=True)
+    programa = fields.Many2one('programa.programa', string="Programa", required=True)

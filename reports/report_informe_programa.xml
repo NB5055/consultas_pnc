@@ -53,11 +53,11 @@
                                     <th class="tg-yw4l-2" colspan="2">Porcentaje</th>
                                 </tr>
                                 <tr>
-                                    <th class="tg-yw4l-3">Mes</th>
+                                    <th class="tg-yw4l-3">Periodo</th>
                                     <th class="tg-yw4l-3">Año</th>
-                                    <th class="tg-yw4l-3">Mes</th>
+                                    <th class="tg-yw4l-3">Periodo</th>
                                     <th class="tg-yw4l-3">Año</th>
-                                    <th class="tg-yw4l-3">Mes</th>
+                                    <th class="tg-yw4l-3">Periodo</th>
                                     <th class="tg-yw4l-3">Año</th>
                                 </tr>
                                 <t t-set='count' t-value='1'/>
@@ -136,12 +136,12 @@
                                     <t t-esc="proyeccion_ano"/>
                                 </th>
                                 <th class="tg-yw4l">
-                                    <t t-esc="'{:,.2f}'.format(float(porcentaje_mes))"/>
-                                    %
+                                    <!--<t t-esc="'{:,.2f}'.format(float(porcentaje_mes))"/>-->
+                                    <!--%-->
                                 </th>
                                 <th class="tg-yw4l">
-                                    <t t-esc="'{:,.2f}'.format((porcentaje_ano))"/>
-                                    %
+                                    <!--<t t-esc="'{:,.2f}'.format((porcentaje_ano))"/>-->
+                                    <!--%-->
                                 </th>
                             </tr>
                         </t>

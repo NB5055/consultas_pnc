@@ -80,7 +80,7 @@ class ProyeccionReport(models.TransientModel):
             return item[0]
 
         obj = self.env.cr.fetchall()
-        no_operations(self, obj, programa)
+        no_operations(self, obj, programa, self.year)
         return sorted(obj, key=getKey)
 
     @api.multi

@@ -34,32 +34,21 @@ class ficha_paciente(models.Model):
     ingresos = fields.Float(string="Ingresos")
     otros = fields.Float(string="Otros Ingresos")
     cohabitantes = fields.Integer(string="Cohabitantes")
-    vivienda = fields.Selection([('p', 'Propia'),
-                                 ('a', 'Alquilada'),
-                                 ('p', 'Prestada')], string="Vivienda",
+    vivienda = fields.Selection([('p', 'Propia'), ('a', 'Alquilada'), ('p', 'Prestada')], string="Vivienda",
                                 default='p')
     renta = fields.Float(string='Costo Renta')
-    vehiculo = fields.Selection([('s', 'Si'), ('n', 'No')], string="Vehiculo",
-                                default='n')
+    vehiculo = fields.Selection([('s', 'Si'), ('n', 'No')], string="Vehiculo", default='n')
     trabajo = fields.Many2one('ficha.paciente.trabajo', string="Trabajo")
     seguro = fields.Many2one('ficha.paciente.seguro', string="Seguro")
-    gastos_fijos = fields.One2many('ficha.paciente.gasto.fijo',
-                                   'gasto_id', string="Gastos Fijos")
-    ayuda_economica = fields.One2many('ficha.paciente.ayuda.economica',
-                                      'ayuda_economica_id',
-                                      string="Ayuda Economica")
-    enfermedades = fields.One2many('ficha.paciente.enfermedades.line',
-                                   'enfermedad_id', string="Condiciones")
-    telefonos = fields.One2many('ficha.paciente.telefono', 'telefono_id',
-                                string="Telefonos")
-    lugar_nacimiento = fields.Many2one('region.provincia',
-                                       string="Lugar de Nacimiento")
-    display_name = fields.Char(string="Paciente",
-                               compute='_compute_display_name', search="_search_display_name")
-    image = fields.Binary("Image", attachment=True,
+    gastos_fijos = fields.One2many('ficha.paciente.gasto.fijo', 'gasto_id', string="Gastos Fijos")
+    ayuda_economica = fields.One2many('ficha.paciente.ayuda.economica', 'ayuda_economica_id', string="Ayuda Economica")
+    enfermedades = fields.One2many('ficha.paciente.enfermedades.line', 'enfermedad_id', string="Condiciones")
+    telefonos = fields.One2many('ficha.paciente.telefono', 'telefono_id', string="Telefonos")
+    lugar_nacimiento = fields.Many2one('region.provincia', string="Lugar de Nacimiento")
+    display_name = fields.Char(string="Paciente", compute='_compute_display_name', search="_search_display_name")
+    image = fields.Binary("Image", attachment=True, default=lambda self: self._get_default_image(True),
                           help="""This field holds the image used as avatar for this contact,"""
-                               """limited to 1024x1024px""",
-                          default=lambda self: self._get_default_image(True))
+                               """limited to 1024x1024px""")
     image_medium = fields.Binary("Medium-sized image",
                                  compute='_compute_images', inverse='_inverse_image_medium',
                                  store=True, attachment=True,
@@ -171,12 +160,12 @@ class ficha_paciente_ayuda_economica(models.Model):
 
     ayuda_economica_id = fields.Many2one('ficha.paciente',
                                          string="Ayuda Economica ID")
-    name = fields.Many2one('res.partner', string="Nombre Pariente",required=True,
+    name = fields.Many2one('res.partner', string="Nombre Pariente", required=True,
                            help="Persona que Ofrece la ayuda")
     parentesco = fields.Many2one('ficha.paciente.parentesco', required=True,
                                  string="Parentesco")
     monto = fields.Float(string="Aporte", required=True)
-    fecha = fields.Date(string="Fecha Ayuda", default=fields.Date.today())
+    fecha = fields.Date(string="Fecha Ayuda", default=fields.Date.context_today)
 
 
 class ficha_paciente_parentesco(models.Model):

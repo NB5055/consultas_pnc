@@ -99,10 +99,11 @@ class consulta_proyeccion(models.Model):
 
     tratamiento_id = fields.Many2one("consultas.tratamiento")
     referimiento_id = fields.Many2one("consultas.referimiento")
-    proyeccion = fields.Integer(string="Proyeccion")
-    programa = fields.Many2one("programa.programa", string="Programa")
-    year = fields.Selection([(num, str(num)) for num in range(2000, (datetime.now().year) + 1)], string='Año')
+    proyeccion = fields.Integer(string="Proyeccion", required=True)
+    programa = fields.Many2one("programa.programa", string="Programa", required=True)
+    year = fields.Selection([(num, str(num)) for num in range(2000, (datetime.now().year) + 1)], string='Año',
+                            required=True)
 
     _sql_constraints = [
-        ('unique_name', "unique(tratamiento_id,referimiento_id,proyeccion,year,programa)", "Proyeccion Existe")
+        ('unique_name', "unique(tratamiento_id,proyeccion,year,programa)", "Proyeccion Existe")
     ]

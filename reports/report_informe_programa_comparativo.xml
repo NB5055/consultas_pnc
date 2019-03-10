@@ -84,7 +84,7 @@
 
                         <t t-set='count' t-value='1'/>
 
-                        <tr t-foreach="docs.get_tratamientos()" t-as="tratamiento">
+                        <tr t-foreach="docs.get_tratamientos(consultas)" t-as="tratamiento">
                             <t t-if="(count%2) == 1">
                                 <t t-set="cl" t-value="'tg-6k2t'"/>
                             </t>
@@ -287,20 +287,20 @@
                                         </t>
                                     </t>
                                     <th>
-                                        <span t-esc="'{:,.2f}'.format(total_porciento_mes)"/>
+                                        <!--<span t-esc="'{:,.2f}'.format(total_porciento_mes)"/>-->
                                     </th>
                                     <th>
-                                        <span t-esc="'{:,.2f}'.format(total_porciento_mes)"/>
+                                        <!--<span t-esc="'{:,.2f}'.format(total_porciento_mes)"/>-->
                                     </th>
                                     <t t-set="total_general_porciento_mes" t-value="total_general_porciento_mes + total_porciento_mes"/>
                                     <t t-set="total_general_porciento_ano" t-value="total_general_porciento_ano + total_porciento_mes"/>
                                 </t>
                             </t>
                             <th>
-                                <span t-esc="'{:,.2f}'.format(total_general_porciento_mes)"/> %
+                                <!--<span t-esc="'{:,.2f}'.format(total_general_porciento_mes)"/> %-->
                             </th>
                             <th>
-                                <span t-esc="'{:,.2f}'.format(total_general_porciento_ano)"/> %
+                                <!--<span t-esc="'{:,.2f}'.format(total_general_porciento_ano)"/> %-->
                             </th>
                         </tr>
                     </t>
