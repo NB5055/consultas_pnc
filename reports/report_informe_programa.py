@@ -11,7 +11,7 @@ def no_operations(self, obj, programa, year):
         departamento.append(ob[0])
     for t in self.env['consultas.tratamiento'].search([]):
         if t.name not in departamento and programa in t.programa_ids.ids:
-            proyeccion = t.proyeccion.filtered(lambda x: year == x.year)
+            proyeccion = t.proyeccion.filtered(lambda x: year == x.year and programa == x.programa)
             obj.append(tuple((t.name, 0, programa, t.id, 0, proyeccion.proyeccion, proyeccion.proyeccion / 10)))
 
 

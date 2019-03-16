@@ -89,7 +89,6 @@ class ficha_paciente(models.Model):
 
         with open(img_path, 'rb') as f:
             image = f.read()
-        image = tools.image_colorize(image)
         return tools.image_resize_image_big(image.encode('base64'))
 
     @api.model
