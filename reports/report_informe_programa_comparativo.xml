@@ -61,22 +61,22 @@
                         </tr>
                         <tr>
                             <t t-foreach="docs.programa_ids" t-as="programa">
-                                <th class="tg-yw4l-3">Mes</th>
+                                <th class="tg-yw4l-3">Periodo</th>
                                 <th class="tg-yw4l-3">Año</th>
                             </t>
-                            <th class="tg-yw4l-3">Mes</th>
+                            <th class="tg-yw4l-3">Periodo</th>
                             <th class="tg-yw4l-3">Año</th>
                             <t t-foreach="docs.programa_ids" t-as="programa">
-                                <th class="tg-yw4l-3">Mes</th>
+                                <th class="tg-yw4l-3">Periodo</th>
                                 <th class="tg-yw4l-3">Año</th>
                             </t>
-                            <th class="tg-yw4l-3">Mes</th>
+                            <th class="tg-yw4l-3">Periodo</th>
                             <th class="tg-yw4l-3">Año</th>
                             <t t-foreach="docs.programa_ids" t-as="programa">
-                                <th class="tg-yw4l-3">Mes</th>
+                                <th class="tg-yw4l-3">Periodo</th>
                                 <th class="tg-yw4l-3">Año</th>
                             </t>
-                            <th class="tg-yw4l-3">Mes</th>
+                            <th class="tg-yw4l-3">Periodo</th>
                             <th class="tg-yw4l-3">Año</th>
                         </tr>
 
@@ -110,8 +110,12 @@
                                             <t t-set="acumulado_ano" t-value="acumulado_ano + (ano or 0.0)"/>
                                         </t>
                                     </t>
-                                    <td t-att-class='cl'><span t-esc="mes"/></td>
-                                    <td t-att-class='cl'><span t-esc="ano"/></td>
+                                    <td t-att-class='cl'>
+                                        <span t-esc="mes"/>
+                                    </td>
+                                    <td t-att-class='cl'>
+                                        <span t-esc="ano"/>
+                                    </td>
                                 </t>
                             </t>
                             <td t-att-class='cl'>
@@ -136,8 +140,12 @@
                                             <t t-set="proyeccion_ano" t-value="proyeccion_ano + (ano or 0.0)"/>
                                         </t>
                                     </t>
-                                    <td t-att-class='cl'><span t-esc="mes"/></td>
-                                    <td t-att-class='cl'><span t-esc="ano"/></td>
+                                    <td t-att-class='cl'>
+                                        <span t-esc="mes"/>
+                                    </td>
+                                    <td t-att-class='cl'>
+                                        <span t-esc="ano"/>
+                                    </td>
                                 </t>
                             </t>
                             <td t-att-class='cl'>
@@ -160,17 +168,17 @@
                                     <t t-foreach="consulta_ids" t-as="consulta">
 
                                         <t t-if="consulta[0] == tratamiento.name">
-                                                <t t-set="mes" t-value="mes + consulta[1]"/>
-                                                <t t-set="mes_eq" t-value="mes_eq + consulta[6]"/>
+                                            <t t-set="mes" t-value="mes + consulta[1]"/>
+                                            <t t-set="mes_eq" t-value="mes_eq + consulta[6]"/>
 
-                                                <t t-set="porciento_mes" t-value="porciento_mes + mes"/>
-                                                <t t-set="porciento_mes_eq" t-value="porciento_mes_eq + mes_eq"/>
+                                            <t t-set="porciento_mes" t-value="porciento_mes + mes"/>
+                                            <t t-set="porciento_mes_eq" t-value="porciento_mes_eq + mes_eq"/>
 
-                                                <t t-set="ano" t-value="ano + consulta[4]"/>
-                                                <t t-set="ano_eq" t-value="ano + consulta[5]"/>
+                                            <t t-set="ano" t-value="ano + consulta[4]"/>
+                                            <t t-set="ano_eq" t-value="ano + consulta[5]"/>
 
-                                                <t t-set="porciento_ano" t-value="porciento_ano + ano"/>
-                                                <t t-set="porciento_ano_eq" t-value="porciento_ano_eq + ano_eq"/>
+                                            <t t-set="porciento_ano" t-value="porciento_ano + ano"/>
+                                            <t t-set="porciento_ano_eq" t-value="porciento_ano_eq + ano_eq"/>
                                         </t>
                                     </t>
                                     <td t-att-class='cl'>
@@ -194,7 +202,8 @@
 
                             <td t-att-class='cl'>
                                 <t t-if="porciento_mes > 0 and porciento_mes_eq > 0">
-                                    <span t-esc="'{:,.2f}'.format((float(porciento_mes) / float(porciento_mes_eq)) * 100)"/>%
+                                    <span t-esc="'{:,.2f}'.format((float(porciento_mes) / float(porciento_mes_eq)) * 100)"/>
+                                    %
                                 </t>
                                 <t t-if="porciento_mes &lt;= 0 or porciento_mes_eq &lt;= 0">
                                     0.0%
@@ -202,7 +211,8 @@
                             </td>
                             <td t-att-class='cl'>
                                 <t t-if="porciento_ano > 0 and porciento_ano_eq > 0">
-                                    <span t-esc="'{:,.2f}'.format((float(porciento_ano) / float(porciento_ano_eq)) * 100 )"/>%
+                                    <span t-esc="'{:,.2f}'.format((float(porciento_ano) / float(porciento_ano_eq)) * 100 )"/>
+                                    %
                                 </t>
                                 <t t-if="porciento_ano &lt;= 0 or porciento_ano_eq &lt;= 0">
                                     0.0%
@@ -229,8 +239,10 @@
                             <t t-foreach="docs.programa_ids" t-as="programa">
                                 <t t-foreach="consultas.get(programa.id)" t-as="consulta_ids">
                                     <t t-foreach="consulta_ids" t-as="consulta">
-                                        <t t-set="total_acumulado_mes" t-value="total_acumulado_mes + (consulta[1] or 0.0)"/>
-                                        <t t-set="total_acumulado_ano" t-value="total_acumulado_ano + (consulta[4] or 0.0)"/>
+                                        <t t-set="total_acumulado_mes"
+                                           t-value="total_acumulado_mes + (consulta[1] or 0.0)"/>
+                                        <t t-set="total_acumulado_ano"
+                                           t-value="total_acumulado_ano + (consulta[4] or 0.0)"/>
                                     </t>
                                     <th>
                                         <span t-esc="total_acumulado_mes"/>
@@ -252,55 +264,27 @@
                             </th>
                             <t t-foreach="docs.programa_ids" t-as="programa">
                                 <t t-foreach="consultas.get(programa.id)" t-as="consulta_ids">
-                                    <t t-foreach="consulta_ids" t-as="consulta">
-                                        <t t-set="total_proyeccion_mes" t-value="total_proyeccion_mes + (consulta[1] or 0.0)"/>
-                                        <t t-set="total_proyeccion_ano" t-value="total_proyeccion_ano + (consulta[4] or 0.0)"/>
-                                    </t>
                                     <th>
-                                        <span t-esc="total_proyeccion_mes"/>
                                     </th>
                                     <th>
-                                        <span t-esc="total_proyeccion_ano"/>
                                     </th>
-                                    <t t-set="total_general_proyeccion_mes"
-                                       t-value="total_general_proyeccion_mes + total_proyeccion_mes"/>
-                                    <t t-set="total_general_proyeccion_ano"
-                                       t-value="total_general_proyeccion_ano + total_proyeccion_ano"/>
                                 </t>
                             </t>
                             <th>
-                                <span t-esc="total_general_proyeccion_mes"/>
                             </th>
                             <th>
-                                <span t-esc="total_general_proyeccion_ano"/>
                             </th>
                             <t t-foreach="docs.programa_ids" t-as="programa">
                                 <t t-foreach="consultas.get(programa.id)" t-as="consulta_ids">
-                                    <t t-foreach="consulta_ids" t-as="consulta">
-                                        <t t-if="consulta[6] > 0 and consulta[1] > 0">
-                                            <t t-set="total_porciento_mes"
-                                               t-value="total_porciento_mes + float(((float(consulta[1]) / float(consulta[6]))*100))"/>
-                                        </t>
-                                        <t t-if="consulta[5] > 0 and consulta[4] > 0">
-                                            <t t-set="total_porciento_mes"
-                                               t-value="total_porciento_mes + float(((float(consulta[4]) / float(consulta[5]))*100))"/>
-                                        </t>
-                                    </t>
                                     <th>
-                                        <!--<span t-esc="'{:,.2f}'.format(total_porciento_mes)"/>-->
                                     </th>
                                     <th>
-                                        <!--<span t-esc="'{:,.2f}'.format(total_porciento_mes)"/>-->
                                     </th>
-                                    <t t-set="total_general_porciento_mes" t-value="total_general_porciento_mes + total_porciento_mes"/>
-                                    <t t-set="total_general_porciento_ano" t-value="total_general_porciento_ano + total_porciento_mes"/>
                                 </t>
                             </t>
                             <th>
-                                <!--<span t-esc="'{:,.2f}'.format(total_general_porciento_mes)"/> %-->
                             </th>
                             <th>
-                                <!--<span t-esc="'{:,.2f}'.format(total_general_porciento_ano)"/> %-->
                             </th>
                         </tr>
                     </t>

@@ -115,16 +115,16 @@
                                     <t t-esc="acumulado_ano"/>
                                 </th>
                                 <th class="tg-yw4l">
-                                    <t t-esc="proyeccion_mes"/>
+                                    <!--<t t-esc="proyeccion_mes"/>-->
                                 </th>
                                 <th class="tg-yw4l">
-                                    <t t-esc="proyeccion_ano"/>
+                                    <!--<t t-esc="proyeccion_ano"/>-->
                                 </th>
                                 <th class="tg-yw4l">
-                                    <t t-esc="'{:,.2f}'.format(float(porcentaje_mes or 0))"/> %
+                                    <!--<t t-esc="'{:,.2f}'.format(float(porcentaje_mes or 0))"/> %-->
                                 </th>
                                 <th class="tg-yw4l">
-                                    <t t-esc="'{:,.2f}'.format((porcentaje_ano or 0))"/> %
+                                    <!--<t t-esc="'{:,.2f}'.format((porcentaje_ano or 0))"/> %-->
                                 </th>
                             </tr>
                         </table>
