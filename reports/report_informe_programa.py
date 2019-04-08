@@ -10,13 +10,6 @@ def no_operations(self, obj, programa, year):
     for ob in obj:
         departamento.append(ob[0])
     for t in self.env['consultas.tratamiento'].search([]):
-        # """(select count(ct2.name) from consultas_consultas cc
-        # inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
-        # inner join consultas_tratamiento ct2 on ctl.name = ct2.id
-        # left join programa_programa pp on cc.programa = pp.id
-        # where programa = """ + str(programa) + """ and ct2.id = ct.id
-        #                                                         and fecha >= '""" + str(year) + """-01-01'
-        #                                                         and fecha <= '""" + str(year) + """-""" + str(end_date.month) + """-""" + str(end_day)
         if t.name not in departamento and programa in t.programa_ids.ids:
             acumulado = len(self.env['consultas.tratamiento.line'].search([('consulta_id.programa', '=', programa),
                                                                      ('name', '=', t.id),
