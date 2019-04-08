@@ -186,5 +186,22 @@
             </field>
         </record>
 
+        <!--========================================================================-->
+        <!-- View Formulario consultas proyeccion-->
+        <!--========================================================================-->
+        <record id="consultas_proyeccion_form" model="ir.ui.view">
+            <field name="name">Proyeccion</field>
+            <field name="model">consultas.proyeccion</field>
+            <field name="arch" type="xml">
+                <form string="Proyeccion">
+                    <group>
+                        <field name="tratamiento_id"/>
+                        <field name="proyeccion"/>
+                        <field name="year"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
     </data>
 </openerp>

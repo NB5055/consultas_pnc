@@ -19,6 +19,8 @@ class programa_programa(models.Model):
     paciente_id = fields.Many2one("ficha.paciente")
     tratamiento_ids = fields.Many2many('consultas.tratamiento', string="Tratamientos")
 
+    proyeccion_ids = fields.One2many("consultas.proyeccion", "programa", string="Proyecciones")
+
     _sql_constraints = [
             ('name_uniq', 'unique(name)', "Este programa ya existe")
         ]

@@ -12,7 +12,7 @@
                             <field name="name"/>
                             <field name="atendidos"/>
                             <field name="fecha"/>
-                            <field name="programa"/>
+                            <field name="programa" required="1"/>
                         </group>
                     </sheet>
                 </form>

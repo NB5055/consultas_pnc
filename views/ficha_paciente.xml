@@ -46,9 +46,14 @@
                                     </group>
                                 </group>
                                 <group>
+                                    <field name="enfermedades" required="1" string="Condicion" nolabel="1">
+                                        <tree editable="top" >
+                                            <field name="name" string="Condicion" options="{'no_create_edit': True}"/>
+                                        </tree>
+                                    </field>
                                     <field name="diagnostico" colspan="4" nolabel="1">
                                         <tree editable="top" colors="red:True" style="background-color:red">
-                                            <field name="name" string="Diagnostico"/>
+                                            <field name="name" string="Diagnostico" options="{'no_create_edit': True}"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -82,13 +87,6 @@
                                     <field name="cohabitantes" />
                                     <field name="vivienda" />
                                 </group>
-                            </page>
-                            <page string="Condicion">
-                                <field name="enfermedades">
-                                    <tree editable="top">
-                                        <field name="name"/>
-                                    </tree>
-                                </field>
                             </page>
                             <page string="Historial">
                                 <field name="consultas">

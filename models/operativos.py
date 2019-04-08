@@ -9,4 +9,4 @@ class Operativos(models.Model):
     name = fields.Many2one("consultas.tratamiento", string="Consulta", required=True)
     atendidos = fields.Integer(string="Cantidad", required=True)
     fecha = fields.Date(string="Fecha", required=True)
-    programa = fields.Many2one('programa.programa', string="Programa", required=True)
+    programa = fields.Many2one('programa.programa', string="Programa")

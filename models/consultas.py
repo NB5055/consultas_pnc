@@ -105,5 +105,5 @@ class consulta_proyeccion(models.Model):
                             required=True)
 
     _sql_constraints = [
-        ('unique_name', "unique(tratamiento_id,proyeccion,year,programa)", "Proyeccion Existe")
+        ('unique_name', "unique(tratamiento_id,year,programa)", "Proyeccion Existe")
     ]

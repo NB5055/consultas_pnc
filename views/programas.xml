@@ -31,6 +31,15 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page string="Proyecciones">
+                                <field name="proyeccion_ids">
+                                    <tree default_order='tratamiento_id,year'>
+                                        <field name="tratamiento_id"/>
+                                        <field name="proyeccion"/>
+                                        <field name="year"/>
+                                    </tree>
+                                </field>
+                            </page>
                             <page string="Notas">
                                 <field name="notas"/>
                             </page>
