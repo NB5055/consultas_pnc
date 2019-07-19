@@ -67,6 +67,10 @@ class ficha_paciente(models.Model):
     state = fields.Selection([('activo', 'Activo'), ('inactivo', 'Inactivo')], string='State', default="activo")
     diagnostico = fields.One2many("consultas.diagnostico.line", 'paciente_id',
                                   string="Diagnostico", copy=True)
+    consultas_count = fields.Integer(compute="_compute_consultas_count")
+
+    def _compute_consultas_count(self):
+        self.consultas_count = len(self.consultas)
 
     @api.depends('image')
     def _compute_images(self):
@@ -86,7 +90,6 @@ class ficha_paciente(models.Model):
     def _get_default_image(self, colorize=False):
         img_path = openerp.modules.get_module_resource(
             'base', 'static/src/img', 'avatar.png')
-
         with open(img_path, 'rb') as f:
             image = f.read()
         return tools.image_resize_image_big(image.encode('base64'))
@@ -96,6 +99,17 @@ class ficha_paciente(models.Model):
         return ["|", "|", ('apellidos', operator, value),
                 ('nombre', operator, value),
                 ('name', operator, value)]
+
+    @api.multi
+    def show_complete_history(self):
+        return {
+            'name': 'Historial',
+            'res_model': 'consultas.consultas',
+            'type': 'ir.actions.act_window',
+            'domain': [('name', '=', self.id)],
+            'views': [(self.env.ref('consultas_pnc.consultas_consultas_history_tree').id, 'tree'),
+                      (self.env.ref('consultas_pnc.consultas_consultas_history_form').id, 'form')]
+        }
 
     _sql_constraints = [
         ('unique_name', 'unique(name)', """Existe otro Paciente/"""
@@ -193,7 +207,7 @@ class ficha_paciente_enfermedades_line(models.Model):
 
     enfermedad_id = fields.Many2one('ficha.paciente')
     name = fields.Many2one('ficha.paciente.enfermedades',
-                           string="Condicion", required=True)
+                           string="Condicion")
 
 
 class ficha_paciente_telefono(models.Model):

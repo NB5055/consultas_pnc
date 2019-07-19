@@ -22,7 +22,7 @@
                 </div>
                 <h3>Patronato Nacional de Ciegos, INC</h3>
                 Estadistica por Programa<br/>
-                Informe Proyecciones y Resultado
+                Informe Proyecciones y Resultados
                 <p>
                     <t t-esc="docs.month_string"/>
                     /

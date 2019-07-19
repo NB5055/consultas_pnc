@@ -2,13 +2,12 @@
 from openerp import models, fields, api
 from openerp.exceptions import UserError
 from datetime import datetime
-from .report_informe_programa import no_operations
+from .report_informe_programa import no_operations, discount_report_related
 
 
 class ProyeccionReport(models.TransientModel):
     _name = "proyeccion.report.programa"
     _description = "Informes"
-    # Informe Resultado
 
     month = fields.Selection([('1', 'Enero'),
                               ('2', 'Febrero'),
@@ -81,6 +80,7 @@ class ProyeccionReport(models.TransientModel):
 
         obj = self.env.cr.fetchall()
         no_operations(self, obj, programa, self.year)
+        obj = discount_report_related(self, obj)
         return sorted(obj, key=getKey)
 
     @api.multi

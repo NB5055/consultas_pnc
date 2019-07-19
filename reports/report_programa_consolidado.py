@@ -4,6 +4,21 @@ from datetime import datetime as dt
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 import calendar
 
+def discount_report_related(self, obj):
+    consulta_updated_ids = []
+    for consulta_id in obj:
+        tratamiento_id = self.env['consultas.tratamiento'].browse(consulta_id[0])
+        if tratamiento_id.discount_report:
+            for obj_id in obj:
+                if obj_id[0] == tratamiento_id.discount_report.id:
+                    consulta_id = (consulta_id[0],
+                                   consulta_id[1],
+                                   consulta_id[2] - obj_id[2],
+                                   consulta_id[3] - obj_id[3],)
+            consulta_updated_ids.append(consulta_id)
+        else:
+            consulta_updated_ids.append(consulta_id)
+    return consulta_updated_ids
 
 class InformeReportConsolidado(models.TransientModel):
     _name = "informe.report.programa.consolidado"
@@ -47,6 +62,7 @@ class InformeReportConsolidado(models.TransientModel):
             return item[0]
 
         obj = self.env.cr.fetchall()
+        obj = discount_report_related(self, obj)
         return sorted(obj, key=getKey)
 
     @api.multi

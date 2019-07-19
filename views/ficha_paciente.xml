@@ -13,6 +13,12 @@
                         <field name="state" clickable="True" widget="statusbar" statusbar_colors='{"activo":"green","inactivo":"red"}'/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box">
+                            <button name="show_complete_history" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="consultas_count" string="Historial" widget="statinfo"/>
+                            </button>
+                        </div>
+
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
                             <h1>
@@ -88,17 +94,16 @@
                                     <field name="vivienda" />
                                 </group>
                             </page>
-                            <page string="Historial">
-                                <field name="consultas">
-                                    <tree>
-                                        <field name="fecha"/>
-                                        <field name="programa"/>
-                                        <field name="diagnostico"/>
-                                        <field name="tratamiento"/>
-                                        <field name="referimiento"/>
-                                    </tree>
-                                </field>
-                            </page>
+                            <!--<page string="Historial">-->
+                                <!--<field name="consultas">-->
+                                    <!--<tree>-->
+                                        <!--<field name="fecha"/>-->
+                                        <!--<field name="programa"/>-->
+                                        <!--<field name="employee_id"/>-->
+                                        <!--<field name="tratamiento"/>-->
+                                    <!--</tree>-->
+                                <!--</field>-->
+                            <!--</page>-->
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

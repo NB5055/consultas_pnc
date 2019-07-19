@@ -124,7 +124,7 @@
         </record>
 
         <menuitem name="Informe General" parent="menu_reportes" id="menu_informes" action="informes_action"/>
-        <menuitem name="Informe de Resultado" parent="menu_reportes" id="menu_proyeccion" action="proyeccion_action"/>
+        <menuitem name="Informe de Resultados" parent="menu_reportes" id="menu_proyeccion" action="proyeccion_action"/>
         <menuitem name="Informe Consolidado" parent="menu_reportes" id="menu_consolidado" action="consolidado_action"/>
         <!--<menuitem name="Informe Prevencion Ceguera" parent="menu_reportes" id="menu_prevencion_ceguera"-->
         <!--action="prevencion_ceguera_action"/>-->

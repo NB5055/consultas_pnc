@@ -47,6 +47,33 @@
             </field>
         </record>
 
+        <record model='ir.ui.view' id='consultas_consultas_history_tree'>
+            <field name="name">Historial Consultas o Atenciones</field>
+            <field name="model">consultas.consultas</field>
+            <field name="arch" type="xml">
+                <tree string="Consultas" delete="false" create="false">
+                    <field name="fecha"/>
+                    <field name="programa"/>
+                    <field name="employee_id"/>
+                    <field name="tratamiento"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='consultas_consultas_history_form'>
+            <field name="name">Historial Consultas o Atenciones</field>
+            <field name="model">consultas.consultas</field>
+            <field name="inherit_id" ref="consultas_consultas_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="create">false</attribute>
+                    <attribute name="delete">false</attribute>
+                    <attribute name="edit">false</attribute>
+                </form>
+            </field>
+        </record>
+
         <record model='ir.ui.view' id='consultas_consultas_search'>
             <field name="name">Registro Consultas o Atenciones</field>
             <field name="model">consultas.consultas</field>
@@ -78,6 +105,10 @@
             <field name="res_model">consultas.consultas</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                      (0, 0, {'view_mode': 'tree', 'view_id': ref('consultas_consultas_tree')}),
+                      (0, 0, {'view_mode': 'form', 'view_id': ref('consultas_consultas_form')})]"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Haga Click Para Crear Nuevo Registro Consultas o Atenciones.
@@ -97,6 +128,7 @@
                     <sheet>
                         <group>
                             <field name="name"/>
+                            <field name="discount_report"/>
                         </group>
                         <notebook>
                             <page string="Proyeccion">

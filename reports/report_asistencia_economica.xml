@@ -67,13 +67,14 @@
                     <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_final,'%Y-%m-%d'))"/>
                 </p>
 
-                <t t-set='asistencias_ids' t-value="docs.get_asistencias()"/>
-                <t t-foreach="asistencias_ids" t-as="asistencia">
-                    <t t-foreach="asistencia" t-as="o">
+                <t t-foreach="docs.paciente_ids" t-as="paciente_id">
+                    <t t-set="paciente_asistencia_ids"
+                       t-value="docs.paciente_asistencia_ids(paciente_id)"/>
+                    <t t-if="paciente_asistencia_ids">
                         <table width="100%" class="tg">
                             <tr>
                                 <th colspan="5" class="tg-yw4l">
-                                    <span t-field="o.display_name"/>
+                                    <span t-field="paciente_id.display_name"/>
                                 </th>
                             </tr>
                             <tr>
@@ -84,7 +85,8 @@
                             </tr>
                             <t t-set='count' t-value='1'/>
                             <t t-set="total" t-value="0"/>
-                            <t t-foreach="asistencia.get(o)" t-as="asistencia_id">
+                            <t t-foreach="paciente_asistencia_ids" t-as="asistencia_id">
+
                                 <t t-if="(count%2) == 1">
                                     <t t-set="cl" t-value="'tg-6k2t'"/>
                                 </t>

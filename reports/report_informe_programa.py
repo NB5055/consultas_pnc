@@ -12,12 +12,33 @@ def no_operations(self, obj, programa, year):
     for t in self.env['consultas.tratamiento'].search([]):
         if t.name not in departamento and programa in t.programa_ids.ids:
             acumulado = len(self.env['consultas.tratamiento.line'].search([('consulta_id.programa', '=', programa),
-                                                                     ('name', '=', t.id),
-                                                                     ('consulta_id.fecha', '>=', str(year) + '-01-01'),
-                                                                     ('consulta_id.fecha', '<=',
-                                                                      str(year) + '-12-31')]))
+                                                                           ('name', '=', t.id),
+                                                                           ('consulta_id.fecha', '>=',
+                                                                            str(year) + '-01-01'),
+                                                                           ('consulta_id.fecha', '<=',
+                                                                            str(year) + '-12-31')]))
             proyeccion = t.proyeccion.filtered(lambda x: year == x.year and programa == x.programa)
             obj.append(tuple((t.name, 0, programa, t.id, acumulado, proyeccion.proyeccion, proyeccion.proyeccion / 10)))
+
+
+def discount_report_related(self, obj):
+    consulta_updated_ids = []
+    for consulta_id in obj:
+        tratamiento_id = self.env['consultas.tratamiento'].browse(consulta_id[3])
+        if tratamiento_id.discount_report:
+            for obj_id in obj:
+                if obj_id[3] == tratamiento_id.discount_report.id:
+                    consulta_id = (consulta_id[0],
+                                   consulta_id[1] - obj_id[1],
+                                   consulta_id[2],
+                                   consulta_id[3],
+                                   consulta_id[4] - obj_id[4],
+                                   consulta_id[5] - obj_id[5],
+                                   consulta_id[6] - obj_id[6],)
+            consulta_updated_ids.append(consulta_id)
+        else:
+            consulta_updated_ids.append(consulta_id)
+    return consulta_updated_ids
 
 
 class InformeReport(models.TransientModel):
@@ -87,6 +108,7 @@ class InformeReport(models.TransientModel):
         obj = self.env.cr.fetchall()
 
         no_operations(self, obj, programa, end_date.year)
+        obj = discount_report_related(self, obj)
         return sorted(obj, key=getKey)
 
     def get_tratamientos(self, consultas):

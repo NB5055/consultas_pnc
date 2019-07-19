@@ -13,23 +13,18 @@ class ReportAsistenciaEconomica(models.TransientModel):
     def _print_report(self, data):
         raise UserError('Error!')
 
-    @api.one
+    @api.multi
     def get_asistencias(self):
-        data = {}
-        paciente_ids = False
-        if self.paciente_ids:
-            paciente_ids = self.paciente_ids
-        else:
-            paciente_ids = self.env['ficha.paciente'].search([])
-        for paciente_id in paciente_ids:
-            asistencia_ids = self.env['ficha.paciente.ayuda.economica'].search([('fecha', '>=', self.fecha_inicial),
-                                                                                ('fecha', '<=', self.fecha_final),
-                                                                                ('ayuda_economica_id', '=',
-                                                                                 paciente_id.id)],
-                                                                               order="name asc,fecha asc")
-            if asistencia_ids:
-                data.update({paciente_id: asistencia_ids})
-        return data
+        if not self.paciente_ids:
+            self.paciente_ids = self.env['ficha.paciente'].search([], order="nombre asc")
+        asistencia_ids = self.env['ficha.paciente.ayuda.economica'].search([('fecha', '>=', self.fecha_inicial),
+                                                                            ('fecha', '<=', self.fecha_final)],
+                                                                           order="name asc,fecha asc")
+        return asistencia_ids
+
+    @api.multi
+    def paciente_asistencia_ids(self, paciente_id):
+        return self.get_asistencias().filtered(lambda self:self.ayuda_economica_id == paciente_id)
 
     @api.multi
     def check_report(self):
