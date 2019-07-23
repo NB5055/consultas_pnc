@@ -15,8 +15,6 @@ class ReportAsistenciaEconomica(models.TransientModel):
 
     @api.multi
     def get_asistencias(self):
-        if not self.paciente_ids:
-            self.paciente_ids = self.env['ficha.paciente'].search([], order="nombre asc")
         asistencia_ids = self.env['ficha.paciente.ayuda.economica'].search([('fecha', '>=', self.fecha_inicial),
                                                                             ('fecha', '<=', self.fecha_final)],
                                                                            order="name asc,fecha asc")
@@ -24,10 +22,12 @@ class ReportAsistenciaEconomica(models.TransientModel):
 
     @api.multi
     def paciente_asistencia_ids(self, paciente_id):
-        return self.get_asistencias().filtered(lambda self:self.ayuda_economica_id == paciente_id)
+        return self.get_asistencias().filtered(lambda self: self.ayuda_economica_id == paciente_id)
 
     @api.multi
     def check_report(self):
+        if not self.paciente_ids:
+            self.paciente_ids = self.env['ficha.paciente'].search([], order="nombre asc")
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'consultas_pnc.report_asistencia_economica',
