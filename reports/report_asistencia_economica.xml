@@ -14,6 +14,7 @@
                         </group>
                         <group>
                             <field name="paciente_ids" widget="many2many_tags"/>
+                            <field name="programa_ids" widget="many2many_tags"/>
                         </group>
 
                     </sheet>
@@ -66,67 +67,70 @@
                     hasta
                     <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_final,'%Y-%m-%d'))"/>
                 </p>
+                <t t-foreach="docs.programa_ids" t-as="programa_id">
+                    <t t-set="programa_id" t-value="programa_id"/>
+                    <t t-foreach="docs.get_paciente_filtered(programa_id)" t-as="paciente_id">
+                        <t t-set="paciente_asistencia_ids"
+                           t-value="docs.paciente_asistencia_ids(paciente_id)"/>
+                        <t t-if="paciente_asistencia_ids">
+                            <table width="100%" class="tg">
+                                <tr>
+                                    <th colspan="5" class="tg-yw4l">
+                                        <span t-field="paciente_id.display_name"/>
+                                        (<span t-esc="programa_id.name"/>)
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="tg-yw4l" colspan="2">Patrocinador</th>
+                                    <th class="tg-yw4l">Concepto</th>
+                                    <th class="tg-yw4l">Monto</th>
+                                    <th class="tg-yw4l">Fecha Ayuda</th>
+                                </tr>
+                                <t t-set='count' t-value='1'/>
+                                <t t-set="total" t-value="0"/>
+                                <t t-foreach="paciente_asistencia_ids" t-as="asistencia_id">
 
-                <t t-foreach="docs.paciente_ids" t-as="paciente_id">
-                    <t t-set="paciente_asistencia_ids"
-                       t-value="docs.paciente_asistencia_ids(paciente_id)"/>
-                    <t t-if="paciente_asistencia_ids">
-                        <table width="100%" class="tg">
-                            <tr>
-                                <th colspan="5" class="tg-yw4l">
-                                    <span t-field="paciente_id.display_name"/>
-                                </th>
-                            </tr>
-                            <tr>
-                                <th class="tg-yw4l" colspan="2">Patrocinador</th>
-                                <th class="tg-yw4l">Concepto</th>
-                                <th class="tg-yw4l">Monto</th>
-                                <th class="tg-yw4l">Fecha Ayuda</th>
-                            </tr>
-                            <t t-set='count' t-value='1'/>
-                            <t t-set="total" t-value="0"/>
-                            <t t-foreach="paciente_asistencia_ids" t-as="asistencia_id">
-
-                                <t t-if="(count%2) == 1">
-                                    <t t-set="cl" t-value="'tg-6k2t'"/>
-                                </t>
-                                <t t-if="(count%2) != 1">
-                                    <t t-set="cl" t-value="'tg-yw4l'"/>
+                                    <t t-if="(count%2) == 1">
+                                        <t t-set="cl" t-value="'tg-6k2t'"/>
+                                    </t>
+                                    <t t-if="(count%2) != 1">
+                                        <t t-set="cl" t-value="'tg-yw4l'"/>
+                                    </t>
+                                    <tr>
+                                        <td>
+                                            <t t-esc="count"/>
+                                        </td>
+                                        <td t-att-class='cl'>
+                                            <p t-esc="asistencia_id.name.name"/>
+                                        </td>
+                                        <td t-att-class='cl'>
+                                            <p t-esc="asistencia_id.parentesco.name"/>
+                                        </td>
+                                        <td t-att-class='cl'>
+                                            <p t-esc="asistencia_id.monto"/>
+                                        </td>
+                                        <td t-att-class='cl'>
+                                            <p t-esc="asistencia_id.fecha"/>
+                                        </td>
+                                    </tr>
+                                    <t t-set='count' t-value='count+1'/>
+                                    <t t-set="total" t-value="total + asistencia_id.monto"/>
                                 </t>
                                 <tr>
-                                    <td>
-                                        <t t-esc="count"/>
-                                    </td>
-                                    <td t-att-class='cl'>
-                                        <p t-esc="asistencia_id.name.name"/>
-                                    </td>
-                                    <td t-att-class='cl'>
-                                        <p t-esc="asistencia_id.parentesco.name"/>
-                                    </td>
-                                    <td t-att-class='cl'>
-                                        <p t-esc="asistencia_id.monto"/>
-                                    </td>
-                                    <td t-att-class='cl'>
-                                        <p t-esc="asistencia_id.fecha"/>
-                                    </td>
+                                    <th colspan="3" style="text-align:right !important;">
+                                        <strong>Total :</strong>
+                                    </th>
+                                    <th class="tg-yw4l" style="text-align:left !important;">
+                                        <strong>
+                                            <t t-esc="total"/>
+                                        </strong>
+                                    </th>
+                                    <th></th>
                                 </tr>
-                                <t t-set='count' t-value='count+1'/>
-                                <t t-set="total" t-value="total + asistencia_id.monto"/>
-                            </t>
-                            <tr>
-                                <th colspan="3" style="text-align:right !important;">
-                                    <strong>Total :</strong>
-                                </th>
-                                <th class="tg-yw4l" style="text-align:left !important;">
-                                    <strong>
-                                        <t t-esc="total"/>
-                                    </strong>
-                                </th>
-                                <th></th>
-                            </tr>
-                        </table>
-                        <br/>
-                        <br/>
+                            </table>
+                            <br/>
+                            <br/>
+                        </t>
                     </t>
                 </t>
             </div>
