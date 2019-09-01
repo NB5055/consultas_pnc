@@ -13,16 +13,18 @@
                         <group col="4" string="Registro Consultas o Atenciones">
 
                             <field name="fecha"/>
-                            <field name="programa" options="{'no_create_edit': True,'no_open': True}"/>
-                            <field name="name" options="{'no_create_edit': True}"/>
-                            <field name="employee_id" options="{'no_create_edit': True,'no_open': True}"/>
+                            <field name="programa" options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
+                            <field name="name" options="{'no_create_edit': True,'no_create': True}"/>
+                            <field name="employee_id" options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
                             <field name="edad"/>
                             <field name="sexo"/>
                         </group>
                         <field name="tratamiento" colspan="4"
                                required="1">
                             <tree editable="top">
-                                <field name="name" string="Tratamiento / Seguimiento / Referimiento" required="1"/>
+                                <field name="name" string="Tratamiento / Seguimiento / Referimiento" required="1"
+                                       options="{'no_create_edit': True,
+                                                             'no_create': True}"/>
                             </tree>
                         </field>
 
@@ -129,6 +131,7 @@
                         <group>
                             <field name="name"/>
                             <field name="discount_report"/>
+                            <field name="category"/>
                         </group>
                         <notebook>
                             <page string="Proyeccion">

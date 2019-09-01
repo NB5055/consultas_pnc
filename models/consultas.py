@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from openerp import fields, models, api
 from datetime import datetime
+
+from openerp import fields, models, api
 
 
 class consultas_consultas(models.Model):
@@ -80,6 +81,8 @@ class consultas_tratamiento(models.Model):
                                  string="Proyeccion Anual")
     programa_ids = fields.Many2many('programa.programa', string="Programas")
     discount_report = fields.Many2one('consultas.tratamiento', string="Descuenta a")
+    category = fields.Selection([('rh', 'Rehabilitacion'), ('pc', 'Prevencion Ceguera')],
+                                string="Categoria")
     _sql_constraints = [
         ('unique_name', 'unique(name)', """Tratamiento Existe""")
     ]

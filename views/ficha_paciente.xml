@@ -54,12 +54,15 @@
                                 <group>
                                     <field name="enfermedades" required="1" string="Condicion" nolabel="1">
                                         <tree editable="top" >
-                                            <field name="name" string="Condicion" options="{'no_create_edit': True}"/>
+                                            <field name="name" string="Condicion" required="1"
+                                                   options="{'no_create_edit': True,
+                                                             'no_create': True}"/>
                                         </tree>
                                     </field>
                                     <field name="diagnostico" colspan="4" nolabel="1">
                                         <tree editable="top" colors="red:True" style="background-color:red">
-                                            <field name="name" string="Diagnostico" options="{'no_create_edit': True}"/>
+                                            <field name="name" string="Diagnostico" required="1" options="{'no_create_edit': True,
+                                                             'no_create': True}"/>
                                         </tree>
                                     </field>
                                 </group>
@@ -80,8 +83,10 @@
                             <page string="Asistencia Economica">
                                 <field name="ayuda_economica" >
                                     <tree string="Ayuda Economica" editable="top">
-                                        <field name="name" string="Patrocinador"/>
-                                        <field name="parentesco" string="Concepto"/>
+                                        <field name="name" string="Patrocinador" options="{'no_create_edit': True,
+                                                             'no_create': True}"/>
+                                        <field name="parentesco" string="Concepto" options="{'no_create_edit': True,
+                                                             'no_create': True}"/>
                                         <field name="monto" type="char"/>
                                         <field name="fecha"/>
                                     </tree>

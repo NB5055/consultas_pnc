@@ -1,8 +1,10 @@
+import calendar
+from datetime import datetime as dt
+
 from openerp import models, fields, api
 from openerp.exceptions import UserError
-from datetime import datetime as dt
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
-import calendar
+
 
 def discount_report_related(self, obj):
     consulta_updated_ids = []
@@ -14,11 +16,14 @@ def discount_report_related(self, obj):
                     consulta_id = (consulta_id[0],
                                    consulta_id[1],
                                    consulta_id[2] - obj_id[2],
-                                   consulta_id[3] - obj_id[3],)
+                                   consulta_id[3] - obj_id[3],
+                                   consulta_id[4])
             consulta_updated_ids.append(consulta_id)
+
         else:
             consulta_updated_ids.append(consulta_id)
     return consulta_updated_ids
+
 
 class InformeReportConsolidado(models.TransientModel):
     _name = "informe.report.programa.consolidado"
@@ -54,12 +59,13 @@ class InformeReportConsolidado(models.TransientModel):
                         where ctl.name = ct.id
                         and fecha >= '""" + str(start_date.year) + """-01-01' 
                     	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
-            end_day) + """'))
+            end_day) + """')),ct.category
                 from consultas_tratamiento ct group by ct.id"""
 
         self.env.cr.execute(query)
+
         def getKey(item):
-            return item[0]
+            return item[1]
 
         obj = self.env.cr.fetchall()
         obj = discount_report_related(self, obj)

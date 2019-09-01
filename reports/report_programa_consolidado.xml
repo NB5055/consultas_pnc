@@ -9,6 +9,57 @@
                 name="consultas_pnc.report_programa_consolidado"
                 menu="False"
         />
+        <template id="consultas_pnc.report_programa_consolidado_data">
+            <table width="100%" class="tg">
+                <tr t-if="header_data">
+                    <th class="tg-yw4l" colspan="3">
+                        <span t-esc="header_data"/>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="tg-yw4l" style="text-align:left !important;" rowspan="2">Departamento y/o Servicio</th>
+                    <th class="tg-yw4l-2" colspan="2">Acumulado</th>
+                </tr>
+                <tr>
+                    <th class="tg-yw4l-3">Periodo</th>
+                    <th class="tg-yw4l-3">Total</th>
+                </tr>
+                <t t-set='count' t-value='1'/>
+                <t t-set="total_mes" t-value="0"/>
+                <t t-set="total_ano" t-value="0"/>
+                <t t-foreach="data" t-as="obj">
+                    <t t-if="(count%2) == 1">
+                        <t t-set="cl" t-value="'tg-6k2t'"/>
+                    </t>
+                    <t t-if="(count%2) != 1">
+                        <t t-set="cl" t-value="'tg-yw4l'"/>
+                    </t>
+                    <tr>
+                        <td t-att-class='cl'>
+                            <p t-esc="obj[1]"/>
+                        </td>
+                        <td t-att-class='cl'>
+                            <p t-esc="obj[2]"/>
+                        </td>
+                        <td t-att-class='cl'>
+                            <p t-esc="obj[3]"/>
+                        </td>
+                    </tr>
+                    <t t-set='count' t-value='count+1'/>
+                    <t t-set="total_mes" t-value="total_mes + obj[2]"/>
+                    <t t-set="total_ano" t-value="total_ano + obj[3]"/>
+                </t>
+                <tr>
+                    <th class="tg-yw4l">Totales</th>
+                    <th class="tg-yw4l">
+                        <t t-esc="total_mes"/>
+                    </th>
+                    <th class="tg-yw4l">
+                        <t t-esc="total_ano"/>
+                    </th>
+                </tr>
+            </table>
+        </template>
 
         <template id="consultas_pnc.report_programa_consolidado">
             <div class="page" align="center">
@@ -32,53 +83,38 @@
                     </p>
                 </p>
 
-                <table width="100%" class="tg">
-                    <tr>
-                        <th class="tg-yw4l" rowspan="2">Departamento y/o Servicio</th>
-                        <th class="tg-yw4l-2" colspan="2">Acumulado</th>
-                    </tr>
-                    <tr>
-                        <th class="tg-yw4l-3">Periodo</th>
-                        <th class="tg-yw4l-3">Total</th>
-                    </tr>
-                    <t t-set='count' t-value='1'/>
-                    <t t-set="total_mes" t-value="0"/>
-                    <t t-set="total_ano" t-value="0"/>
-                    <t t-foreach="docs.get_consultas()" t-as="o">
-                        <t t-foreach="o" t-as="obj">
-                            <t t-if="(count%2) == 1">
-                                <t t-set="cl" t-value="'tg-6k2t'"/>
-                            </t>
-                            <t t-if="(count%2) != 1">
-                                <t t-set="cl" t-value="'tg-yw4l'"/>
-                            </t>
+                <t t-set="rh_data" t-value="filter(lambda x:x[4] == 'rh', docs.get_consultas()[0])"/>
+                <t t-set="pc_data" t-value="filter(lambda x:x[4] == 'pc', docs.get_consultas()[0])"/>
+                <t t-set="none_data" t-value="filter(lambda x:x[4] == None, docs.get_consultas()[0])"/>
 
-                            <tr>
-                                <td t-att-class='cl'>
-                                    <p t-esc="obj[1]"/>
-                                </td>
-                                <td t-att-class='cl'>
-                                    <p t-esc="obj[2]"/>
-                                </td>
-                                <td t-att-class='cl'>
-                                    <p t-esc="obj[3]"/>
-                                </td>
-                            </tr>
-                            <t t-set='count' t-value='count+1'/>
-                            <t t-set="total_mes" t-value="total_mes + obj[2]"/>
-                            <t t-set="total_ano" t-value="total_ano + obj[3]"/>
-                        </t>
+                <t t-if="rh_data">
+                    <t t-call="consultas_pnc.report_programa_consolidado_data">
+                        <t t-set="data" t-value="rh_data"/>
+                        <t t-set="header_data" t-value="'Rehabilitacion'"/>
                     </t>
-                    <tr>
-                        <th class="tg-yw4l">Totales</th>
-                        <th class="tg-yw4l">
-                            <t t-esc="total_mes"/>
-                        </th>
-                        <th class="tg-yw4l">
-                            <t t-esc="total_ano"/>
-                        </th>
-                    </tr>
-                </table>
+                    <br/>
+                    <br/>
+                    <br/>
+                </t>
+                <t t-if="pc_data">
+                    <t t-call="consultas_pnc.report_programa_consolidado_data">
+                        <t t-set="data" t-value="pc_data"/>
+                        <t t-set="header_data" t-value="'Prevencion Ceguera'"/>
+                    </t>
+                    <br/>
+                    <br/>
+                    <br/>
+                </t>
+                <t t-if="none_data">
+                    <t t-call="consultas_pnc.report_programa_consolidado_data">
+                        <t t-set="data" t-value="none_data"/>
+                        <t t-set="header_data" t-value="''"/>
+                    </t>
+                    <br/>
+                    <br/>
+                    <br/>
+                </t>
+
             </div>
         </template>
     </data>

@@ -17,7 +17,7 @@ def no_operations(self, obj, programa, year):
                                                                             str(year) + '-01-01'),
                                                                            ('consulta_id.fecha', '<=',
                                                                             str(year) + '-12-31')]))
-            proyeccion = t.proyeccion.filtered(lambda x: year == x.year and programa == x.programa)
+            proyeccion = t.proyeccion.filtered(lambda x: year == x.year and programa == x.programa.id)
             obj.append(tuple((t.name, 0, programa, t.id, acumulado, proyeccion.proyeccion, proyeccion.proyeccion / 10)))
 
 
@@ -106,7 +106,6 @@ class InformeReport(models.TransientModel):
             return item[0]
 
         obj = self.env.cr.fetchall()
-
         no_operations(self, obj, programa, end_date.year)
         obj = discount_report_related(self, obj)
         return sorted(obj, key=getKey)
