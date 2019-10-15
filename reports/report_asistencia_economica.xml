@@ -50,7 +50,6 @@
 
         <template id="consultas_pnc.report_asistencia_economica">
             <div class="page" align="center">
-
                 <t t-call="consultas_pnc.styles"/>
 
                 <t t-if="not o or not 'company_id' in o">
@@ -60,6 +59,7 @@
                     <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
                          style="max-height: 45px;"/>
                 </div>
+                <t t-set="currency" t-value="docs.env.user.company_id.currency_id"/>
                 <h3>Patronato Nacional de Ciegos, INC</h3>
                 Asistencia Economica
                 <p>Desde
@@ -107,7 +107,8 @@
                                             <p t-esc="asistencia_id.parentesco.name"/>
                                         </td>
                                         <td t-att-class='cl'>
-                                            <p t-esc="asistencia_id.monto"/>
+                                            <p t-esc="asistencia_id.monto"
+                                               t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
                                         </td>
                                         <td t-att-class='cl'>
                                             <p t-esc="asistencia_id.fecha"/>
@@ -133,6 +134,47 @@
                         </t>
                     </t>
                 </t>
+                <table width="100%" class="tg">
+                    <t t-set='count' t-value='1'/>
+                    <tr>
+                        <th colspan="2" class="tg-yw4l">
+                            Total por Programa
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="tg-yw4l">Programa</th>
+                        <th class="tg-yw4l">Total</th>
+                    </tr>
+                    <t t-set="total_general" t-value="0.0"/>
+                    <t t-foreach="docs.get_totales()" t-as="total">
+                        <t t-if="(count%2) == 1">
+                            <t t-set="cl" t-value="'tg-6k2t'"/>
+                        </t>
+                        <t t-if="(count%2) != 1">
+                            <t t-set="cl" t-value="'tg-yw4l'"/>
+                        </t>
+                        <tr>
+                            <td t-att-class='cl'>
+                                <t t-esc="total['programa']"/>
+                            </td>
+                            <td t-att-class='cl'>
+                                <t t-esc="total['total_programa']"/>
+                                <t t-set="total_general" t-value="total_general + total['total_programa']"
+                                   t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                            </td>
+                        </tr>
+                        <t t-set='count' t-value='count+1'/>
+                    </t>
+                    <tr>
+                        <th class="tg-yw4l">
+                            Total General
+                        </th>
+                        <th class="tg-yw4l">
+                            <t t-esc="total_general"
+                               t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                        </th>
+                    </tr>
+                </table>
             </div>
         </template>
 

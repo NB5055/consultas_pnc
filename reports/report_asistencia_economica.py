@@ -28,6 +28,15 @@ class ReportAsistenciaEconomica(models.TransientModel):
     def get_paciente_filtered(self, programa_id):
         return self.paciente_ids.filtered(lambda x: x.programa == programa_id)
 
+    def get_totales(self):
+        totales = []
+        for programa_id in self.programa_ids:
+            total_programa = sum(
+                self.get_asistencias().filtered(lambda x: x.ayuda_economica_id.programa == programa_id).mapped('monto'))
+            totales.append({'programa': programa_id.name,
+                            'total_programa': total_programa})
+        return totales
+
     @api.multi
     def check_report(self):
         if not self.paciente_ids:
