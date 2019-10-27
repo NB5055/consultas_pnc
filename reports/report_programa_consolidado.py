@@ -24,6 +24,39 @@ def discount_report_related(self, obj):
             consulta_updated_ids.append(consulta_id)
     return consulta_updated_ids
 
+# def discount_report_related(self, obj):
+#     consulta_updated_ids = []
+#     for consulta_id in obj:
+#         tratamiento_id = self.env['consultas.tratamiento'].browse(consulta_id[3])
+#         discount_report = self.env['consultas.tratamiento'].search([('discount_report', '=', consulta_id[3])])
+#         if discount_report:
+#             for consulta_obj in obj:
+#                 discount_1 = 0
+#                 discount_4 = 0
+#                 discount_5 = 0
+#                 discount_6 = 0
+#                 if consulta_obj[3] in discount_report.mapped('id'):
+#                     discount_1 += consulta_obj[1]
+#                     discount_4 += consulta_obj[4]
+#                     discount_5 += consulta_obj[5]
+#                     discount_6 += consulta_obj[6]
+#                 consulta1 = consulta_id[1] - discount_1
+#                 consulta4 = consulta_id[4] - discount_4
+#                 consulta5 = consulta_id[5] - discount_5
+#                 consulta6 = consulta_id[6] - discount_6
+#                 consulta_id = (consulta_id[0],
+#                                consulta1 if consulta1 > 0 else consulta_id[1],
+#                                consulta_id[2],
+#                                consulta_id[3],
+#                                consulta4 if consulta4 > 0 else consulta_id[4],
+#                                consulta5 if consulta5 > 0 else consulta_id[5],
+#                                consulta6 if consulta6 > 0 else consulta_id[6],)
+#             consulta_updated_ids.append(consulta_id)
+#         else:
+#             consulta_updated_ids.append(consulta_id)
+#     return consulta_updated_ids
+
+
 
 class InformeReportConsolidado(models.TransientModel):
     _name = "informe.report.programa.consolidado"

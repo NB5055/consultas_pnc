@@ -38,14 +38,17 @@ def discount_report_related(self, obj):
                     discount_4 += consulta_obj[4]
                     discount_5 += consulta_obj[5]
                     discount_6 += consulta_obj[6]
-
+                consulta1 = consulta_id[1] - discount_1
+                consulta4 = consulta_id[4] - discount_4
+                consulta5 = consulta_id[5] - discount_5
+                consulta6 = consulta_id[6] - discount_6
                 consulta_id = (consulta_id[0],
-                               consulta_id[1] - discount_1,
+                               consulta1 if consulta1 > 0 else 0,
                                consulta_id[2],
                                consulta_id[3],
-                               consulta_id[4] - discount_4,
-                               consulta_id[5] - discount_5,
-                               consulta_id[6] - discount_6,)
+                               consulta4 if consulta4 > 0 else 0,
+                               consulta5 if consulta5 > 0 else 0,
+                               consulta6 if consulta6 > 0 else 0,)
             consulta_updated_ids.append(consulta_id)
         else:
             consulta_updated_ids.append(consulta_id)

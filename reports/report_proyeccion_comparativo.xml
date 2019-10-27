@@ -34,7 +34,7 @@
                         <th class="tg-yw4l" rowspan="3">Departamento y/o Servicio</th>
                         <th class="tg-yw4l-2" t-att-colspan="(len(docs.programa_ids)*2)+2">Acumulado</th>
                         <th class="tg-yw4l-2" t-att-colspan="(len(docs.programa_ids)*2)+2">Proyección</th>
-                        <th class="tg-yw4l-2" t-att-colspan="(len(docs.programa_ids)*2)+2">Porcentaje</th>
+                        <th class="tg-yw4l-2" t-att-colspan="(len(docs.programa_ids)*2)+2">Porcentaje Ejecutado</th>
                     </tr>
                     <t t-if="docs.programa_ids">
                         <tr>
