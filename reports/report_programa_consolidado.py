@@ -28,13 +28,14 @@ def discount_report_related(self, obj):
     consulta_updated_ids = []
     for consulta_id in obj:
         tratamiento_id = self.env['consultas.tratamiento'].browse(consulta_id[3])
-        discount_report = self.env['consultas.tratamiento'].search([('discount_report', '=', consulta_id[3])])
+        print(consulta_id)
+        discount_report = self.env['consultas.tratamiento'].search([('discount_report', '=', consulta_id[0])])
         if discount_report:
             for consulta_obj in obj:
                 discount_2 = 0
                 discount_3 = 0
 
-                if consulta_obj[3] in discount_report.mapped('id'):
+                if consulta_obj[0] in discount_report.mapped('id'):
                     discount_2 += consulta_obj[2]
                     discount_3 += consulta_obj[3]
                 consulta2 = consulta_id[2] - discount_2
@@ -105,4 +106,13 @@ class InformeReportConsolidado(models.TransientModel):
             'report_name': 'consultas_pnc.report_programa_consolidado',
             'target': 'new',
             'report_type': 'qweb-html',
+        }
+
+    @api.multi
+    def print_report(self):
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'consultas_pnc.report_programa_consolidado',
+            'target': 'new',
+            'report_type': 'qweb-pdf',
         }

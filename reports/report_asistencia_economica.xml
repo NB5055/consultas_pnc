@@ -19,8 +19,9 @@
 
                     </sheet>
                     <footer>
-                        <button name="check_report" string="Print" type="object" default_focus="1"
+                        <button name="check_report" string="Ver Reporte" type="object" default_focus="1"
                                 class="oe_highlight"/>
+                        <button name="print_report" string="Imprimir Reporte" type="object" default_focus="1"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>

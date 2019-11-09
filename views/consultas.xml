@@ -23,6 +23,7 @@
                                required="1">
                             <tree editable="top">
                                 <field name="name" string="Tratamiento / Seguimiento / Referimiento" required="1"
+                                       domain="[('category','=','rh')]"
                                        options="{'no_create_edit': True,
                                                              'no_create': True}"/>
                             </tree>

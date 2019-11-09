@@ -43,3 +43,12 @@ class PrevencionCegueraReport(models.TransientModel):
             'target': 'new',
             'report_type': 'qweb-html',
         }
+
+    @api.multi
+    def print_report(self):
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'consultas_pnc.report_prevencion_ceguera',
+            'target': 'new',
+            'report_type': 'qweb-pdf',
+        }

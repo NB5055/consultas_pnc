@@ -6,8 +6,9 @@ class programa_programa(models.Model):
     _name = "programa.programa"
     _description = "Listado de programas del instituto"
     _inherit = ['mail.thread']
-    _order = "name"
+    _order = "sequence,name"
 
+    sequence = fields.Integer()
     name = fields.Char(string="Nombre", help="Nombre del Programa",
                        required=True, placeholder="Nombre")
     encargado = fields.Many2one("hr.employee", string="Encargado del Programa")
@@ -20,6 +21,7 @@ class programa_programa(models.Model):
     tratamiento_ids = fields.Many2many('consultas.tratamiento', string="Tratamientos")
 
     proyeccion_ids = fields.One2many("consultas.proyeccion", "programa", string="Proyecciones")
+
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', "Este programa ya existe")

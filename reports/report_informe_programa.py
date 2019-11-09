@@ -54,7 +54,6 @@ def discount_report_related(self, obj):
             consulta_updated_ids.append(consulta_id)
     return consulta_updated_ids
 
-
 class InformeReport(models.TransientModel):
     _name = "informe.report.programa"
     _description = "Informes"
@@ -140,24 +139,36 @@ class InformeReport(models.TransientModel):
     @api.multi
     def check_report(self):
         if self.comparativo:
-            return self.check_report_comparativo()
+            return self.check_report_comparativo('qweb-html')
         else:
-            return self.check_report_individual()
+            return self.check_report_individual('qweb-html')
 
     @api.multi
-    def check_report_individual(self):
+    def print_report(self):
+        if self.comparativo:
+            return self.check_report_comparativo('qweb-pdf')
+        else:
+            return self.check_report_individual('qweb-pdf')
+
+    @api.multi
+    def check_report_individual(self, report_type):
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'consultas_pnc.report_programa',
             'target': 'new',
-            'report_type': 'qweb-html',
+            'report_type': report_type,
         }
 
     @api.multi
-    def check_report_comparativo(self):
+    def check_report_comparativo(self, report_type):
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'consultas_pnc.report_programa_comparativo',
             'target': 'new',
-            'report_type': 'qweb-html',
+            'report_type': report_type,
         }
+
+    @api.onchange('programa_ids')
+    def change_programa_ids(self):
+        if self.programa_ids:
+            self.programa_ids[len(self.programa_ids)-1].sudo().write({"sequence": len(self.programa_ids)})

@@ -91,3 +91,17 @@ class ProyeccionReport(models.TransientModel):
             'target': 'new',
             'report_type': 'qweb-html',
         }
+
+    @api.multi
+    def print_report(self):
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'consultas_pnc.report_proyeccion',
+            'target': 'new',
+            'report_type': 'qweb-pdf',
+        }
+
+    @api.onchange('programa_ids')
+    def change_programa_ids(self):
+        if self.programa_ids:
+            self.programa_ids[len(self.programa_ids)-1].sudo().write({"sequence": len(self.programa_ids)})

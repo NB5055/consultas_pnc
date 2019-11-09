@@ -9,7 +9,7 @@
                 <form string="Prevencion de Ceguera">
                     <sheet>
                         <group>
-                            <field name="name"/>
+                            <field name="name" domain="[('category','=','pc')]"/>
                             <field name="atendidos"/>
                             <field name="fecha"/>
                             <field name="programa" required="1"/>

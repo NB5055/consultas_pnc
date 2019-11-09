@@ -37,8 +37,7 @@ class ReportAsistenciaEconomica(models.TransientModel):
                             'total_programa': total_programa})
         return totales
 
-    @api.multi
-    def check_report(self):
+    def _check_report(self, report_type):
         if not self.paciente_ids:
             self.paciente_ids = self.paciente_ids.search([], order="nombre asc")
         if not self.programa_ids:
@@ -47,5 +46,13 @@ class ReportAsistenciaEconomica(models.TransientModel):
             'type': 'ir.actions.report.xml',
             'report_name': 'consultas_pnc.report_asistencia_economica',
             'target': 'new',
-            'report_type': 'qweb-html',
+            'report_type': report_type,
         }
+
+    @api.multi
+    def print_report(self):
+        return self._check_report('qweb-pdf')
+
+    @api.multi
+    def check_report(self):
+        return self._check_report('qweb-html')
