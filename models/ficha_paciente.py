@@ -178,7 +178,11 @@ class ficha_paciente_ayuda_economica(models.Model):
     parentesco = fields.Many2one('ficha.paciente.parentesco', required=True,
                                  string="Parentesco")
     monto = fields.Float(string="Aporte", required=True)
-    fecha = fields.Date(string="Fecha Ayuda", default=fields.Date.context_today)
+    fecha = fields.Date(string="Fecha Ayuda", default=fields.Date.context_today, required=True)
+
+    _sql_constraints = [
+        ('check_amount', 'check(monto > 0)', 'El aporte debe ser mayor de 0')
+    ]
 
 
 class ficha_paciente_parentesco(models.Model):

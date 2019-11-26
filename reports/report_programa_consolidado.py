@@ -28,7 +28,6 @@ def discount_report_related(self, obj):
     consulta_updated_ids = []
     for consulta_id in obj:
         tratamiento_id = self.env['consultas.tratamiento'].browse(consulta_id[3])
-        print(consulta_id)
         discount_report = self.env['consultas.tratamiento'].search([('discount_report', '=', consulta_id[0])])
         if discount_report:
             for consulta_obj in obj:
