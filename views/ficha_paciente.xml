@@ -45,7 +45,9 @@
                                         <field name="lugar_nacimiento" placeholder="Lugad de Nacimíento"/>
                                     </group>
                                     <group col="2">
-                                        <field name="edad" placeholder="Edad"/>
+                                        <field name="birth_date"/>
+                                        <field name="age"/>
+                                        <field name="edad" readonly="1"/>
                                         <field name="estado_civil"/>
                                         <field name="vehiculo"/>
                                         <field name="seguro" placeholder="Seguro"/>
@@ -53,7 +55,7 @@
                                 </group>
                                 <group>
                                     <field name="enfermedades" required="1" string="Condicion" nolabel="1">
-                                        <tree editable="top" >
+                                        <tree editable="top" colors="red:True" style="background-color:red">
                                             <field name="name" string="Condicion" required="1"
                                                    options="{'no_create_edit': True,
                                                              'no_create': True}"/>
@@ -128,7 +130,9 @@
                     <field name="nombre" />
                     <field name="apellidos" />
                     <field name="apodos" />
-                    <field name="edad" />
+                    <field name="birth_date"/>
+                    <field name="age"/>
+                    <field name="edad" readonly="1"/>
                     <field name="direccion" />
                 </tree>
             </field>
@@ -159,6 +163,9 @@
                                         <br/>
                                         <field name="programa"/>
                                     </strong>
+                                    <div>
+                                        <strong>Nacimiento : </strong> <field name="birth_date"/> (<field name="age"/>)
+                                    </div>
                                     <ul>
                                         <li>
                                             <t>Consultas : <field name="consultas"/></t>
@@ -183,13 +190,16 @@
                     <field name="apodos" />
                     <field name="lugar_nacimiento" />
                     <field name="enfermedades" />
+                    <field name="age"/>
+                    <field name="birth_date"/>
 
                     <group expand="0" string="Group By">
                         <filter string="Nombre" domain="" context="{'group_by':'nombre'}"/>
                         <filter string="Apellidos" domain="" context="{'group_by':'apellidos'}"/>
                         <filter string="Programa" domain="" context="{'group_by':'programa'}"/>
                         <filter string="Sexo" domain="" context="{'group_by':'sexo'}"/>
-                        <filter string="Edad" domain="" context="{'group_by':'edad'}"/>
+                        <filter string="Edad" domain="" context="{'group_by':'age'}"/>
+                        <filter string="Nacimiento" domain="" context="{'group_by':'birth_date'}"/>
                         <filter string="Estado Civil" domain="" context="{'group_by':'estado_civil'}"/>
                         <filter string="Lugar de Nacimiento" context="{'group_by':'lugar_nacimiento'}"/>
                     </group>

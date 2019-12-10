@@ -14,7 +14,7 @@ class consultas_consultas(models.Model):
     programa = fields.Many2one("programa.programa", string="Programa",
                                help="""Programa al que """
                                     """pertenece la Consulta""")
-    edad = fields.Integer(related='name.edad', required=True)
+    edad = fields.Integer(related='name.age', required=True)
     sexo = fields.Selection(related='name.sexo', required=True)
     fecha = fields.Date(string="Fecha", default=fields.Date.context_today, required=True)
     diagnostico = fields.One2many("consultas.diagnostico.line", 'consulta_id',
@@ -83,6 +83,7 @@ class consultas_tratamiento(models.Model):
     discount_report = fields.Many2one('consultas.tratamiento', string="Descuenta a")
     category = fields.Selection([('rh', 'Rehabilitacion'), ('pc', 'Prevencion Ceguera')],
                                 string="Categoria")
+
     _sql_constraints = [
         ('unique_name', 'unique(name)', """Tratamiento Existe""")
     ]
@@ -95,6 +96,9 @@ class consultas_tratamiento_line(models.Model):
     name = fields.Many2one("consultas.tratamiento", ondelete="cascade",
                            string="Tratamiento / Seguimiento")
     consulta_id = fields.Many2one("consultas.consultas")
+    paciente_id = fields.Many2one(related="consulta_id.name", store=True)
+    employee_id = fields.Many2one(related="consulta_id.employee_id", store=True)
+    programa = fields.Many2one(related="consulta_id.programa", store=True)
 
 
 class consulta_proyeccion(models.Model):
