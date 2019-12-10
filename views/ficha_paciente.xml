@@ -46,8 +46,7 @@
                                     </group>
                                     <group col="2">
                                         <field name="birth_date"/>
-                                        <field name="age"/>
-                                        <field name="edad" readonly="1"/>
+                                        <field name="edad"/>
                                         <field name="estado_civil"/>
                                         <field name="vehiculo"/>
                                         <field name="seguro" placeholder="Seguro"/>
@@ -131,8 +130,7 @@
                     <field name="apellidos" />
                     <field name="apodos" />
                     <field name="birth_date"/>
-                    <field name="age"/>
-                    <field name="edad" readonly="1"/>
+                    <field name="edad"/>
                     <field name="direccion" />
                 </tree>
             </field>
@@ -164,7 +162,7 @@
                                         <field name="programa"/>
                                     </strong>
                                     <div>
-                                        <strong>Nacimiento : </strong> <field name="birth_date"/> (<field name="age"/>)
+                                        <strong>Nacimiento : </strong> <field name="birth_date"/> (<field name="edad"/>)
                                     </div>
                                     <ul>
                                         <li>
@@ -190,7 +188,7 @@
                     <field name="apodos" />
                     <field name="lugar_nacimiento" />
                     <field name="enfermedades" />
-                    <field name="age"/>
+                    <field name="edad"/>
                     <field name="birth_date"/>
 
                     <group expand="0" string="Group By">

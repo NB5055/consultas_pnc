@@ -14,7 +14,7 @@ class consultas_consultas(models.Model):
     programa = fields.Many2one("programa.programa", string="Programa",
                                help="""Programa al que """
                                     """pertenece la Consulta""")
-    edad = fields.Integer(related='name.age', required=True)
+    edad = fields.Integer(related='name.edad', required=True)
     sexo = fields.Selection(related='name.sexo', required=True)
     fecha = fields.Date(string="Fecha", default=fields.Date.context_today, required=True)
     diagnostico = fields.One2many("consultas.diagnostico.line", 'consulta_id',

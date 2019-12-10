@@ -5,7 +5,7 @@
         <menuitem name="Citas" parent="menu_root" action="act_citas" id="menu_citas"/>
         <menuitem name="Ficha" parent="menu_root" id="ficha_paciente" sequence="2"/>
         <menuitem action="ficha_paciente_act" parent="ficha_paciente" id="ficha_paciente_menu"/>
-        <menuitem name="Consultas" parent="menu_root" id="consultas_consultas_menu" sequence="4"/>
+        <menuitem name="Consultas y Servicios" parent="menu_root" id="consultas_consultas_menu" sequence="4"/>
         <menuitem action="consultas_consultas_act" parent="consultas_consultas_menu" id="consultas_consultas_sub_menu"/>
         <menuitem action="consultas_tratamiento_line_act" parent="consultas_consultas_sub_menu"
                   id="consultas_consultas_line_sub_menu"/>

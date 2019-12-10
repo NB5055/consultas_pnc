@@ -22,7 +22,7 @@ class ficha_paciente(models.Model):
     apodos = fields.Char(string="Apodos")
     sexo = fields.Selection([('m', 'Masculino'), ('f', 'Femenino')],
                             string="Sexo", default='m')
-    edad = fields.Integer(string="Edad Old")
+    edad = fields.Integer(string="Edad", compute="compute_age", store=True)
     direccion = fields.Char(string="Direccion")
     estado_civil = fields.Selection([('s', 'Soltero(a)'),
                                      ('c', 'Casado(a)'),
@@ -69,8 +69,6 @@ class ficha_paciente(models.Model):
                                   string="Diagnostico", copy=True)
     consultas_count = fields.Integer(compute="_compute_consultas_count")
     birth_date = fields.Date(string="Fecha Nacimiento")
-    age = fields.Integer(string="Edad", compute="compute_age", store=True)
-
 
     @api.multi
     @api.depends('birth_date')
@@ -79,7 +77,7 @@ class ficha_paciente(models.Model):
             if paciente.birth_date:
                 birth_date = fields.Date.from_string(paciente.birth_date)
                 today = fields.Date.from_string(fields.Date.today())
-                paciente.age = abs(today.year - birth_date.year)
+                paciente.edad = abs(today.year - birth_date.year)
 
     def _compute_consultas_count(self):
         self.consultas_count = len(self.consultas)

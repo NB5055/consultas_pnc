@@ -97,7 +97,6 @@
                         <filter string="Programa" domain="" context="{'group_by':'programa'}"/>
                         <filter string="Sexo" domain="" context="{'group_by':'sexo'}"/>
                         <filter string="Edad" domain="" context="{'group_by':'edad'}"/>
-                        <filter string="Médico / Profesor" domain="" context="{'group_by':'employee_id'}"/>
                         <filter string="Edad" context="{'group_by':'edad'}"/>
                         <filter string="Sexo" context="{'group_by':'sexo'}"/>
                     </group>
@@ -106,7 +105,7 @@
         </record>
 
         <record model='ir.actions.act_window' id='consultas_consultas_act'>
-            <field name="name">Consultas o Atenciones</field>
+            <field name="name">Servicios o Atenciones</field>
             <field name="res_model">consultas.consultas</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -197,7 +196,7 @@
                     <group expand="0" string="Group By">
                         <filter string="Consulta" domain="" context="{'group_by':'name'}"/>
                         <filter string="Paciente" domain="" context="{'group_by':'paciente_id'}"/>
-                        <filter name="group_employee_id" string="Profesor" domain="" context="{'group_by':'employee_id'}"/>
+                        <filter name="group_employee_id" string="Médico / Profesor" domain="" context="{'group_by':'employee_id'}"/>
                         <filter string="Programa" domain="" context="{'group_by':'programa'}"/>
                     </group>
                 </search>
