@@ -181,6 +181,7 @@
                     <field name="name"/>
                     <field name="paciente_id"/>
                     <field name="employee_id"/>
+                    <button name="show_consulta" string="Ver" type="object" groups="consultas_pnc.group_categoria_a"/>
                 </tree>
             </field>
         </record>

@@ -24,6 +24,7 @@ class consultas_consultas(models.Model):
     tratamiento = fields.One2many("consultas.tratamiento.line", 'consulta_id',
                                   string="Tratamiento / Seguimiento / Referimiento", copy=True)
     employee_id = fields.Many2one("hr.employee", string="Médico / Profesor",
+                                  required=True,
                                   default=lambda self: self._get_employee())
 
     @api.onchange('name')
@@ -99,6 +100,22 @@ class consultas_tratamiento_line(models.Model):
     paciente_id = fields.Many2one(related="consulta_id.name", store=True)
     employee_id = fields.Many2one(related="consulta_id.employee_id", store=True)
     programa = fields.Many2one(related="consulta_id.programa", store=True)
+
+    @api.multi
+    def show_consulta(self):
+        return {
+            'name': "Servicios o Atenciones",
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'consultas.consultas',
+            'view_id': self.env.ref('consultas_pnc.consultas_consultas_form').id,
+            'target': 'current',
+            'views': False,
+            'type': 'ir.actions.act_window',
+            'res_id': self.consulta_id.id,
+            'context': self._context
+
+        }
 
 
 class consulta_proyeccion(models.Model):
