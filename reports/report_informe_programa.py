@@ -74,12 +74,12 @@ class InformeReport(models.TransientModel):
         end_date = dt.strptime(self.fecha_final, DATE_FORMAT)
         end_day = calendar.monthrange(end_date.year, end_date.month)[1]
 
-        query = """(select ct.name as tratamiento,count(ct.name) as sumatoria,pp.id as programa,ct.id as consulta_id,
+        query = """(select ct.name as tratamiento,count(ct.name) as sumatoria,pp.id as programa_id,ct.id as consulta_id,
                            (select count(ct2.name) from consultas_consultas cc
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                     	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
                     	left join programa_programa pp on cc.programa = pp.id
-                    	where programa = """ + str(programa) + """ and ct2.id = ct.id
+                    	where programa_id = """ + str(programa) + """ and ct2.id = ct.id
                     	 and fecha >= '""" + str(start_date.year) + """-01-01' 
                     	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
             end_day) + """'
@@ -93,7 +93,7 @@ class InformeReport(models.TransientModel):
                     	inner join consultas_tratamiento ct on ctl.name = ct.id
                     	left join programa_programa pp on cc.programa = pp.id
                     	where fecha >= '""" + self.fecha_inicial + """' and fecha <= '""" + self.fecha_final + """'
-                    	and programa = """ + str(programa) + """
+                    	and programa_id = """ + str(programa) + """
                     	group by ct.name,pp.id,ct.id order by ct.name,pp.id)
                 union
                     (select ct.name  as tratamiento,sum(o.atendidos) as sumatoria,programa as programa,ct.id as consulta_id,
@@ -113,6 +113,7 @@ class InformeReport(models.TransientModel):
                                 programa = """ + str(programa) + """
                           group by ct.name,programa,ct.id)
                 """
+        print(query)
         self.env.cr.execute(query)
 
         def getKey(item):

@@ -96,24 +96,33 @@ class consultas_tratamiento_line(models.Model):
 
     name = fields.Many2one("consultas.tratamiento", ondelete="cascade",
                            string="Tratamiento / Seguimiento")
-    consulta_id = fields.Many2one("consultas.consultas")
+    consulta_id = fields.Many2one("consultas.consultas", ondelete="cascade")
     paciente_id = fields.Many2one(related="consulta_id.name", store=True)
     employee_id = fields.Many2one(related="consulta_id.employee_id", store=True)
     programa = fields.Many2one(related="consulta_id.programa", store=True)
+
+
+    edad = fields.Integer(related='consulta_id.edad')
+    sexo = fields.Selection(related='consulta_id.sexo')
+    fecha = fields.Date(related="consulta_id.fecha")
+    tratamiento = fields.One2many(related="consulta_id.tratamiento")
+    message_follower_ids = fields.One2many(related="consulta_id.message_follower_ids")
+    message_ids = fields.One2many(related="consulta_id.message_ids")
 
     @api.multi
     def show_consulta(self):
         return {
             'name': "Servicios o Atenciones",
             'view_type': 'form',
-            'view_mode': 'form',
+            'view_mode': 'form,tree',
             'res_model': 'consultas.consultas',
-            'view_id': self.env.ref('consultas_pnc.consultas_consultas_form').id,
+            'views': [(self.env.ref('consultas_pnc.consultas_consultas_tree').id, 'tree'),
+                      (self.env.ref('consultas_pnc.consultas_consultas_form').id, 'form')],
             'target': 'current',
             'views': False,
             'type': 'ir.actions.act_window',
-            'res_id': self.consulta_id.id,
-            'context': self._context
+            # 'res_id': self.consulta_id.id,
+            'domain': [(1, '=', 1)],
 
         }
 

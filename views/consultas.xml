@@ -181,7 +181,7 @@
                     <field name="name"/>
                     <field name="paciente_id"/>
                     <field name="employee_id"/>
-                    <button name="show_consulta" string="Ver" type="object" groups="consultas_pnc.group_categoria_a"/>
+                    <!--<button name="show_consulta" string="Ver" type="object" groups="consultas_pnc.group_categoria_a"/>-->
                 </tree>
             </field>
         </record>
@@ -197,20 +197,57 @@
                     <group expand="0" string="Group By">
                         <filter string="Consulta" domain="" context="{'group_by':'name'}"/>
                         <filter string="Paciente" domain="" context="{'group_by':'paciente_id'}"/>
-                        <filter name="group_employee_id" string="Médico / Profesor" domain="" context="{'group_by':'employee_id'}"/>
+                        <filter name="group_employee_id" string="Médico / Profesor" domain=""
+                                context="{'group_by':'employee_id'}"/>
                         <filter string="Programa" domain="" context="{'group_by':'programa'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
+        <record model='ir.ui.view' id='consultas_tratamiento_line_form'>
+            <field name="name">Registro Consultas o Atenciones</field>
+            <field name="model">consultas.tratamiento.line</field>
+            <field name="arch" type="xml">
+                <form string="Registro Consultas o Atenciones ">
+                    <sheet>
+                        <group col="4" string="Registro Consultas o Atenciones">
+
+                            <field name="fecha"/>
+                            <field name="programa"
+                                   options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
+                            <field name="paciente_id" options="{'no_create_edit': True,'no_create': True}"/>
+                            <field name="employee_id"
+                                   options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
+                            <field name="edad"/>
+                            <field name="sexo"/>
+                        </group>
+                        <field name="tratamiento" colspan="4"
+                               required="1">
+                            <tree editable="top">
+                                <field name="name" string="Tratamiento / Seguimiento / Referimiento" required="1"
+                                       domain="[('category','=','rh')]"
+                                       options="{'no_create_edit': True,
+                                                             'no_create': True}"/>
+                            </tree>
+                        </field>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
         <record model='ir.actions.act_window' id='consultas_tratamiento_line_act'>
             <field name="name">Tratamiento / Seguimiento / Referimiento</field>
             <field name="res_model">consultas.tratamiento.line</field>
-            <field name="context">{'search_default_group_employee_id': 1}
-            </field>
+            <field name="context">{'search_default_group_employee_id': 1}</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form</field>
         </record>
         <!--========================================================================-->
         <!-- View Formulario Referimientos-->

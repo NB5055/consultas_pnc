@@ -35,12 +35,12 @@ class ProyeccionReport(models.TransientModel):
 
     @api.one
     def get_consultas(self, programa):
-        query = """(select ct.name as tratamiento,count(ct.name) as sumatoria,pp.id as programa,ct.id as consulta_id,
+        query = """(select ct.name as tratamiento,count(ct.name) as sumatoria,pp.id as programa_id,ct.id as consulta_id,
                            (select count(ct2.name) from consultas_consultas cc
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                     	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
                     	left join programa_programa pp on cc.programa = pp.id
-                    	where programa = """ + str(programa) + """ and ct2.id = ct.id
+                    	where programa_id = """ + str(programa) + """ and ct2.id = ct.id
                     	 and extract(year from fecha) = """ + str(self.year) + """
                     	 and extract(month from fecha) <= """ + str(self.month) + """
                     	group by ct.name) as year,
@@ -54,7 +54,7 @@ class ProyeccionReport(models.TransientModel):
                     	left join programa_programa pp on cc.programa = pp.id
                     	where extract(month from fecha) = """ + self.month + """ and
                     	extract(year from fecha) = """ + str(self.year) + """ and
-                    	programa = """ + str(programa) + """
+                    	programa_id = """ + str(programa) + """
                     	group by ct.name,pp.id,ct.id order by ct.name,pp.id)
                 union
                     (select ct.name  as tratamiento,sum(o.atendidos) as sumatoria,programa as programa,ct.id as consulta_id,
