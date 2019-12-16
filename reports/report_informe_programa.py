@@ -79,7 +79,7 @@ class InformeReport(models.TransientModel):
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                     	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
                     	left join programa_programa pp on cc.programa = pp.id
-                    	where programa_id = """ + str(programa) + """ and ct2.id = ct.id
+                    	where cc.programa = """ + str(programa) + """ and ct2.id = ct.id
                     	 and fecha >= '""" + str(start_date.year) + """-01-01' 
                     	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
             end_day) + """'
@@ -93,7 +93,7 @@ class InformeReport(models.TransientModel):
                     	inner join consultas_tratamiento ct on ctl.name = ct.id
                     	left join programa_programa pp on cc.programa = pp.id
                     	where fecha >= '""" + self.fecha_inicial + """' and fecha <= '""" + self.fecha_final + """'
-                    	and programa_id = """ + str(programa) + """
+                    	and cc.programa = """ + str(programa) + """
                     	group by ct.name,pp.id,ct.id order by ct.name,pp.id)
                 union
                     (select ct.name  as tratamiento,sum(o.atendidos) as sumatoria,programa as programa,ct.id as consulta_id,
