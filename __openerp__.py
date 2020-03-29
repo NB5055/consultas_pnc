@@ -31,6 +31,7 @@
         'views/webclient_templates.xml',
         'reports/report_asistencia_economica.xml',
         'reports/report_informe_programa_comparativo.xml',
+        'reports/report_pacientes.xml',
     ],
     'demo': [],
 

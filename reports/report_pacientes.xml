@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model='ir.ui.view' id='report_paciente_form'>
+            <field name="name">report.paciente</field>
+            <field name="model">report.paciente</field>
+            <field name="arch" type="xml">
+                <form string="Pacientes">
+                    <sheet>
+                        <group>
+                            <field name="programa_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="check_report" string="Ver Reporte" type="object" default_focus="1"
+                                class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="report_paciente_action" model="ir.actions.act_window">
+            <field name="name">Pacientes</field>
+            <field name="res_model">report.paciente</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="Listado Pacientes" parent="menu_reportes" id="menu_report_paciente"
+                  action="report_paciente_action"/>
+
+        <report
+                id="report_report_paciente"
+                model="report.paciente"
+                string="Pacientes"
+                report_type="qweb-html"
+                name="consultas_pnc.report_paciente"
+                menu="False"
+        />
+
+        <template id="consultas_pnc.report_paciente">
+            <div class="page" align="center">
+                <t t-call="consultas_pnc.styles"/>
+
+                <t t-if="not o or not 'company_id' in o">
+                    <t t-set="company" t-value="res_company"></t>
+                </t>
+                <div>
+                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                         style="max-height: 45px;"/>
+                </div>
+                <t t-set="currency" t-value="docs.env.user.company_id.currency_id"/>
+                <h3>Patronato Nacional de Ciegos, INC</h3>
+                Listado Pacientes
+                <!--<t t-set="paiciente_data" t-value="docs.get_data()"/>-->
+                <t t-foreach="docs.programa_ids" t-as="programa_id">
+                    <!--<t t-set="programa_id" t-value="programa_id"/>-->
+                    <t t-set="paciente_ids"
+                       t-value="docs.get_data(programa_id)"/>
+                    <table width="100%" class="tg" t-if="paciente_ids">
+                        <tr>
+                            <th colspan="5" class="tg-yw4l">
+                                <h4 t-esc="programa_id.name"/>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th class="tg-yw4l" colspan="2">Paciente</th>
+                            <th class="tg-yw4l">Cedula</th>
+                            <th class="tg-yw4l">Direccion</th>
+                            <th class="tg-yw4l">Telefonos</th>
+                        </tr>
+                        <t t-set='count' t-value='1'/>
+                        <t t-foreach="paciente_ids" t-as="paciente_id">
+
+                            <t t-if="(count%2) == 1">
+                                <t t-set="cl" t-value="'tg-6k2t'"/>
+                            </t>
+                            <t t-if="(count%2) != 1">
+                                <t t-set="cl" t-value="'tg-yw4l'"/>
+                            </t>
+                            <tr>
+                                <td>
+                                    <t t-esc="count"/>
+                                </td>
+                                <td t-att-class='cl'>
+                                    <span t-field="paciente_id.apellidos"/>
+                                    <span t-field="paciente_id.nombre"/>
+                                </td>
+                                <td t-att-class='cl'>
+                                    <span t-field="paciente_id.name"/>
+                                </td>
+                                <td t-att-class='cl'>
+                                    <span t-field="paciente_id.direccion"/>
+                                </td>
+                                <td t-att-class='cl'>
+                                    <span t-esc="','.join(paciente_id.telefonos.mapped('name'))"/>
+                                </td>
+                            </tr>
+                            <t t-set='count' t-value='count+1'/>
+                        </t>
+                    </table>
+                    <br/>
+                    <br/>
+                </t>
+
+            </div>
+        </template>
+
+    </data>
+</openerp>

@@ -113,7 +113,6 @@ class InformeReport(models.TransientModel):
                                 programa = """ + str(programa) + """
                           group by ct.name,programa,ct.id)
                 """
-        print(query)
         self.env.cr.execute(query)
 
         def getKey(item):
