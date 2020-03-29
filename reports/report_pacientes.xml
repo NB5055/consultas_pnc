@@ -6,7 +6,7 @@
             <field name="name">report.paciente</field>
             <field name="model">report.paciente</field>
             <field name="arch" type="xml">
-                <form string="Pacientes">
+                <form string="Participantes">
                     <sheet>
                         <group>
                             <field name="programa_ids" widget="many2many_tags"/>
@@ -23,20 +23,20 @@
         </record>
 
         <record id="report_paciente_action" model="ir.actions.act_window">
-            <field name="name">Pacientes</field>
+            <field name="name">Participantes</field>
             <field name="res_model">report.paciente</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
 
-        <menuitem name="Listado Pacientes" parent="menu_reportes" id="menu_report_paciente"
+        <menuitem name="Listado de Participantes" parent="menu_reportes" id="menu_report_paciente"
                   action="report_paciente_action"/>
 
         <report
                 id="report_report_paciente"
                 model="report.paciente"
-                string="Pacientes"
+                string="Participantes"
                 report_type="qweb-html"
                 name="consultas_pnc.report_paciente"
                 menu="False"
@@ -55,7 +55,7 @@
                 </div>
                 <t t-set="currency" t-value="docs.env.user.company_id.currency_id"/>
                 <h3>Patronato Nacional de Ciegos, INC</h3>
-                Listado Pacientes
+                Listado de Participantes
                 <!--<t t-set="paiciente_data" t-value="docs.get_data()"/>-->
                 <t t-foreach="docs.programa_ids" t-as="programa_id">
                     <!--<t t-set="programa_id" t-value="programa_id"/>-->
