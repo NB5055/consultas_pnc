@@ -63,7 +63,7 @@
                        t-value="docs.get_data(programa_id)"/>
                     <table width="100%" class="tg" t-if="paciente_ids">
                         <tr>
-                            <th colspan="5" class="tg-yw4l">
+                            <th colspan="7" class="tg-yw4l">
                                 <h4 t-esc="programa_id.name"/>
                             </th>
                         </tr>
@@ -72,6 +72,8 @@
                             <th class="tg-yw4l">Cedula</th>
                             <th class="tg-yw4l">Direccion</th>
                             <th class="tg-yw4l">Telefonos</th>
+                            <th class="tg-yw4l">Edad</th>
+                            <th class="tg-yw4l">Condicion</th>
                         </tr>
                         <t t-set='count' t-value='1'/>
                         <t t-foreach="paciente_ids" t-as="paciente_id">
@@ -98,6 +100,12 @@
                                 </td>
                                 <td t-att-class='cl'>
                                     <span t-esc="','.join(paciente_id.telefonos.mapped('name'))"/>
+                                </td>
+                                <td t-att-class='cl'>
+                                    <span t-field="paciente_id.edad"/>
+                                </td>
+                                <td t-att-class='cl'>
+                                    <span t-esc="','.join(paciente_id.enfermedades.mapped('name').mapped('name'))"/>
                                 </td>
                             </tr>
                             <t t-set='count' t-value='count+1'/>
