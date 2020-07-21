@@ -104,7 +104,7 @@ class consultas_tratamiento_line(models.Model):
 
     edad = fields.Integer(related='consulta_id.edad')
     sexo = fields.Selection(related='consulta_id.sexo')
-    fecha = fields.Date(related="consulta_id.fecha")
+    fecha = fields.Date(related="consulta_id.fecha", store=True)
     tratamiento = fields.One2many(related="consulta_id.tratamiento")
     message_follower_ids = fields.One2many(related="consulta_id.message_follower_ids")
     message_ids = fields.One2many(related="consulta_id.message_ids")
