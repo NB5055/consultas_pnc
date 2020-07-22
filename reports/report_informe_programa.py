@@ -80,8 +80,8 @@ class InformeReport(models.TransientModel):
                     	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
                     	left join programa_programa pp on cc.programa = pp.id
                     	where cc.programa = """ + str(programa) + """ and ct2.id = ct.id
-                    	 and fecha >= '""" + str(start_date.year) + """-01-01' 
-                    	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
+                    	 and cc.fecha >= '""" + str(start_date.year) + """-01-01' 
+                    	 and cc.fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
             end_day) + """'
                     	group by ct.name) as year,
                     	(coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
@@ -92,7 +92,7 @@ class InformeReport(models.TransientModel):
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                     	inner join consultas_tratamiento ct on ctl.name = ct.id
                     	left join programa_programa pp on cc.programa = pp.id
-                    	where fecha >= '""" + self.fecha_inicial + """' and fecha <= '""" + self.fecha_final + """'
+                    	where cc.fecha >= '""" + self.fecha_inicial + """' and cc.fecha <= '""" + self.fecha_final + """'
                     	and cc.programa = """ + str(programa) + """
                     	group by ct.name,pp.id,ct.id order by ct.name,pp.id)
                 union
