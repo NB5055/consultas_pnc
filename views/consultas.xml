@@ -14,6 +14,7 @@
 
                             <field name="fecha"/>
                             <field name="programa"
+                                   required="1"
                                    options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
                             <field name="name" options="{'no_create_edit': True,'no_create': True}"/>
                             <field name="employee_id"
@@ -177,7 +178,7 @@
             <field name="name">Tratamiento / Seguimiento / Referimiento</field>
             <field name="model">consultas.tratamiento.line</field>
             <field name="arch" type="xml">
-                <tree string="Consultas" delete="false" create="false">
+                <tree string="Consultas" >
                     <field name="name"/>
                     <field name="paciente_id"/>
                     <field name="employee_id"/>
@@ -213,11 +214,15 @@
                     <sheet>
                         <group col="4" string="Registro Consultas o Atenciones">
 
-                            <field name="fecha"/>
+                            <field name="fecha" required="1"/>
                             <field name="programa"
+                                   required="1"
                                    options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
-                            <field name="paciente_id" options="{'no_create_edit': True,'no_create': True}"/>
+                            <field name="paciente_id"
+                                   required="1"
+                                   options="{'no_create_edit': True,'no_create': True}"/>
                             <field name="employee_id"
+                                   required="1"
                                    options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
                             <field name="edad"/>
                             <field name="sexo"/>
