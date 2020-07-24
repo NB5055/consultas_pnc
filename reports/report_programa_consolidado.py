@@ -74,8 +74,8 @@ class InformeReportConsolidado(models.TransientModel):
                                      fecha <= '""" + self.fecha_final + """'),0)+ 
                     (select count(cc.id) from consultas_consultas cc 
                         inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id 
-                        where ctl.name = ct.id and fecha >= '""" + self.fecha_inicial + """' and 
-                                                   fecha <= '""" + self.fecha_final + """')),
+                        where ctl.name = ct.id and ctl.fecha >= '""" + self.fecha_inicial + """' and 
+                                                   ctl.fecha <= '""" + self.fecha_final + """')),
                     (coalesce((select sum(atendidos) from operativos op 
                         where ct.id = op.name
                         and fecha >= '""" + str(start_date.year) + """-01-01' 
@@ -84,8 +84,8 @@ class InformeReportConsolidado(models.TransientModel):
                     (select count(cc.id) from consultas_consultas cc 
                         inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id 
                         where ctl.name = ct.id
-                        and fecha >= '""" + str(start_date.year) + """-01-01' 
-                    	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
+                        and ctl.fecha >= '""" + str(start_date.year) + """-01-01' 
+                    	 and ctl.fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
             end_day) + """')),ct.category
                 from consultas_tratamiento ct group by ct.id"""
 

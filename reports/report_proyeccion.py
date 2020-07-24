@@ -41,8 +41,8 @@ class ProyeccionReport(models.TransientModel):
                     	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
                     	left join programa_programa pp on cc.programa = pp.id
                     	where cc.programa = """ + str(programa) + """ and ct2.id = ct.id
-                    	 and extract(year from fecha) = """ + str(self.year) + """
-                    	 and extract(month from fecha) <= """ + str(self.month) + """
+                    	 and extract(year from ctl.fecha) = """ + str(self.year) + """
+                    	 and extract(month from ctl.fecha) <= """ + str(self.month) + """
                     	group by ct.name) as year,
                     	(coalesce((select proyeccion from consultas_proyeccion cp where cp.programa = """ + str(
             programa) + """ and tratamiento_id = ct.id and year = """ + str(self.year) + """),0)) as proyeccion_year,
@@ -52,8 +52,8 @@ class ProyeccionReport(models.TransientModel):
                     	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                     	inner join consultas_tratamiento ct on ctl.name = ct.id
                     	left join programa_programa pp on cc.programa = pp.id
-                    	where extract(month from fecha) = """ + self.month + """ and
-                    	extract(year from fecha) = """ + str(self.year) + """ and
+                    	where extract(month from ctl.fecha) = """ + self.month + """ and
+                    	extract(year from ctl.fecha) = """ + str(self.year) + """ and
                     	cc.programa = """ + str(programa) + """
                     	group by ct.name,pp.id,ct.id order by ct.name,pp.id)
                 union
@@ -73,7 +73,6 @@ class ProyeccionReport(models.TransientModel):
                                 programa = """ + str(programa) + """
                           group by ct.name,programa,ct.id)
                 """
-        print(query)
         self.env.cr.execute(query)
 
         def getKey(item):
