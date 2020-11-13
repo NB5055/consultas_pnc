@@ -26,6 +26,7 @@ class consultas_consultas(models.Model):
     employee_id = fields.Many2one("hr.employee", string="Médico / Profesor",
                                   required=True,
                                   default=lambda self: self._get_employee())
+    notes = fields.Text(string="Notas")
 
     @api.onchange('name')
     def set_programa(self):

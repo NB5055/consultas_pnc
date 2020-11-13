@@ -5,12 +5,12 @@
         <!-- View Formulario consultas consultas-->
         <!--========================================================================-->
         <record model='ir.ui.view' id='consultas_consultas_form'>
-            <field name="name">Registro Consultas o Atenciones</field>
+            <field name="name">Registro Consultas y Atenciones</field>
             <field name="model">consultas.consultas</field>
             <field name="arch" type="xml">
-                <form string="Registro Consultas o Atenciones ">
+                <form string="Registro Consultas y Atenciones ">
                     <sheet>
-                        <group col="4" string="Registro Consultas o Atenciones">
+                        <group col="4" string="Registro Consultas y Atenciones">
 
                             <field name="fecha"/>
                             <field name="programa"
@@ -31,6 +31,9 @@
                                                              'no_create': True}"/>
                             </tree>
                         </field>
+                        <group string="Notas">
+                            <field name="notes" nolabel="1"/>
+                        </group>
 
                     </sheet>
                     <div class="oe_chatter">
@@ -42,7 +45,7 @@
         </record>
 
         <record model='ir.ui.view' id='consultas_consultas_tree'>
-            <field name="name">Registro Consultas o Atenciones</field>
+            <field name="name">Registro Consultas y Atenciones</field>
             <field name="model">consultas.consultas</field>
             <field name="arch" type="xml">
                 <tree string="Consultas ">
@@ -54,7 +57,7 @@
         </record>
 
         <record model='ir.ui.view' id='consultas_consultas_history_tree'>
-            <field name="name">Historial Consultas o Atenciones</field>
+            <field name="name">Historial Consultas y Atenciones</field>
             <field name="model">consultas.consultas</field>
             <field name="arch" type="xml">
                 <tree string="Consultas" delete="false" create="false">
@@ -67,7 +70,7 @@
         </record>
 
         <record model='ir.ui.view' id='consultas_consultas_history_form'>
-            <field name="name">Historial Consultas o Atenciones</field>
+            <field name="name">Historial Consultas y Atenciones</field>
             <field name="model">consultas.consultas</field>
             <field name="inherit_id" ref="consultas_consultas_form"/>
             <field name="mode">primary</field>
@@ -81,7 +84,7 @@
         </record>
 
         <record model='ir.ui.view' id='consultas_consultas_search'>
-            <field name="name">Registro Consultas o Atenciones</field>
+            <field name="name">Registro Consultas y Atenciones</field>
             <field name="model">consultas.consultas</field>
             <field name="arch" type="xml">
                 <search string="Consultas ">
@@ -116,7 +119,7 @@
                       (0, 0, {'view_mode': 'form', 'view_id': ref('consultas_consultas_form')})]"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Haga Click Para Crear Nuevo Registro Consultas o Atenciones.
+                    Haga Click Para Crear Nuevo Registro Consultas y Atenciones.
                 </p>
             </field>
         </record>
@@ -207,12 +210,12 @@
         </record>
 
         <record model='ir.ui.view' id='consultas_tratamiento_line_form'>
-            <field name="name">Registro Consultas o Atenciones</field>
+            <field name="name">Registro Consultas y Atenciones</field>
             <field name="model">consultas.tratamiento.line</field>
             <field name="arch" type="xml">
-                <form string="Registro Consultas o Atenciones ">
+                <form string="Registro Consultas y Atenciones ">
                     <sheet>
-                        <group col="4" string="Registro Consultas o Atenciones">
+                        <group col="4" string="Registro Consultas y Atenciones">
 
                             <field name="fecha" required="1"/>
                             <field name="programa"
