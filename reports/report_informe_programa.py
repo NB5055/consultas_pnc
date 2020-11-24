@@ -97,8 +97,8 @@ class InformeReport(models.TransientModel):
                     	group by ct.name,pp.id,ct.id order by ct.name,pp.id)
                 union
                     (select ct.name  as tratamiento,sum(o.atendidos) as sumatoria,programa as programa,ct.id as consulta_id,
-                            (select sum(atendidos) from operativos 
-                                where programa = """ + str(programa) + """ 
+                            (select sum(atendidos) from operativos op
+                                where programa = """ + str(programa) + """ and ct.id = op.name 
                                 and fecha >= '""" + str(start_date.year) + """-01-01' 
                     	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
             end_day) + """') as year,
@@ -110,6 +110,7 @@ class InformeReport(models.TransientModel):
                           join consultas_tratamiento ct on o.name = ct.id
                           where fecha >= '""" + self.fecha_inicial + """' and
                                 fecha <= '""" + self.fecha_final + """' and
+                                category != 'rh' and
                                 programa = """ + str(programa) + """
                           group by ct.name,programa,ct.id)
                 """
@@ -117,7 +118,6 @@ class InformeReport(models.TransientModel):
 
         def getKey(item):
             return item[0]
-
         obj = self.env.cr.fetchall()
         no_operations(self, obj, programa, end_date.year)
         obj = discount_report_related(self, obj)

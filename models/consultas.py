@@ -101,6 +101,7 @@ class consultas_tratamiento_line(models.Model):
     paciente_id = fields.Many2one(related="consulta_id.name", store=True)
     employee_id = fields.Many2one(related="consulta_id.employee_id", store=True)
     programa = fields.Many2one(related="consulta_id.programa", store=True)
+    notes = fields.Text(related="consulta_id.notes")
 
 
     edad = fields.Integer(related='consulta_id.edad')

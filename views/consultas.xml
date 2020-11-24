@@ -239,7 +239,9 @@
                                                              'no_create': True}"/>
                             </tree>
                         </field>
-
+                        <group string="Notas">
+                            <field name="notes" nolabel="1"/>
+                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
