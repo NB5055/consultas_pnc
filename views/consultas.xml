@@ -220,6 +220,7 @@
 
                             <field name="fecha" required="1"/>
                             <field name="programa"
+                                   domain="[('program_type','=','servicio')]"
                                    required="1"
                                    options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
                             <field name="paciente_id"
