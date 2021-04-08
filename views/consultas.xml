@@ -15,6 +15,7 @@
                             <field name="fecha"/>
                             <field name="programa"
                                    required="1"
+                                   domain="[('program_type','=','servicio')]"
                                    options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
                             <field name="name" options="{'no_create_edit': True,'no_create': True}"/>
                             <field name="employee_id"

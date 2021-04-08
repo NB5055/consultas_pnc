@@ -21,7 +21,8 @@ class programa_programa(models.Model):
     tratamiento_ids = fields.Many2many('consultas.tratamiento', string="Tratamientos")
 
     proyeccion_ids = fields.One2many("consultas.proyeccion", "programa", string="Proyecciones")
-
+    program_type = fields.Selection([('prevencion_ceguera', 'Pregencion de Ceguera'),
+                                     ('servicio', 'Servicio')], string="Tipo Programa")
 
     _sql_constraints = [
         ('name_uniq', 'unique(name)', "Este programa ya existe")
