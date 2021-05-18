@@ -20,8 +20,8 @@
                             <field name="name" options="{'no_create_edit': True,'no_create': True}"/>
                             <field name="employee_id"
                                    options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
-                            <field name="edad"/>
-                            <field name="sexo"/>
+                            <field name="edad" required="1"/>
+                            <field name="sexo" required="1"/>
                         </group>
                         <field name="tratamiento" colspan="4"
                                required="1">
