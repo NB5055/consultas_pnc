@@ -79,7 +79,7 @@ class ProyeccionReport(models.TransientModel):
             return item[0]
 
         obj = self.env.cr.fetchall()
-        no_operations(self, obj, programa, self.year)
+        no_operations(self, obj, programa, self.year,[('category','!=','rh')])
         obj = discount_report_related(self, obj)
         return sorted(obj, key=getKey)
 

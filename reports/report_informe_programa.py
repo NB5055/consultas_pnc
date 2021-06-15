@@ -6,11 +6,11 @@ from openerp.exceptions import UserError
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 
 
-def no_operations(self, obj, programa, year):
+def no_operations(self, obj, programa, year,category=[]):
     departamento = []
     for ob in obj:
         departamento.append(ob[0])
-    for t in self.env['consultas.tratamiento'].search([]):
+    for t in self.env['consultas.tratamiento'].search(category):
         if t.name not in departamento and programa in t.programa_ids.ids:
             acumulado = len(self.env['consultas.tratamiento.line'].search([('consulta_id.programa', '=', programa),
                                                                            ('name', '=', t.id),
@@ -18,9 +18,16 @@ def no_operations(self, obj, programa, year):
                                                                             str(year) + '-01-01'),
                                                                            ('consulta_id.fecha', '<=',
                                                                             str(year) + '-12-31')]))
+
+            acumulado += sum(self.env['operativos'].search([('programa', '=', programa),
+                                                 ('name', '=', t.id),
+                                                 ('fecha', '>=',
+                                                  str(year) + '-01-01'),
+                                                 ('fecha', '<=',
+                                                  str(year) + '-12-31')]).mapped('atendidos'))
+
             proyeccion = t.proyeccion.filtered(lambda x: year == x.year and programa == x.programa.id)
             obj.append(tuple((t.name, 0, programa, t.id, acumulado, proyeccion.proyeccion, proyeccion.proyeccion / 10)))
-
 
 def discount_report_related(self, obj):
     consulta_updated_ids = []
@@ -80,7 +87,7 @@ class InformeReport(models.TransientModel):
                     	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
                     	left join programa_programa pp on cc.programa = pp.id
                     	where cc.programa = """ + str(programa) + """ and ct2.id = ct.id
-                    	 and cc.fecha >= '""" + str(start_date.year) + """-01-01' 
+                    	 and cc.fecha >= '""" + str(start_date.year) + """-01-01'
                     	 and cc.fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
             end_day) + """'
                     	group by ct.name) as year,
