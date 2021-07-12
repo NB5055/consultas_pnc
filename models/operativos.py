@@ -3,6 +3,7 @@ from openerp import models, fields, api
 
 class Operativos(models.Model):
     _name = 'operativos'
+    _inherit = ['mail.thread']
     _description = "Operativos"
     _order = "name, fecha"
 

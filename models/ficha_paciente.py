@@ -16,39 +16,39 @@ class ficha_paciente(models.Model):
     def _compute_display_name(self):
         self.display_name = ' '.join(filter(None, [self.apellidos, self.nombre, " (", self.name, ")"]))
 
-    name = fields.Char(string="Cedula", required=True, default=0, copy=False)
-    nombre = fields.Char(string="Nombre", required=True)
-    apellidos = fields.Char(string="Apellidos", required=True)
-    apodos = fields.Char(string="Apodos")
+    name = fields.Char(string="Cedula", required=True, default=0, copy=False, track_visibility="onchange")
+    nombre = fields.Char(string="Nombre", required=True, track_visibility="onchange")
+    apellidos = fields.Char(string="Apellidos", required=True, track_visibility="onchange")
+    apodos = fields.Char(string="Apodos", track_visibility="onchange")
     sexo = fields.Selection([('m', 'Masculino'), ('f', 'Femenino')],
-                            string="Sexo", default='m')
-    edad = fields.Integer(string="Edad", compute="compute_age", store=True)
-    direccion = fields.Char(string="Direccion")
+                            string="Sexo", default='m', track_visibility="onchange")
+    edad = fields.Integer(string="Edad", compute="compute_age", store=True, track_visibility="onchange")
+    direccion = fields.Char(string="Direccion", track_visibility="onchange")
     estado_civil = fields.Selection([('s', 'Soltero(a)'),
                                      ('c', 'Casado(a)'),
                                      ('d', 'Divorciado(a)'),
                                      ('v', 'Viudo(a)')], string="Estado Civil",
-                                    default="s")
-    grado_academico = fields.Char(string="Grado Academico")
-    hijos = fields.Integer(string="Cant. Hijos")
-    ingresos = fields.Float(string="Ingresos")
-    otros = fields.Float(string="Otros Ingresos")
-    cohabitantes = fields.Integer(string="Cohabitantes")
+                                    default="s", track_visibility="onchange")
+    grado_academico = fields.Char(string="Grado Academico", track_visibility="onchange")
+    hijos = fields.Integer(string="Cant. Hijos", track_visibility="onchange")
+    ingresos = fields.Float(string="Ingresos", track_visibility="onchange")
+    otros = fields.Float(string="Otros Ingresos", track_visibility="onchange")
+    cohabitantes = fields.Integer(string="Cohabitantes", track_visibility="onchange")
     vivienda = fields.Selection([('p', 'Propia'), ('a', 'Alquilada'), ('p', 'Prestada')], string="Vivienda",
-                                default='p')
-    renta = fields.Float(string='Costo Renta')
-    vehiculo = fields.Selection([('s', 'Si'), ('n', 'No')], string="Vehiculo", default='n')
-    trabajo = fields.Many2one('ficha.paciente.trabajo', string="Trabajo")
-    seguro = fields.Many2one('ficha.paciente.seguro', string="Seguro")
-    gastos_fijos = fields.One2many('ficha.paciente.gasto.fijo', 'gasto_id', string="Gastos Fijos")
-    ayuda_economica = fields.One2many('ficha.paciente.ayuda.economica', 'ayuda_economica_id', string="Ayuda Economica")
-    enfermedades = fields.One2many('ficha.paciente.enfermedades.line', 'enfermedad_id', string="Condiciones")
-    telefonos = fields.One2many('ficha.paciente.telefono', 'telefono_id', string="Telefonos")
-    lugar_nacimiento = fields.Many2one('region.provincia', string="Lugar de Nacimiento")
+                                default='p', track_visibility="onchange")
+    renta = fields.Float(string='Costo Renta', track_visibility="onchange")
+    vehiculo = fields.Selection([('s', 'Si'), ('n', 'No')], string="Vehiculo", default='n', track_visibility="onchange")
+    trabajo = fields.Many2one('ficha.paciente.trabajo', string="Trabajo", track_visibility="onchange")
+    seguro = fields.Many2one('ficha.paciente.seguro', string="Seguro", track_visibility="onchange")
+    gastos_fijos = fields.One2many('ficha.paciente.gasto.fijo', 'gasto_id', string="Gastos Fijos", track_visibility="onchange")
+    ayuda_economica = fields.One2many('ficha.paciente.ayuda.economica', 'ayuda_economica_id', string="Ayuda Economica", track_visibility="onchange")
+    enfermedades = fields.One2many('ficha.paciente.enfermedades.line', 'enfermedad_id', string="Condiciones", track_visibility="onchange")
+    telefonos = fields.One2many('ficha.paciente.telefono', 'telefono_id', string="Telefonos", track_visibility="onchange")
+    lugar_nacimiento = fields.Many2one('region.provincia', string="Lugar de Nacimiento", track_visibility="onchange")
     display_name = fields.Char(string="Paciente", compute='_compute_display_name', search="_search_display_name")
     image = fields.Binary("Image", attachment=True, default=lambda self: self._get_default_image(True),
                           help="""This field holds the image used as avatar for this contact,"""
-                               """limited to 1024x1024px""")
+                               """limited to 1024x1024px""", track_visibility="onchange")
     image_medium = fields.Binary("Medium-sized image",
                                  compute='_compute_images', inverse='_inverse_image_medium',
                                  store=True, attachment=True,
@@ -62,13 +62,13 @@ class ficha_paciente(models.Model):
                                 help="""Small-sized image of this contact. It is automatically """
                                      """resized as a 64x64px image, with aspect ratio preserved. """
                                      """Use this field anywhere a small image is required.""")
-    programa = fields.Many2one("programa.programa", string="Programa a que pertenece")
-    consultas = fields.One2many("consultas.consultas", "name", readonly=True)
+    programa = fields.Many2one("programa.programa", string="Programa a que pertenece", track_visibility="onchange")
+    consultas = fields.One2many("consultas.consultas", "name", readonly=True, track_visibility="onchange")
     state = fields.Selection([('activo', 'Activo'), ('inactivo', 'Inactivo')], string='State', default="activo")
     diagnostico = fields.One2many("consultas.diagnostico.line", 'paciente_id',
-                                  string="Diagnostico", copy=True)
-    consultas_count = fields.Integer(compute="_compute_consultas_count")
-    birth_date = fields.Date(string="Fecha Nacimiento")
+                                  string="Diagnostico", copy=True, track_visibility="onchange")
+    consultas_count = fields.Integer(compute="_compute_consultas_count", track_visibility="onchange")
+    birth_date = fields.Date(string="Fecha Nacimiento", track_visibility="onchange")
 
     @api.multi
     @api.depends('birth_date')
@@ -133,10 +133,11 @@ class ficha_paciente(models.Model):
 
 class ficha_paciente_trabajo(models.Model):
     _name = 'ficha.paciente.trabajo'
+    _inherit = ['mail.thread']
     _descripcion = 'Trabajos para Pacientes'
     _order = "name"
 
-    name = fields.Char(string="Puestos de Trabajo", required=True)
+    name = fields.Char(string="Puestos de Trabajo", required=True, track_visibility="onchange")
     _sql_constraints = [
         ('unique_name', 'unique(name)', """Puesto de Trabajo Existe""")
     ]
@@ -144,10 +145,11 @@ class ficha_paciente_trabajo(models.Model):
 
 class ficha_paciente_seguro(models.Model):
     _name = 'ficha.paciente.seguro'
+    _inherit = ['mail.thread']
     _descripcion = 'Seguros Pacientes'
     _order = "name"
 
-    name = fields.Char(string="Aseguradora", required=True)
+    name = fields.Char(string="Aseguradora", required=True, track_visibility="onchange")
 
     _sql_constraints = [
         ('unique_name', 'unique(name)', """Seguro Existe""")
@@ -156,21 +158,23 @@ class ficha_paciente_seguro(models.Model):
 
 class ficha_paciente_gasto_fijo(models.Model):
     _name = 'ficha.paciente.gasto.fijo'
+    _inherit = ['mail.thread']
     _descripcion = 'Gastos Fijos de Paciente'
     _order = "name"
 
-    gasto_id = fields.Many2one('ficha.paciente', string='Gasto ID')
+    gasto_id = fields.Many2one('ficha.paciente', string='Gasto ID', track_visibility="onchange")
     name = fields.Many2one('ficha.paciente.gasto.fijo.descripcion',
-                           string='Tipo Gasto', required=True)
-    monto = fields.Float(string="Monto del Gasto", required=True)
+                           string='Tipo Gasto', required=True, track_visibility="onchange")
+    monto = fields.Float(string="Monto del Gasto", required=True, track_visibility="onchange")
 
 
 class ficha_paciente_gasto_fijo_descripcion(models.Model):
     _name = 'ficha.paciente.gasto.fijo.descripcion'
+    _inherit = ['mail.thread']
     _descripcion = 'Descripcion Gasto Fijo de Paciente'
     _order = "name"
 
-    name = fields.Char(string="Tipo Gasto", required=True)
+    name = fields.Char(string="Tipo Gasto", required=True, track_visibility="onchange")
     _sql_constraints = [
         ('unique_name', 'unique(name)', """Gasto Existe""")
     ]
@@ -178,17 +182,18 @@ class ficha_paciente_gasto_fijo_descripcion(models.Model):
 
 class ficha_paciente_ayuda_economica(models.Model):
     _name = 'ficha.paciente.ayuda.economica'
+    _inherit = ['mail.thread']
     _descripcion = 'Ayuda Economica del Paciente'
     _order = "fecha"
 
     ayuda_economica_id = fields.Many2one('ficha.paciente',
-                                         string="Ayuda Economica ID")
+                                         string="Ayuda Economica ID", track_visibility="onchange")
     name = fields.Many2one('res.partner', string="Nombre Pariente", required=True,
-                           help="Persona que Ofrece la ayuda")
+                           help="Persona que Ofrece la ayuda", track_visibility="onchange")
     parentesco = fields.Many2one('ficha.paciente.parentesco', required=True,
-                                 string="Parentesco")
-    monto = fields.Float(string="Aporte", required=True)
-    fecha = fields.Date(string="Fecha Ayuda", default=fields.Date.context_today, required=True)
+                                 string="Parentesco", track_visibility="onchange")
+    monto = fields.Float(string="Aporte", required=True, track_visibility="onchange")
+    fecha = fields.Date(string="Fecha Ayuda", default=fields.Date.context_today, required=True, track_visibility="onchange")
 
     _sql_constraints = [
         ('check_amount', 'check(monto > 0)', 'El aporte debe ser mayor de 0')
@@ -198,9 +203,10 @@ class ficha_paciente_ayuda_economica(models.Model):
 class ficha_paciente_parentesco(models.Model):
     _name = 'ficha.paciente.parentesco'
     _descripcion = 'Tipos de Parientes'
+    _inherit = ['mail.thread']
     _order = "name"
 
-    name = fields.Char(string="Tipo Pariente", required=True)
+    name = fields.Char(string="Tipo Pariente", required=True, track_visibility="onchange")
     _sql_constraints = [
         ('unique_name', 'unique(name)', """Parentesco Existe""")
     ]
@@ -208,29 +214,32 @@ class ficha_paciente_parentesco(models.Model):
 
 class ficha_paciente_enfermedades(models.Model):
     _name = 'ficha.paciente.enfermedades'
+    _inherit = ['mail.thread']
     _descripcion = 'Enfermedades de los Pacientes'
     _order = "name"
 
-    name = fields.Char(string="Condicion", required=True)
+    name = fields.Char(string="Condicion", required=True, track_visibility="onchange")
 
 
 class ficha_paciente_enfermedades_line(models.Model):
     _name = 'ficha.paciente.enfermedades.line'
+    _inherit = ['mail.thread']
     _descripcion = 'Enfermedades de los Pacientes'
     _order = "name"
 
-    enfermedad_id = fields.Many2one('ficha.paciente')
+    enfermedad_id = fields.Many2one('ficha.paciente', track_visibility="onchange")
     name = fields.Many2one('ficha.paciente.enfermedades',
-                           string="Condicion")
+                           string="Condicion", track_visibility="onchange")
 
 
 class ficha_paciente_telefono(models.Model):
     _name = 'ficha.paciente.telefono'
+    _inherit = ['mail.thread']
     _descripcion = 'Telefonos del Paciente'
 
     telefono_id = fields.Many2one('ficha.paciente',
-                                  string="Telefonos Pacientes")
-    name = fields.Char(string='Telefono', required=True)
+                                  string="Telefonos Pacientes", track_visibility="onchange")
+    name = fields.Char(string='Telefono', required=True, track_visibility="onchange")
     tipo = fields.Selection([('r', 'Residencial'),
                              ('c', 'Celular')], string="Tipo de Telefono",
-                            required=True)
+                            required=True, track_visibility="onchange")
