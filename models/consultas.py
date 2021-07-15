@@ -19,9 +19,9 @@ class consultas_consultas(models.Model):
     diagnostico = fields.One2many("consultas.diagnostico.line", 'consulta_id',
                                   string="Diagnostico / Estado / Actividad", copy=True, track_visibility="onchange")
     referimiento = fields.One2many("consultas.referimiento.line", 'consulta_id',
-                                   string="Referimiento", copy=True, track_visibility="onchange")
+                                   string="Referimiento", copy=True)
     tratamiento = fields.One2many("consultas.tratamiento.line", 'consulta_id',
-                                  string="Tratamiento / Seguimiento / Referimiento", copy=True, track_visibility="onchange")
+                                  string="Tratamiento / Seguimiento / Referimiento", copy=True)
     employee_id = fields.Many2one("hr.employee", string="Médico / Profesor",
                                   required=True,
                                   default=lambda self: self._get_employee(), track_visibility="onchange")
@@ -97,24 +97,23 @@ class consultas_tratamiento(models.Model):
 
 class consultas_tratamiento_line(models.Model):
     _name = "consultas.tratamiento.line"
-    _inherit = ['mail.thread']
     _description = ""
 
     name = fields.Many2one("consultas.tratamiento", ondelete="cascade",
-                           string="Tratamiento / Seguimiento", track_visibility="onchange")
-    consulta_id = fields.Many2one("consultas.consultas", ondelete="cascade", track_visibility="onchange")
-    paciente_id = fields.Many2one(related="consulta_id.name", store=True, track_visibility="onchange")
-    employee_id = fields.Many2one(related="consulta_id.employee_id", store=True, track_visibility="onchange")
-    programa = fields.Many2one(related="consulta_id.programa", store=True, track_visibility="onchange")
-    notes = fields.Text(related="consulta_id.notes", track_visibility="onchange")
+                           string="Tratamiento / Seguimiento")
+    consulta_id = fields.Many2one("consultas.consultas", ondelete="cascade")
+    paciente_id = fields.Many2one(related="consulta_id.name", store=True)
+    employee_id = fields.Many2one(related="consulta_id.employee_id", store=True)
+    programa = fields.Many2one(related="consulta_id.programa", store=True)
+    notes = fields.Text(related="consulta_id.notes")
 
 
-    edad = fields.Integer(related='consulta_id.edad', store=True, track_visibility="onchange")
-    sexo = fields.Selection(related='consulta_id.sexo', store=True, track_visibility="onchange")
-    fecha = fields.Date(related="consulta_id.fecha", store=True, track_visibility="onchange")
-    tratamiento = fields.One2many(related="consulta_id.tratamiento", track_visibility="onchange")
-    message_follower_ids = fields.One2many(related="consulta_id.message_follower_ids", track_visibility="onchange")
-    message_ids = fields.One2many(related="consulta_id.message_ids", track_visibility="onchange")
+    edad = fields.Integer(related='consulta_id.edad', store=True)
+    sexo = fields.Selection(related='consulta_id.sexo', store=True)
+    fecha = fields.Date(related="consulta_id.fecha", store=True)
+    tratamiento = fields.One2many(related="consulta_id.tratamiento")
+    message_follower_ids = fields.One2many(related="consulta_id.message_follower_ids")
+    message_ids = fields.One2many(related="consulta_id.message_ids")
 
     @api.multi
     def show_consulta(self):
@@ -139,12 +138,12 @@ class consulta_proyeccion(models.Model):
     _inherit = ['mail.thread']
     _description = ""
 
-    tratamiento_id = fields.Many2one("consultas.tratamiento", track_visibility="onchange")
-    referimiento_id = fields.Many2one("consultas.referimiento", track_visibility="onchange")
-    proyeccion = fields.Integer(string="Proyeccion", required=True, track_visibility="onchange")
-    programa = fields.Many2one("programa.programa", string="Programa", required=True, track_visibility="onchange")
+    tratamiento_id = fields.Many2one("consultas.tratamiento")
+    referimiento_id = fields.Many2one("consultas.referimiento")
+    proyeccion = fields.Integer(string="Proyeccion", required=True)
+    programa = fields.Many2one("programa.programa", string="Programa", required=True)
     year = fields.Selection([(num, str(num)) for num in range(2000, (datetime.now().year) + 1)], string='Año',
-                            required=True, track_visibility="onchange")
+                            required=True)
 
     _sql_constraints = [
         ('unique_name', "unique(tratamiento_id,year,programa)", "Proyeccion Existe")
