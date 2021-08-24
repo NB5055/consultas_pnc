@@ -80,7 +80,8 @@ class ficha_paciente(models.Model):
                 paciente.edad = abs(today.year - birth_date.year)
 
     def _compute_consultas_count(self):
-        self.consultas_count = len(self.consultas)
+        for consulta in self:
+            consulta.consultas_count = len(consulta.consultas)
 
     @api.depends('image')
     def _compute_images(self):
