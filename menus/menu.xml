@@ -7,7 +7,8 @@
         <menuitem action="ficha_paciente_act" parent="ficha_paciente" id="ficha_paciente_menu"/>
         <menuitem name="Consultas y Servicios" parent="menu_root" id="consultas_consultas_menu" sequence="4"/>
         <menuitem action="consultas_consultas_act" parent="consultas_consultas_menu" id="consultas_consultas_sub_menu"/>
-        <menuitem action="consultas_tratamiento_line_act" parent="consultas_consultas_sub_menu"
+        <menuitem action="consultas_tratamiento_line_act" parent="consultas_consultas_menu"
+                  groups="group_categoria_a"
                   id="consultas_consultas_line_sub_menu"/>
 
         <menuitem action="operativo_act" parent="consultas_consultas_menu" id="operativos"/>

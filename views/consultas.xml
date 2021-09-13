@@ -182,8 +182,9 @@
             <field name="name">Tratamiento / Seguimiento / Referimiento</field>
             <field name="model">consultas.tratamiento.line</field>
             <field name="arch" type="xml">
-                <tree string="Consultas" >
+                <tree string="Consultas" delete="false" create="false" edit="false">
                     <field name="name"/>
+                    <field name="fecha"/>
                     <field name="paciente_id"/>
                     <field name="employee_id"/>
                     <!--<button name="show_consulta" string="Ver" type="object" groups="consultas_pnc.group_categoria_a"/>-->
@@ -195,12 +196,12 @@
             <field name="name">Tratamiento / Seguimiento / Referimiento</field>
             <field name="model">consultas.tratamiento.line</field>
             <field name="arch" type="xml">
-                <search string="Consultas ">
+                <search string="Tratamiento / Seguimiento">
                     <field name="name"/>
                     <field name="paciente_id"/>
                     <field name="employee_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Consulta" domain="" context="{'group_by':'name'}"/>
+                        <filter string="Tratamiento / Seguimiento" domain="" context="{'group_by':'name'}"/>
                         <filter string="Paciente" domain="" context="{'group_by':'paciente_id'}"/>
                         <filter name="group_employee_id" string="Médico / Profesor" domain=""
                                 context="{'group_by':'employee_id'}"/>
@@ -214,10 +215,11 @@
             <field name="name">Registro Consultas y Atenciones</field>
             <field name="model">consultas.tratamiento.line</field>
             <field name="arch" type="xml">
-                <form string="Registro Consultas y Atenciones ">
+                <form string="Tratamiento / Seguimiento / Referimiento" delete="false" create="false" edit="false">
                     <sheet>
-                        <group col="4" string="Registro Consultas y Atenciones">
-
+                        <group col="4" string="Tratamiento / Seguimiento / Referimiento">
+                            <field name="name"/>
+                            <field name="consulta_id" string="Consulta"/>
                             <field name="fecha" required="1"/>
                             <field name="programa"
                                    domain="[('program_type','=','servicio')]"
@@ -232,15 +234,15 @@
                             <field name="edad"/>
                             <field name="sexo"/>
                         </group>
-                        <field name="tratamiento" colspan="4"
-                               required="1">
-                            <tree editable="top">
-                                <field name="name" string="Tratamiento / Seguimiento / Referimiento" required="1"
-                                       domain="[('category','=','rh')]"
-                                       options="{'no_create_edit': True,
-                                                             'no_create': True}"/>
-                            </tree>
-                        </field>
+<!--                        <field name="tratamiento" colspan="4"-->
+<!--                               required="1">-->
+<!--                            <tree editable="top">-->
+<!--                                <field name="name" string="Tratamiento / Seguimiento / Referimiento" required="1"-->
+<!--                                       domain="[('category','=','rh')]"-->
+<!--                                       options="{'no_create_edit': True,-->
+<!--                                                             'no_create': True}"/>-->
+<!--                            </tree>-->
+<!--                        </field>-->
                         <group string="Notas">
                             <field name="notes" nolabel="1"/>
                         </group>
@@ -255,7 +257,7 @@
 
 
         <record model='ir.actions.act_window' id='consultas_tratamiento_line_act'>
-            <field name="name">Tratamiento / Seguimiento / Referimiento</field>
+            <field name="name">Tratamiento/Seguimiento/Referimiento</field>
             <field name="res_model">consultas.tratamiento.line</field>
             <field name="context">{'search_default_group_employee_id': 1}</field>
             <field name="view_type">form</field>

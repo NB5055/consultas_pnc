@@ -45,6 +45,19 @@
             </field>
         </record>
 
+        <record model="ir.rule" id="prevent_edit_no_admin">
+            <field name="name">Consulta: Editar consultas propias</field>
+            <field name="model_id" ref="model_consultas_consultas"/>
+            <field name="groups" eval="[(4, ref('consultas_pnc.group_categoria_c')),(4, ref('consultas_pnc.group_categoria_b'))]"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+        <record model="ir.rule" id="allow_edit_admin">
+            <field name="name">Consulta: Editar consultas</field>
+            <field name="model_id" ref="model_consultas_consultas"/>
+            <field name="groups" eval="[(4, ref('consultas_pnc.group_categoria_a'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
     </data>
 
 
