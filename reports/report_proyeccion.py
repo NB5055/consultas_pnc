@@ -20,9 +20,9 @@ class ProyeccionReport(models.TransientModel):
                               ('9', 'Septiembre'),
                               ('10', 'Octubre'),
                               ('11', 'Noviembre'),
-                              ('12', 'Diciembre')], string="Mes", required=True, default=str(datetime.now().month))
+                              ('12', 'Diciembre')], string="Mes", required=True)
     year = fields.Selection([(num, str(num)) for num in range(2000, (datetime.now().year) + 1)], string='Año',
-                            required=True, default=datetime.now().year)
+                            required=True)
     programa_ids = fields.Many2many('programa.programa', string="Programas", required=True)
     month_string = fields.Char(string='Month String', compute="_get_month_string")
 
