@@ -40,14 +40,10 @@ class ficha_paciente(models.Model):
     vehiculo = fields.Selection([('s', 'Si'), ('n', 'No')], string="Vehiculo", default='n', track_visibility="onchange")
     trabajo = fields.Many2one('ficha.paciente.trabajo', string="Trabajo", track_visibility="onchange")
     seguro = fields.Many2one('ficha.paciente.seguro', string="Seguro", track_visibility="onchange")
-    gastos_fijos = fields.One2many('ficha.paciente.gasto.fijo', 'gasto_id', string="Gastos Fijos",
-                                   track_visibility="onchange")
-    ayuda_economica = fields.One2many('ficha.paciente.ayuda.economica', 'ayuda_economica_id', string="Ayuda Economica",
-                                      track_visibility="onchange")
-    enfermedades = fields.One2many('ficha.paciente.enfermedades.line', 'enfermedad_id', string="Condiciones",
-                                   track_visibility="onchange")
-    telefonos = fields.One2many('ficha.paciente.telefono', 'telefono_id', string="Telefonos",
-                                track_visibility="onchange")
+    gastos_fijos = fields.One2many('ficha.paciente.gasto.fijo', 'gasto_id', string="Gastos Fijos", track_visibility="onchange")
+    ayuda_economica = fields.One2many('ficha.paciente.ayuda.economica', 'ayuda_economica_id', string="Ayuda Economica", track_visibility="onchange")
+    enfermedades = fields.One2many('ficha.paciente.enfermedades.line', 'enfermedad_id', string="Condiciones", track_visibility="onchange")
+    telefonos = fields.One2many('ficha.paciente.telefono', 'telefono_id', string="Telefonos", track_visibility="onchange")
     lugar_nacimiento = fields.Many2one('region.provincia', string="Lugar de Nacimiento", track_visibility="onchange")
     display_name = fields.Char(string="Paciente", compute='_compute_display_name', search="_search_display_name")
     image = fields.Binary("Image", attachment=True, default=lambda self: self._get_default_image(True),
@@ -127,8 +123,13 @@ class ficha_paciente(models.Model):
         }
 
     _sql_constraints = [
-        ('unique_name_ced', 'unique(name,nombre,apellidos)', """Este Paciente Participante esta duplicado""")
-        ]
+        ('unique_name', 'check(1=1)', """Existe otro Paciente/"""
+                                        """Participante"""
+                                        """con este documento"""),
+        ('unique_name_ced', 'unique(name,nombre,apellidos)', """Este Paciente/"""
+                                                   """Participante"""
+                                                   """esta duplicado""")
+    ]
 
 
 class ficha_paciente_trabajo(models.Model):
@@ -193,8 +194,7 @@ class ficha_paciente_ayuda_economica(models.Model):
     parentesco = fields.Many2one('ficha.paciente.parentesco', required=True,
                                  string="Parentesco", track_visibility="onchange")
     monto = fields.Float(string="Aporte", required=True, track_visibility="onchange")
-    fecha = fields.Date(string="Fecha Ayuda", default=fields.Date.context_today, required=True,
-                        track_visibility="onchange")
+    fecha = fields.Date(string="Fecha Ayuda", default=fields.Date.context_today, required=True, track_visibility="onchange")
 
     _sql_constraints = [
         ('check_amount', 'check(monto > 0)', 'El aporte debe ser mayor de 0')
