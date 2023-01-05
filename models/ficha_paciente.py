@@ -123,7 +123,7 @@ class ficha_paciente(models.Model):
         }
 
     _sql_constraints = [
-        ('unique_name', 'check(1=1)', """Existe otro Paciente/"""
+        ('unique_name', 'check(1!=1)', """Existe otro Paciente/"""
                                         """Participante"""
                                         """con este documento"""),
         ('unique_name_ced', 'unique(name,nombre,apellidos)', """Este Paciente/"""
