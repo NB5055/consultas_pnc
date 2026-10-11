@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -22,8 +20,8 @@ class ProyeccionReport(models.TransientModel):
                               ('10', 'Octubre'),
                               ('11', 'Noviembre'),
                               ('12', 'Diciembre')], string="Mes", required=True)
-    year = fields.Selection([(str(num), str(num)) for num in range(2000, (datetime.now().year) + 1)], string='Año',
-                            required=True)
+    year = fields.Selection(selection=lambda self: self.env['consultas.proyeccion']._selection_year(),
+                            string='Año', required=True)
     programa_ids = fields.Many2many('programa.programa', string="Programas", required=True)
     month_string = fields.Char(string='Month String', compute="_get_month_string")
 

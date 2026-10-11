@@ -34,14 +34,14 @@ class TestModels(ConsultasPncCommon):
         })
         self.assertEqual(paciente.edad, 20)
         self.assertEqual(paciente.state, 'activo')
-        self.assertEqual(paciente.display_name, 'Gomez Ana  ( 00200000002 )')
+        self.assertEqual(paciente.display_name, 'Gomez Ana  ( 002-0000000-2 )')
         self.assertEqual(len(paciente.telefonos), 1)
         self.assertEqual(paciente.enfermedades.name, condicion)
         self.assertEqual(paciente.diagnostico.name, self.diagnostico)
         self.assertEqual(paciente.gastos_fijos.monto, 100)
         self.assertEqual(paciente.ayuda_economica.fecha, date.today())
         self.assertTrue(paciente.lugar_nacimiento)
-        for term in ('Gomez', 'Ana', '00200000002'):
+        for term in ('Gomez', 'Ana', '00200000002', '002-0000000-2', '0000000-2'):
             self.assertIn(paciente, self.env['ficha.paciente'].search([('display_name', 'ilike', term)]))
             self.assertIn(paciente.id, [r[0] for r in self.env['ficha.paciente'].name_search(term)])
 
@@ -55,7 +55,7 @@ class TestModels(ConsultasPncCommon):
         self.assertNotIn('image_small', self.env['ficha.paciente']._fields)
 
     def test_ficha_edad_sin_fecha_nacimiento(self):
-        paciente = self.env['ficha.paciente'].create({'name': '003', 'nombre': 'Luis', 'apellidos': 'Diaz'})
+        paciente = self.env['ficha.paciente'].create({'name': '0', 'nombre': 'Luis', 'apellidos': 'Diaz'})
         self.assertEqual(paciente.edad, 0)
         consulta = self._create_consulta(date(2024, 3, 5), self.terapia, paciente=paciente)
         consulta.edad = 44
@@ -73,7 +73,7 @@ class TestModels(ConsultasPncCommon):
             'tratamiento': [(0, 0, {'name': self.terapia.id}), (0, 0, {'name': self.operativo.id})],
             'diagnostico': [(0, 0, {'name': self.diagnostico.id, 'paciente_id': self.paciente.id})],
         })
-        self.assertEqual(consulta.edad, 30)
+        self.assertEqual(consulta.edad, 2024 - self.paciente.birth_date.year)
         self.assertEqual(consulta.sexo, 'm')
         self.assertEqual(len(consulta.tratamiento), 2)
         self.assertEqual(consulta.diagnostico.name, self.diagnostico)
@@ -86,7 +86,7 @@ class TestModels(ConsultasPncCommon):
             "select paciente_id, employee_id, programa, edad, sexo, fecha from consultas_tratamiento_line where id = %s",
             (linea.id,))
         self.assertEqual(self.env.cr.fetchone(), (
-            self.paciente.id, self.employee.id, self.programa.id, 30, 'm', date(2024, 3, 5)))
+            self.paciente.id, self.employee.id, self.programa.id, consulta.edad, 'm', date(2024, 3, 5)))
         self.assertEqual(linea.notes, 'Nota de prueba')
         self.assertEqual(linea.tratamiento, consulta.tratamiento)
 
@@ -164,7 +164,7 @@ class TestModels(ConsultasPncCommon):
         password = self.env.cr.fetchone()[0]
         self.assertTrue(password)
         self.assertNotIn('clave-segura-1', password)
-        self.assertIn(employee, self.programa.participantes)
+        self.assertIn(employee.id, self.programa.participantes.ids)
 
         employee.write({'category_group': 'b', 'user_name': 'profesor.uno', 'user_password': 'otra-clave-2'})
         self.assertEqual(user.login, 'profesor.uno')

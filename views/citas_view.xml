@@ -5,19 +5,59 @@
         <field name="model">citas.citas</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_registrar_consulta" string="Registrar Atencion" type="object"
+                            class="oe_highlight" invisible="state != 'pendiente' or not id"/>
+                    <button name="action_ausente" string="No Asistio" type="object"
+                            invisible="state != 'pendiente' or not id"/>
+                    <button name="action_cancelar" string="Cancelar Cita" type="object"
+                            invisible="state != 'pendiente' or not id"/>
+                    <button name="action_pendiente" string="Volver a Pendiente" type="object"
+                            invisible="state not in ('ausente', 'cancelada')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pendiente,atendida"/>
+                </header>
                 <sheet>
-                    <group col="4">
-                        <field name="paciente_id"/>
-                        <field name="programa_id"/>
-                        <label for="fecha_desde" string="Duracion"/>
-                        <div colspan="2">
-                            <field name="fecha_desde" class="oe_inline"/>
-                            <span class="oe_inline"> - </span>
-                            <field name="fecha_hasta" class="oe_inline"/>
-                        </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_consulta" type="object" class="oe_stat_button"
+                                icon="fa-stethoscope" string="Consulta" invisible="not consulta_id"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="paciente_id" readonly="state != 'pendiente'"
+                                   options="{'no_create_edit': True, 'no_create': True}"/>
+                            <field name="programa_id" readonly="state != 'pendiente'"
+                                   options="{'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                            <field name="employee_id" readonly="state != 'pendiente'"
+                                   options="{'no_create_edit': True, 'no_open': True, 'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="fecha_desde" readonly="state != 'pendiente'"/>
+                            <field name="fecha_hasta" readonly="state != 'pendiente'"/>
+                            <field name="consulta_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Motivo / Notas">
+                        <field name="notas" nolabel="1" colspan="2"/>
                     </group>
                 </sheet>
+                <chatter/>
             </form>
+        </field>
+    </record>
+
+    <record id="view_citas_list" model="ir.ui.view">
+        <field name="name">Citas</field>
+        <field name="model">citas.citas</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancelada'" decoration-danger="state == 'ausente'"
+                  decoration-success="state == 'atendida'">
+                <field name="fecha_desde"/>
+                <field name="fecha_hasta" optional="hide"/>
+                <field name="paciente_id"/>
+                <field name="programa_id"/>
+                <field name="employee_id"/>
+                <field name="state" widget="badge"/>
+            </list>
         </field>
     </record>
 
@@ -25,19 +65,51 @@
         <field name="name">Citas</field>
         <field name="model">citas.citas</field>
         <field name="arch" type="xml">
-            <calendar string="Citas" color="paciente_id"
+            <calendar string="Citas" color="employee_id"
                       date_start="fecha_desde" date_stop="fecha_hasta"
-                      mode="month"
+                      mode="week"
                       quick_create="0">
                 <field name="paciente_id"/>
-                <field name="programa_id"/>
+                <field name="programa_id" filters="1"/>
+                <field name="employee_id" filters="1"/>
+                <field name="state"/>
             </calendar>
+        </field>
+    </record>
+
+    <record id="view_citas_search" model="ir.ui.view">
+        <field name="name">Citas</field>
+        <field name="model">citas.citas</field>
+        <field name="arch" type="xml">
+            <search string="Citas">
+                <field name="paciente_id"/>
+                <field name="employee_id"/>
+                <field name="programa_id"/>
+                <filter name="filter_mias" string="Mis Citas" domain="[('employee_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter name="filter_pendiente" string="Pendientes" domain="[('state', '=', 'pendiente')]"/>
+                <filter name="filter_atendida" string="Atendidas" domain="[('state', '=', 'atendida')]"/>
+                <filter name="filter_ausente" string="No Asistieron" domain="[('state', '=', 'ausente')]"/>
+                <separator/>
+                <filter name="filter_fecha" string="Fecha" date="fecha_desde"/>
+                <group>
+                    <filter name="group_employee" string="Médico / Profesor" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_programa" string="Programa" context="{'group_by': 'programa_id'}"/>
+                    <filter name="group_state" string="Estado" context="{'group_by': 'state'}"/>
+                    <filter name="group_fecha" string="Dia" context="{'group_by': 'fecha_desde:day'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
     <record model="ir.actions.act_window" id="act_citas">
         <field name="name">Citas</field>
         <field name="res_model">citas.citas</field>
-        <field name="view_mode">calendar</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Agende la primera cita.
+            </p>
+        </field>
     </record>
 </odoo>

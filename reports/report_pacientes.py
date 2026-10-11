@@ -8,7 +8,7 @@ class ReportePacientes(models.TransientModel):
     programa_ids = fields.Many2many('programa.programa', string="Programas")
 
     def get_data(self, programa_id):
-        return self.env['ficha.paciente'].sudo().search([('programa', 'in', programa_id.ids)])
+        return self.env['ficha.paciente'].search([('programa', 'in', programa_id.ids)])
 
     def check_report(self):
         if not self.programa_ids:

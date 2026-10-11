@@ -24,13 +24,16 @@ class ReportAsistenciaEconomica(models.TransientModel):
         return self.get_asistencias().filtered(lambda x: x.ayuda_economica_id == paciente_id)
 
     def get_paciente_filtered(self, programa_id):
-        return self.paciente_ids.filtered(lambda x: x.programa == programa_id)
+        # solo los pacientes con ayudas en el periodo: el resto no imprime nada
+        con_ayuda = self.get_asistencias().ayuda_economica_id
+        return self.paciente_ids.filtered(lambda x: x.programa == programa_id and x in con_ayuda)
 
     def get_totales(self):
         totales = []
+        asistencias = self.get_asistencias()
         for programa_id in self.programa_ids:
             total_programa = sum(
-                self.get_asistencias().filtered(lambda x: x.ayuda_economica_id.programa == programa_id).mapped('monto'))
+                asistencias.filtered(lambda x: x.ayuda_economica_id.programa == programa_id).mapped('monto'))
             totales.append({'programa': programa_id.name,
                             'total_programa': total_programa})
         return totales

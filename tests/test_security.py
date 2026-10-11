@@ -60,7 +60,7 @@ class TestSecurity(ConsultasPncCommon):
             env['consultas.proyeccion'].search([])
         with self.assertRaises(AccessError):
             self.paciente.with_env(env).unlink()
-        paciente = env['ficha.paciente'].create({'name': '009', 'nombre': 'Rosa', 'apellidos': 'Mota'})
+        paciente = env['ficha.paciente'].create({'name': '00900000009', 'nombre': 'Rosa', 'apellidos': 'Mota'})
         paciente.write({'direccion': 'Calle 9'})
 
     def test_categoria_b_solo_sus_consultas(self):
@@ -89,7 +89,8 @@ class TestSecurity(ConsultasPncCommon):
             env['consultas.consultas'].search([])
         with self.assertRaises(AccessError):
             env['ficha.paciente'].search([])
-        self.assertTrue(env['operativos'].search([]) is not None)
+        with self.assertRaises(AccessError):
+            env['operativos'].search([])
 
     def test_administrador_acceso_total(self):
         admin = self.env.ref('base.user_admin')

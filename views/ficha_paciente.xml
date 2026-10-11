@@ -16,6 +16,9 @@
                         <button name="show_complete_history" type="object" class="oe_stat_button" icon="fa-archive">
                             <field name="consultas_count" string="Historial" widget="statinfo"/>
                         </button>
+                        <button name="show_citas" type="object" class="oe_stat_button" icon="fa-calendar">
+                            <field name="citas_count" string="Citas" widget="statinfo"/>
+                        </button>
                     </div>
 
                     <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
@@ -97,6 +100,19 @@
                                 <field name="hijos" />
                                 <field name="cohabitantes" />
                                 <field name="vivienda" />
+                                <field name="renta" invisible="vivienda != 'a'"/>
+                            </group>
+                            <group string="Ingresos y Gastos Fijos">
+                                <group>
+                                    <field name="ingresos"/>
+                                    <field name="otros"/>
+                                </group>
+                                <field name="gastos_fijos" nolabel="1" colspan="2">
+                                    <list string="Gastos Fijos" editable="bottom">
+                                        <field name="name" options="{'no_create_edit': True, 'no_create': True}"/>
+                                        <field name="monto" sum="Total"/>
+                                    </list>
+                                </field>
                             </group>
                         </page>
                         <!--<page string="Historial">-->
@@ -170,7 +186,7 @@
         <field name="model">ficha.paciente</field>
         <field name="arch" type="xml">
             <search string="Ficha Pacientes" >
-                <field name="name" />
+                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('cedula_digitos', 'ilike', self)]"/>
                 <field name="nombre" />
                 <field name="apellidos" />
                 <field name="apodos" />
@@ -178,8 +194,18 @@
                 <field name="enfermedades" />
                 <field name="edad"/>
                 <field name="birth_date"/>
+                <field name="programa"/>
+                <filter name="filter_activo" string="Activos" domain="[('state', '=', 'activo')]"/>
+                <filter name="filter_inactivo" string="Inactivos" domain="[('state', '=', 'inactivo')]"/>
+                <separator/>
+                <filter name="filter_cedula_repetida" string="Cedula Repetida"
+                        domain="[('cedula_repetida', '=', True)]"/>
+                <filter name="filter_sin_cedula" string="Sin Cedula" domain="[('name', '=', '0')]"/>
+                <filter name="filter_sin_nacimiento" string="Sin Fecha de Nacimiento"
+                        domain="[('birth_date', '=', False)]"/>
 
                 <group>
+                    <filter name="group_cedula" string="Cedula" context="{'group_by':'name'}"/>
                     <filter name="group_nombre" string="Nombre" context="{'group_by':'nombre'}"/>
                     <filter name="group_apellidos" string="Apellidos" context="{'group_by':'apellidos'}"/>
                     <filter name="group_programa" string="Programa" context="{'group_by':'programa'}"/>

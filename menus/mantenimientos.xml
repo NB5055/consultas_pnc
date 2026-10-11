@@ -14,6 +14,7 @@
             <menuitem action="ficha_paciente_parentesco_act" parent="ficha_paciente_mant" id="ficha_paciente_parentesco_menu"/>
             <menuitem action="ficha_paciente_enfermedades_act" parent="ficha_paciente_mant" id="ficha_paciente_enfermedades_menu"/>
             <menuitem action="ficha_paciente_ayuda_economica_act" parent="ficha_paciente_mant" id="ficha_paciente_ayuda_economica_menu"/>
+            <menuitem action="ficha_paciente_gasto_fijo_descripcion_act" parent="ficha_paciente_mant" id="ficha_paciente_gasto_fijo_descripcion_menu"/>
             <menuitem action="action_partner_form" parent="ficha_paciente_mant" id="ficha_paciente_patrocinadores" name="Patrocinadores"/>
 
         <menuitem name="Programas" parent="mantenimientos" id="programa_mant" sequence="3"/>
@@ -25,6 +26,7 @@
         <menuitem name="Consultas" parent="mantenimientos" id="programa_consulta" sequence="3"/>
             <menuitem action="consultas_diagnostico_act" parent="programa_consulta" id="consulta_diagnostico_menu"/>
             <menuitem action="consultas_tratamiento_act" parent="programa_consulta" id="consulta_tratamiento_menu"/>
+            <menuitem action="consultas_referimiento_act" parent="programa_consulta" id="consulta_referimiento_menu"/>
 
     <record model="ir.ui.menu" id="hr.menu_hr_root">
         <field name="group_ids" eval="[(6,0,[ref('base.group_no_one'),

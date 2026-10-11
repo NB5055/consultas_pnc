@@ -229,7 +229,7 @@ class TestReports(ConsultasPncCommon):
 
         html = self._render('consultas_pnc.menu_report_asistencia_Economica', wizard)
         celdas = self._celdas(html)
-        inicio = celdas.index('Perez Juan ( 00100000001 ) (Programa Uno)')
+        inicio = celdas.index('Perez Juan ( 001-0000000-1 ) (Programa Uno)')
         self.assertEqual(celdas[inicio + 5:inicio + 8], ['1', 'Patrocinador Uno', 'Beca'])
         self.assertIn('500.00', celdas[inicio + 8])
         self.assertEqual(celdas[inicio + 9], '2024-03-10')
@@ -258,7 +258,7 @@ class TestReports(ConsultasPncCommon):
         celdas = self._celdas(html)
         inicio = celdas.index('Programa Uno')
         self.assertEqual(celdas[inicio + 7:inicio + 14], [
-            '1', 'Perez Juan', '00100000001', 'Calle 1', '809-555-0001,809-555-0002', '30', 'Baja vision'])
+            '1', 'Perez Juan', '001-0000000-1', 'Calle 1', '809-555-0001,809-555-0002', '30', 'Baja vision'])
         self.assertNotIn('Programa Dos', celdas)
 
     def test_reportes_como_categoria_a(self):

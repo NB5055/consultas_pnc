@@ -30,9 +30,21 @@
         </field>
     </record>
 
+    <record id="operativo_pivot" model="ir.ui.view">
+        <field name="name">Prevencion de Ceguera</field>
+        <field name="model">operativos</field>
+        <field name="arch" type="xml">
+            <pivot string="Prevencion de Ceguera">
+                <field name="name" type="row"/>
+                <field name="fecha" interval="month" type="col"/>
+                <field name="atendidos" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="operativo_act" model="ir.actions.act_window">
         <field name="name">Prevencion de Ceguera</field>
         <field name="res_model">operativos</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,pivot</field>
     </record>
 </odoo>

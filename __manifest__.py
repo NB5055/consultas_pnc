@@ -1,6 +1,6 @@
 {
     'name': 'ConsultasPNC',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.1.0',
     'author': 'Angstrom Mena',
     'category': 'Consultas PNC',
     'website': 'https://www.angstrommena.com',
@@ -31,6 +31,7 @@
         'reports/report_asistencia_economica.xml',
         'reports/report_informe_programa_comparativo.xml',
         'reports/report_pacientes.xml',
+        'data/ir_cron.xml',
     ],
     'demo': [],
     'installable': True,

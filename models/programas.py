@@ -13,8 +13,9 @@ class programa_programa(models.Model):
     encargado = fields.Many2one("hr.employee", string="Encargado del Programa", tracking=True)
     provincia = fields.One2many("region.provincia", "programa_id",
                                 string="""Provincia de Ejecución""")
-    participantes = fields.One2many("hr.employee", 'programa_id',
-                                    string="Médico / Profesor")
+    # ficha publica del empleado: la lista se ve aunque el usuario no tenga permisos de RR. HH.
+    participantes = fields.One2many("hr.employee.public", 'programa_id',
+                                    string="Médico / Profesor", readonly=True)
     notas = fields.Text(string="Notas", tracking=True)
     paciente_id = fields.Many2one("ficha.paciente", tracking=True)
     tratamiento_ids = fields.Many2many('consultas.tratamiento', string="Tratamientos")
@@ -24,15 +25,3 @@ class programa_programa(models.Model):
                                      ('servicio', 'Rehabilitacion')], string="Categoria", tracking=True)
 
     _name_uniq = models.Constraint('unique(name)', "Este programa ya existe")
-
-
-class programa_participantes(models.Model):
-    _name = "programa.participantes"
-    _description = "Empleados Participantes del proyecto"
-
-    participante_id = fields.Many2one("hr.employee",
-                                      string="Médico / Profesor")
-    especialidad = fields.Many2one(related="participante_id.job_id",
-                                   string="Especialidad / Cargo",
-                                   readonly=True)
-    programa_id = fields.Many2one("programa.programa", string="Programa")
