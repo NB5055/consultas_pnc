@@ -1,4 +1,4 @@
-from openerp import models, fields, api
+from odoo import fields, models
 
 
 class Operativos(models.Model):

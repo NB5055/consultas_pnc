@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-        <menuitem name="Menu Principal" id="menu_root" sequence="1"/>
-        <menuitem name="Citas" parent="menu_root" action="act_citas" id="menu_citas"/>
-        <menuitem name="Ficha" parent="menu_root" id="ficha_paciente" sequence="2"/>
-        <menuitem action="ficha_paciente_act" parent="ficha_paciente" id="ficha_paciente_menu"/>
-        <menuitem name="Consultas y Servicios" parent="menu_root" id="consultas_consultas_menu" sequence="4"/>
-        <menuitem action="consultas_consultas_act" parent="consultas_consultas_menu" id="consultas_consultas_sub_menu"/>
-        <menuitem action="consultas_tratamiento_line_act" parent="consultas_consultas_menu"
-                  groups="group_categoria_a"
-                  id="consultas_consultas_line_sub_menu"/>
+<odoo>
+    <menuitem name="Menu Principal" id="menu_root" sequence="1"
+              web_icon="consultas_pnc,static/description/icon.png"/>
+    <menuitem name="Citas" parent="menu_root" action="act_citas" id="menu_citas"/>
+    <menuitem name="Ficha" parent="menu_root" id="ficha_paciente" sequence="2"/>
+    <menuitem action="ficha_paciente_act" parent="ficha_paciente" id="ficha_paciente_menu"/>
+    <menuitem name="Consultas y Servicios" parent="menu_root" id="consultas_consultas_menu" sequence="4"/>
+    <menuitem action="consultas_consultas_act" parent="consultas_consultas_menu" id="consultas_consultas_sub_menu"/>
+    <menuitem action="consultas_tratamiento_line_act" parent="consultas_consultas_menu"
+              groups="group_categoria_a,base.group_system"
+              id="consultas_consultas_line_sub_menu"/>
 
-        <menuitem action="operativo_act" parent="consultas_consultas_menu" id="operativos"/>
+    <menuitem action="operativo_act" parent="consultas_consultas_menu" id="operativos"/>
 
-        <menuitem name="Reportes" id="menu_reportes" parent="menu_root"/>
-
-    </data>
-</openerp>
+    <menuitem name="Reportes" id="menu_reportes" parent="menu_root"/>
+</odoo>

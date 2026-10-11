@@ -1,526 +1,505 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
+<odoo>
 <!--========================================================================-->
     <!-- View Formulario Ficha -->
 <!--========================================================================-->
-        <record model='ir.ui.view' id='ficha_paciente_form'>
-            <field name="name">Formulario Paciente / Participantes</field>
-            <field name="model">ficha.paciente</field>
-            <field name="arch" type="xml">
-                <form string="Ficha PAcientes / Participantes">
-                    <header>
-                        <field name="state" clickable="True" widget="statusbar" statusbar_colors='{"activo":"green","inactivo":"red"}'/>
-                    </header>
-                    <sheet>
-                        <div class="oe_button_box">
-                            <button name="show_complete_history" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="consultas_count" string="Historial" widget="statinfo"/>
-                            </button>
-                        </div>
-
-                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
-                        <div class="oe_title">
-                            <h1>
-                                <field name="nombre" default_focus="1" placeholder="Nombre del paciente" />
-                            </h1>
-                            <h1>
-                                <field name="apellidos" placeholder="Apellidos del paciente" />
-                            </h1>
-                            <h3>
-                                <field name="name" placeholder="Cedula del paciente"/>
-                            </h3>
-                        </div>
-                        <group>
-                            <field name="programa"/>
-                        </group>
-                        <notebook >
-                            <page string="Basicos y Contacto">
-                                <group string="Basicos" col="4">
-                                    <group col="2">
-                                        <field name="apodos" placeholder="Apodos"/>
-                                        <field name="sexo" />
-                                        <field name="grado_academico" placeholder="Grado Academico"/>
-                                        <field name="trabajo" placeholder="Trabajo"/>
-                                        <field name="lugar_nacimiento" placeholder="Lugad de Nacimíento"/>
-                                    </group>
-                                    <group col="2">
-                                        <field name="birth_date"/>
-                                        <field name="edad"/>
-                                        <field name="estado_civil"/>
-                                        <field name="vehiculo"/>
-                                        <field name="seguro" placeholder="Seguro"/>
-                                    </group>
-                                </group>
-                                <group>
-                                    <field name="enfermedades" required="1" string="Condicion" nolabel="1">
-                                        <tree editable="top" colors="red:True" style="background-color:red">
-                                            <field name="name" string="Condicion" required="1"
-                                                   options="{'no_create_edit': True,
-                                                             'no_create': True}"/>
-                                        </tree>
-                                    </field>
-                                    <field name="diagnostico" colspan="4" nolabel="1">
-                                        <tree editable="top" colors="red:True" style="background-color:red">
-                                            <field name="name" string="Diagnostico" required="1" options="{'no_create_edit': True,
-                                                             'no_create': True}"/>
-                                        </tree>
-                                    </field>
-                                </group>
-
-                                <group string="Contacto">
-                                    <field name="direccion"
-                                                placeholder="Direccíon"/>
-                                    <div colspan="2">
-                                        <field name="telefonos" >
-                                            <tree string="Telefonos del Paciente" editable="top">
-                                                <field name="name" />
-                                                <field name="tipo" />
-                                            </tree>
-                                        </field>
-                                    </div>
-                                </group>
-                            </page>
-                            <page string="Asistencia Economica">
-                                <field name="ayuda_economica" >
-                                    <tree string="Ayuda Economica" editable="top">
-                                        <field name="name" string="Patrocinador" options="{'no_create_edit': True,
-                                                             'no_create': True}"/>
-                                        <field name="parentesco" string="Concepto" options="{'no_create_edit': True,
-                                                             'no_create': True}"/>
-                                        <field name="monto" type="char"/>
-                                        <field name="fecha"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            <page string="Vivienda y Familiares">
-                                <group>
-                                    <field name="hijos" />
-                                    <field name="cohabitantes" />
-                                    <field name="vivienda" />
-                                </group>
-                            </page>
-                            <!--<page string="Historial">-->
-                                <!--<field name="consultas">-->
-                                    <!--<tree>-->
-                                        <!--<field name="fecha"/>-->
-                                        <!--<field name="programa"/>-->
-                                        <!--<field name="employee_id"/>-->
-                                        <!--<field name="tratamiento"/>-->
-                                    <!--</tree>-->
-                                <!--</field>-->
-                            <!--</page>-->
-                        </notebook>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
+    <record model='ir.ui.view' id='ficha_paciente_form'>
+        <field name="name">Formulario Paciente / Participantes</field>
+        <field name="model">ficha.paciente</field>
+        <field name="arch" type="xml">
+            <form string="Ficha PAcientes / Participantes">
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="show_complete_history" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="consultas_count" string="Historial" widget="statinfo"/>
+                        </button>
                     </div>
-                </form>
-            </field>
-        </record>
 
-        <record model='ir.ui.view' id='ficha_paciente_tree'>
-            <field name="name">Lista Pacientes / Participantes</field>
-            <field name="model">ficha.paciente</field>
-            <field name="arch" type="xml">
-                <tree string="Ficha Pacientes">
-                    <field name="name" />
-                    <field name="nombre" />
-                    <field name="apellidos" />
-                    <field name="apodos" />
-                    <field name="birth_date"/>
-                    <field name="edad"/>
-                    <field name="direccion" />
-                </tree>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='ficha_paciente_kanban'>
-            <field name="name">Pacientes / Participantes</field>
-            <field name="model">ficha.paciente</field>
-            <field name="arch" type="xml">
-                <kanban>
-                    <field name="name" />
-                    <field name="nombre" />
-                    <field name="apellidos" />
-                    <field name="programa"/>
-                    <field name="consultas"/>
-
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click">
-                                <div class="o_kanban_image">
-                                    <img t-att-src="kanban_image('paciente.paciente', 'image_small', record.id.value)"/>
-                                </div>
-                                <div class="oe_kanban_details">
-                                    <strong>
-                                        <field name="apellidos"/> <field name="nombre"/>
-                                        <br/>
-                                        <field name="name"/>
-                                        <br/>
-                                        <field name="programa"/>
-                                    </strong>
-                                    <div>
-                                        <strong>Nacimiento : </strong> <field name="birth_date"/> (<field name="edad"/>)
-                                    </div>
-                                    <ul>
-                                        <li>
-                                            <t>Consultas : <field name="consultas"/></t>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='ficha_paciente_search'>
-            <field name="name">Buscar Paciente / Participante</field>
-            <field name="model">ficha.paciente</field>
-            <field name="arch" type="xml">
-                <search string="Ficha Pacientes" >
-                    <field name="name" />
-                    <field name="nombre" />
-                    <field name="apellidos" />
-                    <field name="apodos" />
-                    <field name="lugar_nacimiento" />
-                    <field name="enfermedades" />
-                    <field name="edad"/>
-                    <field name="birth_date"/>
-
-                    <group expand="0" string="Group By">
-                        <filter string="Nombre" domain="" context="{'group_by':'nombre'}"/>
-                        <filter string="Apellidos" domain="" context="{'group_by':'apellidos'}"/>
-                        <filter string="Programa" domain="" context="{'group_by':'programa'}"/>
-                        <filter string="Sexo" domain="" context="{'group_by':'sexo'}"/>
-                        <filter string="Edad" domain="" context="{'group_by':'age'}"/>
-                        <filter string="Nacimiento" domain="" context="{'group_by':'birth_date'}"/>
-                        <filter string="Estado Civil" domain="" context="{'group_by':'estado_civil'}"/>
-                        <filter string="Lugar de Nacimiento" context="{'group_by':'lugar_nacimiento'}"/>
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="nombre" default_focus="1" placeholder="Nombre del paciente" />
+                        </h1>
+                        <h1>
+                            <field name="apellidos" placeholder="Apellidos del paciente" />
+                        </h1>
+                        <h3>
+                            <field name="name" placeholder="Cedula del paciente"/>
+                        </h3>
+                    </div>
+                    <group>
+                        <field name="programa"/>
                     </group>
-                </search>
-            </field>
-        </record>
+                    <notebook >
+                        <page string="Basicos y Contacto">
+                            <group string="Basicos" col="4">
+                                <group col="2">
+                                    <field name="apodos" placeholder="Apodos"/>
+                                    <field name="sexo" />
+                                    <field name="grado_academico" placeholder="Grado Academico"/>
+                                    <field name="trabajo" placeholder="Trabajo"/>
+                                    <field name="lugar_nacimiento" placeholder="Lugad de Nacimíento"/>
+                                </group>
+                                <group col="2">
+                                    <field name="birth_date"/>
+                                    <field name="edad" readonly="1"/>
+                                    <field name="estado_civil"/>
+                                    <field name="vehiculo"/>
+                                    <field name="seguro" placeholder="Seguro"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="enfermedades" required="1" string="Condicion" nolabel="1">
+                                    <list editable="top" decoration-danger="1">
+                                        <field name="name" string="Condicion" required="1"
+                                               options="{'no_create_edit': True,
+                                                         'no_create': True}"/>
+                                    </list>
+                                </field>
+                                <field name="diagnostico" colspan="4" nolabel="1">
+                                    <list editable="top" decoration-danger="1">
+                                        <field name="name" string="Diagnostico" required="1" options="{'no_create_edit': True,
+                                                         'no_create': True}"/>
+                                    </list>
+                                </field>
+                            </group>
 
-        <record model='ir.actions.act_window' id='ficha_paciente_act'>
-            <field name="name">Pacientes / Participantes </field>
-            <field name="res_model">ficha.paciente</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Haga Click Para Crear un Nuevo paciente.
-              </p>
-            </field>
-        </record>
+                            <group string="Contacto">
+                                <field name="direccion"
+                                            placeholder="Direccíon"/>
+                                <div colspan="2">
+                                    <field name="telefonos" >
+                                        <list string="Telefonos del Paciente" editable="top">
+                                            <field name="name" />
+                                            <field name="tipo" />
+                                        </list>
+                                    </field>
+                                </div>
+                            </group>
+                        </page>
+                        <page string="Asistencia Economica">
+                            <field name="ayuda_economica" >
+                                <list string="Ayuda Economica" editable="top">
+                                    <field name="name" string="Patrocinador" options="{'no_create_edit': True,
+                                                         'no_create': True}"/>
+                                    <field name="parentesco" string="Concepto" options="{'no_create_edit': True,
+                                                         'no_create': True}"/>
+                                    <field name="monto"/>
+                                    <field name="fecha"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Vivienda y Familiares">
+                            <group>
+                                <field name="hijos" />
+                                <field name="cohabitantes" />
+                                <field name="vivienda" />
+                            </group>
+                        </page>
+                        <!--<page string="Historial">-->
+                            <!--<field name="consultas">-->
+                                <!--<list>-->
+                                    <!--<field name="fecha"/>-->
+                                    <!--<field name="programa"/>-->
+                                    <!--<field name="employee_id"/>-->
+                                    <!--<field name="tratamiento"/>-->
+                                <!--</list>-->
+                            <!--</field>-->
+                        <!--</page>-->
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='ficha_paciente_tree'>
+        <field name="name">Lista Pacientes / Participantes</field>
+        <field name="model">ficha.paciente</field>
+        <field name="arch" type="xml">
+            <list string="Ficha Pacientes">
+                <field name="name" />
+                <field name="nombre" />
+                <field name="apellidos" />
+                <field name="apodos" />
+                <field name="birth_date"/>
+                <field name="edad"/>
+                <field name="direccion" />
+            </list>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='ficha_paciente_kanban'>
+        <field name="name">Pacientes / Participantes</field>
+        <field name="model">ficha.paciente</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside class="o_kanban_aside_full">
+                            <field name="image_128" widget="image" alt="Paciente"/>
+                        </aside>
+                        <main class="ms-2">
+                            <strong>
+                                <field name="apellidos"/> <field name="nombre"/>
+                                <br/>
+                                <field name="name"/>
+                                <br/>
+                                <field name="programa"/>
+                            </strong>
+                            <div>
+                                <strong>Nacimiento : </strong> <field name="birth_date"/> (<field name="edad"/>)
+                            </div>
+                            <ul>
+                                <li>
+                                    <t>Consultas : <field name="consultas_count"/></t>
+                                </li>
+                            </ul>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='ficha_paciente_search'>
+        <field name="name">Buscar Paciente / Participante</field>
+        <field name="model">ficha.paciente</field>
+        <field name="arch" type="xml">
+            <search string="Ficha Pacientes" >
+                <field name="name" />
+                <field name="nombre" />
+                <field name="apellidos" />
+                <field name="apodos" />
+                <field name="lugar_nacimiento" />
+                <field name="enfermedades" />
+                <field name="edad"/>
+                <field name="birth_date"/>
+
+                <group>
+                    <filter name="group_nombre" string="Nombre" context="{'group_by':'nombre'}"/>
+                    <filter name="group_apellidos" string="Apellidos" context="{'group_by':'apellidos'}"/>
+                    <filter name="group_programa" string="Programa" context="{'group_by':'programa'}"/>
+                    <filter name="group_sexo" string="Sexo" context="{'group_by':'sexo'}"/>
+                    <filter name="group_edad" string="Edad" context="{'group_by':'edad'}"/>
+                    <filter name="group_birth_date" string="Nacimiento" context="{'group_by':'birth_date'}"/>
+                    <filter name="group_estado_civil" string="Estado Civil" context="{'group_by':'estado_civil'}"/>
+                    <filter name="group_lugar_nacimiento" string="Lugar de Nacimiento" context="{'group_by':'lugar_nacimiento'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model='ir.actions.act_window' id='ficha_paciente_act'>
+        <field name="name">Pacientes / Participantes </field>
+        <field name="res_model">ficha.paciente</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Haga Click Para Crear un Nuevo paciente.
+          </p>
+        </field>
+    </record>
 
 <!--========================================================================-->
     <!-- View Trabajo Pacientes-->
 <!--========================================================================-->
 
-        <record model='ir.ui.view' id='ficha_paciente_trabajo_form'>
-            <field name="name">Trabajos Paciente / Participante</field>
-            <field name="model">ficha.paciente.trabajo</field>
-            <field name="arch" type="xml">
-                <form string="Trabajo Pacientes">
-                    <sheet>
-                        <group col="4" string="Puestos de Trabajo">
-                            <field name="name" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='ficha_paciente_trabajo_form'>
+        <field name="name">Trabajos Paciente / Participante</field>
+        <field name="model">ficha.paciente.trabajo</field>
+        <field name="arch" type="xml">
+            <form string="Trabajo Pacientes">
+                <sheet>
+                    <group col="4" string="Puestos de Trabajo">
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <record model='ir.ui.view' id='ficha_paciente_trabajo_tree'>
-            <field name="name">Lista Puestos de Trabajo Pacientes / Participante</field>
-            <field name="model">ficha.paciente.trabajo</field>
-            <field name="arch" type="xml">
-                <tree string="Puestos de Trabajo">
-                    <field name="name" />
+    <record model='ir.ui.view' id='ficha_paciente_trabajo_tree'>
+        <field name="name">Lista Puestos de Trabajo Pacientes / Participante</field>
+        <field name="model">ficha.paciente.trabajo</field>
+        <field name="arch" type="xml">
+            <list string="Puestos de Trabajo">
+                <field name="name" />
 
-                </tree>
-            </field>
-        </record>
+            </list>
+        </field>
+    </record>
 
-        <record model='ir.ui.view' id='ficha_paciente_trabajo_search'>
-            <field name="name">Buscar Puestos de Trabajo Pacientes / Participante</field>
-            <field name="model">ficha.paciente.trabajo</field>
-            <field name="arch" type="xml">
-                <search string="Puestos de Trabajo" >
-                    <field name="name" />
+    <record model='ir.ui.view' id='ficha_paciente_trabajo_search'>
+        <field name="name">Buscar Puestos de Trabajo Pacientes / Participante</field>
+        <field name="model">ficha.paciente.trabajo</field>
+        <field name="arch" type="xml">
+            <search string="Puestos de Trabajo" >
+                <field name="name" />
 
-                </search>
-            </field>
-        </record>
+            </search>
+        </field>
+    </record>
 
-        <record model='ir.actions.act_window' id='ficha_paciente_trabajo_act'>
-            <field name="name">Puestos de Trabajo</field>
-            <field name="res_model">ficha.paciente.trabajo</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Haga Click Para Crear un puesto de trabajo para pacientes.
-              </p>
-            </field>
-        </record>
+    <record model='ir.actions.act_window' id='ficha_paciente_trabajo_act'>
+        <field name="name">Puestos de Trabajo</field>
+        <field name="res_model">ficha.paciente.trabajo</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Haga Click Para Crear un puesto de trabajo para pacientes.
+          </p>
+        </field>
+    </record>
 
 <!--========================================================================-->
     <!-- View Gastos Fijos Pacientes-->
 <!--========================================================================-->
 
-        <record model='ir.ui.view' id='ficha_paciente_gasto_fijo_form'>
-            <field name="name">Gastos Fijos Paciente / Participante</field>
-            <field name="model">ficha.paciente.gasto.fijo</field>
-            <field name="arch" type="xml">
-                <form string="Gastos Fijos Pacientes / Participante">
-                    <sheet>
-                        <group col="4" string="Gastos Fijos">
-                            <field name="name" />
-                            <field name="monto"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='ficha_paciente_gasto_fijo_form'>
+        <field name="name">Gastos Fijos Paciente / Participante</field>
+        <field name="model">ficha.paciente.gasto.fijo</field>
+        <field name="arch" type="xml">
+            <form string="Gastos Fijos Pacientes / Participante">
+                <sheet>
+                    <group col="4" string="Gastos Fijos">
+                        <field name="name" />
+                        <field name="monto"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <record model='ir.actions.act_window' id='ficha_paciente_gasto_fijo_act'>
-            <field name="name">Gastos Fijos</field>
-            <field name="res_model">ficha.paciente.gasto.fijo</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Haga Click Para Crear.
-              </p>
-            </field>
-        </record>
+    <record model='ir.actions.act_window' id='ficha_paciente_gasto_fijo_act'>
+        <field name="name">Gastos Fijos</field>
+        <field name="res_model">ficha.paciente.gasto.fijo</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Haga Click Para Crear.
+          </p>
+        </field>
+    </record>
 
 <!--========================================================================-->
     <!-- View Tipos Gastos -->
 <!--========================================================================-->
 
-        <record model='ir.ui.view' id='ficha_paciente_gasto_fijo_descripcion_form'>
-            <field name="name">Tipos Gastos Fijos Paciente / Participante</field>
-            <field name="model">ficha.paciente.gasto.fijo.descripcion</field>
-            <field name="arch" type="xml">
-                <form string="Tipos Gastos Fijos Pacientes">
-                    <sheet>
-                        <group col="4" string="Tipos Gastos Fijos">
-                            <field name="name" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='ficha_paciente_gasto_fijo_descripcion_form'>
+        <field name="name">Tipos Gastos Fijos Paciente / Participante</field>
+        <field name="model">ficha.paciente.gasto.fijo.descripcion</field>
+        <field name="arch" type="xml">
+            <form string="Tipos Gastos Fijos Pacientes">
+                <sheet>
+                    <group col="4" string="Tipos Gastos Fijos">
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <record model='ir.ui.view' id='ficha_paciente_gasto_fijo_descripcion_tree'>
-            <field name="name">Lista Tipos Gastos Fijos Pacientes / Participantes</field>
-            <field name="model">ficha.paciente.gasto.fijo.descripcion</field>
-            <field name="arch" type="xml">
-                <tree string="Gastos Fijos Pacientes">
-                    <field name="name" />
+    <record model='ir.ui.view' id='ficha_paciente_gasto_fijo_descripcion_tree'>
+        <field name="name">Lista Tipos Gastos Fijos Pacientes / Participantes</field>
+        <field name="model">ficha.paciente.gasto.fijo.descripcion</field>
+        <field name="arch" type="xml">
+            <list string="Gastos Fijos Pacientes">
+                <field name="name" />
 
-                </tree>
-            </field>
-        </record>
+            </list>
+        </field>
+    </record>
 
-        <record model='ir.ui.view' id='ficha_paciente_gasto_fijo_descripcion_search'>
-            <field name="name">Buscar Tipos Gastos Fijos Pacientes / Participantes</field>
-            <field name="model">ficha.paciente.gasto.fijo.descripcion</field>
-            <field name="arch" type="xml">
-                <search string="Gastos Fijos Pacientes" >
-                    <field name="name" />
-                </search>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='ficha_paciente_gasto_fijo_descripcion_search'>
+        <field name="name">Buscar Tipos Gastos Fijos Pacientes / Participantes</field>
+        <field name="model">ficha.paciente.gasto.fijo.descripcion</field>
+        <field name="arch" type="xml">
+            <search string="Gastos Fijos Pacientes" >
+                <field name="name" />
+            </search>
+        </field>
+    </record>
 
-        <record model='ir.actions.act_window' id='ficha_paciente_gasto_fijo_descripcion_act'>
-            <field name="name">Tipos Gastos Fijos</field>
-            <field name="res_model">ficha.paciente.gasto.fijo.descripcion</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Haga Click Para Crear un tipo de gasto Fijo.
-              </p>
-            </field>
-        </record>
+    <record model='ir.actions.act_window' id='ficha_paciente_gasto_fijo_descripcion_act'>
+        <field name="name">Tipos Gastos Fijos</field>
+        <field name="res_model">ficha.paciente.gasto.fijo.descripcion</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Haga Click Para Crear un tipo de gasto Fijo.
+          </p>
+        </field>
+    </record>
 
 <!--========================================================================-->
     <!-- View ayuda economica pacientes -->
 <!--========================================================================-->
 
-        <record model='ir.ui.view' id='ficha_paciente_ayuda_economica_form'>
-            <field name="name">Ayuda economica Paciente / Participante</field>
-            <field name="model">ficha.paciente.ayuda.economica</field>
-            <field name="arch" type="xml">
-                <form string="Ayuda economica Pacientes">
-                    <sheet>
-                        <group col="4" string="Ayuda economica">
-                            <field name="name" string="Patrocinador" readonly="1"/>
-                            <field name="parentesco" string="Tipo" readonly="1"/>
-                            <field name="monto" readonly="1"/>
-                            <field name="ayuda_economica_id" readonly="1" string="Beneficiario"/>
-                            <field name="fecha" readonly="1"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='ficha_paciente_ayuda_economica_form'>
+        <field name="name">Ayuda economica Paciente / Participante</field>
+        <field name="model">ficha.paciente.ayuda.economica</field>
+        <field name="arch" type="xml">
+            <form string="Ayuda economica Pacientes">
+                <sheet>
+                    <group col="4" string="Ayuda economica">
+                        <field name="name" string="Patrocinador" readonly="1"/>
+                        <field name="parentesco" string="Tipo" readonly="1"/>
+                        <field name="monto" readonly="1"/>
+                        <field name="ayuda_economica_id" readonly="1" string="Beneficiario"/>
+                        <field name="fecha" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <record model='ir.ui.view' id='ficha_paciente_ayuda_economica_tree'>
-            <field name="name">Ayuda economica Paciente / Participante</field>
-            <field name="model">ficha.paciente.ayuda.economica</field>
-            <field name="arch" type="xml">
-                <tree string="Ayuda economica Pacientes">
-                    <field name="ayuda_economica_id" string="Beneficiario"/>
-                    <field name="name" string="Patrocinador"/>
-                    <field name="parentesco" string="Tipo"/>
-                    <field name="monto"/>
-                    <field name="fecha"/>
-                </tree>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='ficha_paciente_ayuda_economica_tree'>
+        <field name="name">Ayuda economica Paciente / Participante</field>
+        <field name="model">ficha.paciente.ayuda.economica</field>
+        <field name="arch" type="xml">
+            <list string="Ayuda economica Pacientes">
+                <field name="ayuda_economica_id" string="Beneficiario"/>
+                <field name="name" string="Patrocinador"/>
+                <field name="parentesco" string="Tipo"/>
+                <field name="monto"/>
+                <field name="fecha"/>
+            </list>
+        </field>
+    </record>
 
-        <record model='ir.actions.act_window' id='ficha_paciente_ayuda_economica_act'>
-            <field name="name">Ayuda Economica</field>
-            <field name="res_model">ficha.paciente.ayuda.economica</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Haga Click Para Crear.
-              </p>
-            </field>
-        </record>
+    <record model='ir.actions.act_window' id='ficha_paciente_ayuda_economica_act'>
+        <field name="name">Ayuda Economica</field>
+        <field name="res_model">ficha.paciente.ayuda.economica</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Haga Click Para Crear.
+          </p>
+        </field>
+    </record>
 
 
 <!--========================================================================-->
     <!-- View Tipos Pacientes -->
 <!--========================================================================-->
 
-        <record model='ir.ui.view' id='ficha_paciente_parentesco_form'>
-            <field name="name">Tipos Gastos Fijos Paciente / Participante</field>
-            <field name="model">ficha.paciente.parentesco</field>
-            <field name="arch" type="xml">
-                <form string="Tipos de Ayudas">
-                    <sheet>
-                        <group col="4" string="Tipos de Ayudas">
-                            <field name="name" string="Ayuda"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='ficha_paciente_parentesco_form'>
+        <field name="name">Tipos Gastos Fijos Paciente / Participante</field>
+        <field name="model">ficha.paciente.parentesco</field>
+        <field name="arch" type="xml">
+            <form string="Tipos de Ayudas">
+                <sheet>
+                    <group col="4" string="Tipos de Ayudas">
+                        <field name="name" string="Ayuda"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <record model='ir.ui.view' id='ficha_paciente_parentesco_tree'>
-            <field name="name">Lista Tipos de Parientes</field>
-            <field name="model">ficha.paciente.parentesco</field>
-            <field name="arch" type="xml">
-                <tree string="Tipos de Ayudas">
-                    <field name="name" string="Ayuda"/>
+    <record model='ir.ui.view' id='ficha_paciente_parentesco_tree'>
+        <field name="name">Lista Tipos de Parientes</field>
+        <field name="model">ficha.paciente.parentesco</field>
+        <field name="arch" type="xml">
+            <list string="Tipos de Ayudas">
+                <field name="name" string="Ayuda"/>
 
-                </tree>
-            </field>
-        </record>
+            </list>
+        </field>
+    </record>
 
-        <record model='ir.ui.view' id='ficha_paciente_parentesco_search'>
-            <field name="name">Buscar Tipos de Parientes</field>
-            <field name="model">ficha.paciente.parentesco</field>
-            <field name="arch" type="xml">
-                <search string="Tipos de Pacientes" >
-                    <field name="name" />
-                </search>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='ficha_paciente_parentesco_search'>
+        <field name="name">Buscar Tipos de Parientes</field>
+        <field name="model">ficha.paciente.parentesco</field>
+        <field name="arch" type="xml">
+            <search string="Tipos de Pacientes" >
+                <field name="name" />
+            </search>
+        </field>
+    </record>
 
-        <record model='ir.actions.act_window' id='ficha_paciente_parentesco_act'>
-            <field name="name">Tipos de Ayudas</field>
-            <field name="res_model">ficha.paciente.parentesco</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Haga Click Para Crear un tipo de Pariente .
-              </p>
-            </field>
-        </record>
+    <record model='ir.actions.act_window' id='ficha_paciente_parentesco_act'>
+        <field name="name">Tipos de Ayudas</field>
+        <field name="res_model">ficha.paciente.parentesco</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Haga Click Para Crear un tipo de Pariente .
+          </p>
+        </field>
+    </record>
 
 
 <!--========================================================================-->
     <!-- View Enfermedades Pacientes -->
 <!--========================================================================-->
 
-        <record model='ir.ui.view' id='ficha_paciente_enfermedades_form'>
-            <field name="name">Enfermedades del Paciente / Participante</field>
-            <field name="model">ficha.paciente.enfermedades</field>
-            <field name="arch" type="xml">
-                <form string="Enfermedades de Paciente">
-                    <sheet>
-                        <group col="4" string="Enfermedades de Paciente / Participante">
-                            <field name="name" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='ficha_paciente_enfermedades_form'>
+        <field name="name">Enfermedades del Paciente / Participante</field>
+        <field name="model">ficha.paciente.enfermedades</field>
+        <field name="arch" type="xml">
+            <form string="Enfermedades de Paciente">
+                <sheet>
+                    <group col="4" string="Enfermedades de Paciente / Participante">
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <record model='ir.ui.view' id='ficha_paciente_enfermedades_tree'>
-            <field name="name">Lista Enfermedades de Paciente / Participante</field>
-            <field name="model">ficha.paciente.enfermedades</field>
-            <field name="arch" type="xml">
-                <tree string="Tipos de Pacientes">
-                    <field name="name" />
+    <record model='ir.ui.view' id='ficha_paciente_enfermedades_tree'>
+        <field name="name">Lista Enfermedades de Paciente / Participante</field>
+        <field name="model">ficha.paciente.enfermedades</field>
+        <field name="arch" type="xml">
+            <list string="Tipos de Pacientes">
+                <field name="name" />
 
-                </tree>
-            </field>
-        </record>
+            </list>
+        </field>
+    </record>
 
-        <record model='ir.ui.view' id='ficha_paciente_enfermedades_search'>
-            <field name="name">Buscar Enfermedades Pacientes / Participantes</field>
-            <field name="model">ficha.paciente.enfermedades</field>
-            <field name="arch" type="xml">
-                <search string="Enfermedades Paciente" >
-                    <field name="name" />
-                </search>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='ficha_paciente_enfermedades_search'>
+        <field name="name">Buscar Enfermedades Pacientes / Participantes</field>
+        <field name="model">ficha.paciente.enfermedades</field>
+        <field name="arch" type="xml">
+            <search string="Enfermedades Paciente" >
+                <field name="name" />
+            </search>
+        </field>
+    </record>
 
-        <record model='ir.actions.act_window' id='ficha_paciente_enfermedades_act'>
-            <field name="name">Condiciones</field>
-            <field name="res_model">ficha.paciente.enfermedades</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Haga Click Para Crear enfermedades de Pacientes / Participantes.
-              </p>
-            </field>
-        </record>
+    <record model='ir.actions.act_window' id='ficha_paciente_enfermedades_act'>
+        <field name="name">Condiciones</field>
+        <field name="res_model">ficha.paciente.enfermedades</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Haga Click Para Crear enfermedades de Pacientes / Participantes.
+          </p>
+        </field>
+    </record>
 
 <!--========================================================================-->
     <!-- View Telefonos Pacientes -->
 <!--========================================================================-->
 
-        <record model='ir.ui.view' id='ficha_paciente_telefono_form'>
-            <field name="name">Telefonos del Paciente / Participante</field>
-            <field name="model">ficha.paciente.telefono</field>
-            <field name="arch" type="xml">
-                <form string="Telefonos del Paciente">
-                    <sheet>
-                        <group col="4" string="Telefonos del Paciente">
-                            <field name="name"/>
-                            <field name="tipo" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-    </data>
-</openerp>
+    <record model='ir.ui.view' id='ficha_paciente_telefono_form'>
+        <field name="name">Telefonos del Paciente / Participante</field>
+        <field name="model">ficha.paciente.telefono</field>
+        <field name="arch" type="xml">
+            <form string="Telefonos del Paciente">
+                <sheet>
+                    <group col="4" string="Telefonos del Paciente">
+                        <field name="name"/>
+                        <field name="tipo" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

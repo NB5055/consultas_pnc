@@ -1,33 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <report
-                id="menu_report_programa_comparativo"
-                model="informe.report.programa"
-                string="Informe por Programa Comparativo"
-                report_type="qweb-html"
-                name="consultas_pnc.report_programa_comparativo"
-                menu="False"
-        />
+<odoo>
+    <record id="menu_report_programa_comparativo" model="ir.actions.report">
+        <field name="name">Informe por Programa Comparativo</field>
+        <field name="model">informe.report.programa</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">consultas_pnc.report_programa_comparativo</field>
+    </record>
 
-        <template id="consultas_pnc.report_programa_comparativo">
+    <template id="report_programa_comparativo">
+        <t t-call="web.basic_layout">
             <div class="page" align="center">
 
                 <t t-call="consultas_pnc.styles"/>
 
-                <t t-if="not o or not 'company_id' in o">
-                    <t t-set="company" t-value="res_company"></t>
-                </t>
+                <t t-set="company" t-value="res_company"/>
                 <div>
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
                          style="max-height: 45px;"/>
                 </div>
                 <h3>Patronato Nacional de Ciegos, INC</h3>
                 Estadistica por Programa
                 <p>Desde
-                    <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_inicial,'%Y-%m-%d'))"/>
+                    <t t-out="docs.fecha_inicial.strftime('%d-%m-%Y')"/>
                     hasta
-                    <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_final,'%Y-%m-%d'))"/>
+                    <t t-out="docs.fecha_final.strftime('%d-%m-%Y')"/>
                 </p>
 
                 <table width="100%" class="tg">
@@ -42,19 +38,19 @@
                         <tr>
                             <t t-foreach="docs.programa_ids" t-as="programa">
                                 <th colspan="2">
-                                    <span t-esc="programa.name"/>
+                                    <span t-out="programa.name"/>
                                 </th>
                             </t>
                             <th colspan="2">Total</th>
                             <t t-foreach="docs.programa_ids" t-as="programa">
                                 <th colspan="2">
-                                    <span t-esc="programa.name"/>
+                                    <span t-out="programa.name"/>
                                 </th>
                             </t>
                             <th colspan="2">Total</th>
                             <t t-foreach="docs.programa_ids" t-as="programa">
                                 <th colspan="2">
-                                    <span t-esc="programa.name"/>
+                                    <span t-out="programa.name"/>
                                 </th>
                             </t>
                             <th colspan="2">Total</th>
@@ -93,66 +89,62 @@
                             </t>
 
                             <td t-att-class='cl'>
-                                <span t-esc="tratamiento.name"/>
+                                <span t-out="tratamiento.name"/>
                             </td>
                             <t t-set="acumulado_mes" t-value="0.0"/>
                             <t t-set="acumulado_ano" t-value="0.0"/>
                             <t t-foreach="docs.programa_ids" t-as="programa">
-                                <t t-foreach="consultas.get(programa.id)" t-as="consulta_ids">
-                                    <t t-set="mes" t-value="0.0"/>
-                                    <t t-set="ano" t-value="0.0"/>
-                                    <t t-foreach="consulta_ids" t-as="consulta">
+                                <t t-set="mes" t-value="0.0"/>
+                                <t t-set="ano" t-value="0.0"/>
+                                <t t-foreach="consultas.get(programa.id)" t-as="consulta">
 
-                                        <t t-if="consulta[0] == tratamiento.name">
-                                            <t t-set="mes" t-value="mes + consulta[1]"/>
-                                            <t t-set="acumulado_mes" t-value="acumulado_mes + (mes or 0.0)"/>
-                                            <t t-set="ano" t-value="ano + consulta[4]"/>
-                                            <t t-set="acumulado_ano" t-value="acumulado_ano + (ano or 0.0)"/>
-                                        </t>
+                                    <t t-if="consulta[0] == tratamiento.name">
+                                        <t t-set="mes" t-value="mes + consulta[1]"/>
+                                        <t t-set="acumulado_mes" t-value="acumulado_mes + (mes or 0.0)"/>
+                                        <t t-set="ano" t-value="ano + consulta[4]"/>
+                                        <t t-set="acumulado_ano" t-value="acumulado_ano + (ano or 0.0)"/>
                                     </t>
-                                    <td t-att-class='cl'>
-                                        <span t-esc="mes"/>
-                                    </td>
-                                    <td t-att-class='cl'>
-                                        <span t-esc="ano"/>
-                                    </td>
                                 </t>
+                                <td t-att-class='cl'>
+                                    <span t-out="mes"/>
+                                </td>
+                                <td t-att-class='cl'>
+                                    <span t-out="ano"/>
+                                </td>
                             </t>
                             <td t-att-class='cl'>
-                                <span t-esc="acumulado_mes"/>
+                                <span t-out="acumulado_mes"/>
                             </td>
                             <td t-att-class='cl'>
-                                <span t-esc="acumulado_ano"/>
+                                <span t-out="acumulado_ano"/>
                             </td>
 
                             <t t-set="proyeccion_mes" t-value="0.0"/>
                             <t t-set="proyeccion_ano" t-value="0.0"/>
                             <t t-foreach="docs.programa_ids" t-as="programa">
-                                <t t-foreach="consultas.get(programa.id)" t-as="consulta_ids">
-                                    <t t-set="mes" t-value="0.0"/>
-                                    <t t-set="ano" t-value="0.0"/>
-                                    <t t-foreach="consulta_ids" t-as="consulta">
+                                <t t-set="mes" t-value="0.0"/>
+                                <t t-set="ano" t-value="0.0"/>
+                                <t t-foreach="consultas.get(programa.id)" t-as="consulta">
 
-                                        <t t-if="consulta[0] == tratamiento.name">
-                                            <t t-set="mes" t-value="mes + consulta[6]"/>
-                                            <t t-set="proyeccion_mes" t-value="proyeccion_mes + (mes or 0.0)"/>
-                                            <t t-set="ano" t-value="ano + consulta[5]"/>
-                                            <t t-set="proyeccion_ano" t-value="proyeccion_ano + (ano or 0.0)"/>
-                                        </t>
+                                    <t t-if="consulta[0] == tratamiento.name">
+                                        <t t-set="mes" t-value="mes + consulta[6]"/>
+                                        <t t-set="proyeccion_mes" t-value="proyeccion_mes + (mes or 0.0)"/>
+                                        <t t-set="ano" t-value="ano + consulta[5]"/>
+                                        <t t-set="proyeccion_ano" t-value="proyeccion_ano + (ano or 0.0)"/>
                                     </t>
-                                    <td t-att-class='cl'>
-                                        <span t-esc="mes"/>
-                                    </td>
-                                    <td t-att-class='cl'>
-                                        <span t-esc="ano"/>
-                                    </td>
                                 </t>
+                                <td t-att-class='cl'>
+                                    <span t-out="mes"/>
+                                </td>
+                                <td t-att-class='cl'>
+                                    <span t-out="ano"/>
+                                </td>
                             </t>
                             <td t-att-class='cl'>
-                                <span t-esc="proyeccion_mes"/>
+                                <span t-out="proyeccion_mes"/>
                             </td>
                             <td t-att-class='cl'>
-                                <span t-esc="proyeccion_ano"/>
+                                <span t-out="proyeccion_ano"/>
                             </td>
 
                             <t t-set="porciento_mes" t-value="0.0"/>
@@ -160,49 +152,47 @@
                             <t t-set="porciento_mes_eq" t-value="0.0"/>
                             <t t-set="porciento_ano_eq" t-value="0.0"/>
                             <t t-foreach="docs.programa_ids" t-as="programa">
-                                <t t-foreach="consultas.get(programa.id)" t-as="consulta_ids">
-                                    <t t-set="mes" t-value="0.0"/>
-                                    <t t-set="ano" t-value="0.0"/>
-                                    <t t-set="mes_eq" t-value="0.0"/>
-                                    <t t-set="ano_eq" t-value="0.0"/>
-                                    <t t-foreach="consulta_ids" t-as="consulta">
+                                <t t-set="mes" t-value="0.0"/>
+                                <t t-set="ano" t-value="0.0"/>
+                                <t t-set="mes_eq" t-value="0.0"/>
+                                <t t-set="ano_eq" t-value="0.0"/>
+                                <t t-foreach="consultas.get(programa.id)" t-as="consulta">
 
-                                        <t t-if="consulta[0] == tratamiento.name">
-                                            <t t-set="mes" t-value="mes + consulta[1]"/>
-                                            <t t-set="mes_eq" t-value="mes_eq + consulta[6]"/>
+                                    <t t-if="consulta[0] == tratamiento.name">
+                                        <t t-set="mes" t-value="mes + consulta[1]"/>
+                                        <t t-set="mes_eq" t-value="mes_eq + consulta[6]"/>
 
-                                            <t t-set="porciento_mes" t-value="porciento_mes + mes"/>
-                                            <t t-set="porciento_mes_eq" t-value="porciento_mes_eq + mes_eq"/>
+                                        <t t-set="porciento_mes" t-value="porciento_mes + mes"/>
+                                        <t t-set="porciento_mes_eq" t-value="porciento_mes_eq + mes_eq"/>
 
-                                            <t t-set="ano" t-value="ano + consulta[4]"/>
-                                            <t t-set="ano_eq" t-value="ano + consulta[5]"/>
+                                        <t t-set="ano" t-value="ano + consulta[4]"/>
+                                        <t t-set="ano_eq" t-value="ano + consulta[5]"/>
 
-                                            <t t-set="porciento_ano" t-value="porciento_ano + ano"/>
-                                            <t t-set="porciento_ano_eq" t-value="porciento_ano_eq + ano_eq"/>
-                                        </t>
+                                        <t t-set="porciento_ano" t-value="porciento_ano + ano"/>
+                                        <t t-set="porciento_ano_eq" t-value="porciento_ano_eq + ano_eq"/>
                                     </t>
-                                    <td t-att-class='cl'>
-                                        <t t-if="mes > 0 and mes_eq > 0">
-                                            <span t-esc="'{:,.2f}'.format((float(mes) / float(mes_eq)) * 100)"/>%
-                                        </t>
-                                        <t t-if="mes &lt;= 0 or mes_eq &lt;= 0">
-                                            0.0%
-                                        </t>
-                                    </td>
-                                    <td t-att-class='cl'>
-                                        <t t-if="ano > 0 and ano_eq > 0">
-                                            <span t-esc="'{:,.2f}'.format((float(ano) / float(ano_eq)) * 100 )"/>%
-                                        </t>
-                                        <t t-if="ano &lt;= 0 or ano_eq &lt;= 0">
-                                            0.0%
-                                        </t>
-                                    </td>
                                 </t>
+                                <td t-att-class='cl'>
+                                    <t t-if="mes > 0 and mes_eq > 0">
+                                        <span t-out="'{:,.2f}'.format((float(mes) / float(mes_eq)) * 100)"/>%
+                                    </t>
+                                    <t t-if="mes &lt;= 0 or mes_eq &lt;= 0">
+                                        0.0%
+                                    </t>
+                                </td>
+                                <td t-att-class='cl'>
+                                    <t t-if="ano > 0 and ano_eq > 0">
+                                        <span t-out="'{:,.2f}'.format((float(ano) / float(ano_eq)) * 100 )"/>%
+                                    </t>
+                                    <t t-if="ano &lt;= 0 or ano_eq &lt;= 0">
+                                        0.0%
+                                    </t>
+                                </td>
                             </t>
 
                             <td t-att-class='cl'>
                                 <t t-if="porciento_mes > 0 and porciento_mes_eq > 0">
-                                    <span t-esc="'{:,.2f}'.format((float(porciento_mes) / float(porciento_mes_eq)) * 100)"/>
+                                    <span t-out="'{:,.2f}'.format((float(porciento_mes) / float(porciento_mes_eq)) * 100)"/>
                                     %
                                 </t>
                                 <t t-if="porciento_mes &lt;= 0 or porciento_mes_eq &lt;= 0">
@@ -211,7 +201,7 @@
                             </td>
                             <td t-att-class='cl'>
                                 <t t-if="porciento_ano > 0 and porciento_ano_eq > 0">
-                                    <span t-esc="'{:,.2f}'.format((float(porciento_ano) / float(porciento_ano_eq)) * 100 )"/>
+                                    <span t-out="'{:,.2f}'.format((float(porciento_ano) / float(porciento_ano_eq)) * 100 )"/>
                                     %
                                 </t>
                                 <t t-if="porciento_ano &lt;= 0 or porciento_ano_eq &lt;= 0">
@@ -237,50 +227,44 @@
                             <t t-set="total_general_porciento_ano" t-value="0.0"/>
                             <th class="tg-yw4l">Total General</th>
                             <t t-foreach="docs.programa_ids" t-as="programa">
-                                <t t-foreach="consultas.get(programa.id)" t-as="consulta_ids">
-                                    <t t-foreach="consulta_ids" t-as="consulta">
-                                        <t t-set="total_acumulado_mes"
-                                           t-value="total_acumulado_mes + (consulta[1] or 0.0)"/>
-                                        <t t-set="total_acumulado_ano"
-                                           t-value="total_acumulado_ano + (consulta[4] or 0.0)"/>
-                                    </t>
-                                    <th>
-                                        <span t-esc="total_acumulado_mes"/>
-                                    </th>
-                                    <th>
-                                        <span t-esc="total_acumulado_ano"/>
-                                    </th>
-                                    <t t-set="total_general_acumulado_mes"
-                                       t-value="total_general_acumulado_mes + total_acumulado_mes"/>
-                                    <t t-set="total_general_acumulado_ano"
-                                       t-value="total_general_acumulado_ano + total_acumulado_ano"/>
+                                <t t-foreach="consultas.get(programa.id)" t-as="consulta">
+                                    <t t-set="total_acumulado_mes"
+                                       t-value="total_acumulado_mes + (consulta[1] or 0.0)"/>
+                                    <t t-set="total_acumulado_ano"
+                                       t-value="total_acumulado_ano + (consulta[4] or 0.0)"/>
                                 </t>
+                                <th>
+                                    <span t-out="total_acumulado_mes"/>
+                                </th>
+                                <th>
+                                    <span t-out="total_acumulado_ano"/>
+                                </th>
+                                <t t-set="total_general_acumulado_mes"
+                                   t-value="total_general_acumulado_mes + total_acumulado_mes"/>
+                                <t t-set="total_general_acumulado_ano"
+                                   t-value="total_general_acumulado_ano + total_acumulado_ano"/>
                             </t>
                             <th>
-                                <span t-esc="total_general_acumulado_mes"/>
+                                <span t-out="total_general_acumulado_mes"/>
                             </th>
                             <th>
-                                <span t-esc="total_general_acumulado_ano"/>
+                                <span t-out="total_general_acumulado_ano"/>
                             </th>
                             <t t-foreach="docs.programa_ids" t-as="programa">
-                                <t t-foreach="consultas.get(programa.id)" t-as="consulta_ids">
-                                    <th>
-                                    </th>
-                                    <th>
-                                    </th>
-                                </t>
+                                <th>
+                                </th>
+                                <th>
+                                </th>
                             </t>
                             <th>
                             </th>
                             <th>
                             </th>
                             <t t-foreach="docs.programa_ids" t-as="programa">
-                                <t t-foreach="consultas.get(programa.id)" t-as="consulta_ids">
-                                    <th>
-                                    </th>
-                                    <th>
-                                    </th>
-                                </t>
+                                <th>
+                                </th>
+                                <th>
+                                </th>
                             </t>
                             <th>
                             </th>
@@ -290,6 +274,6 @@
                     </t>
                 </table>
             </div>
-        </template>
-    </data>
-</openerp>
+        </t>
+    </template>
+</odoo>

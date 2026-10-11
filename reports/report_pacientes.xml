@@ -1,56 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
-        <record model='ir.ui.view' id='report_paciente_form'>
-            <field name="name">report.paciente</field>
-            <field name="model">report.paciente</field>
-            <field name="arch" type="xml">
-                <form string="Participantes">
-                    <sheet>
-                        <group>
-                            <field name="programa_ids" widget="many2many_tags"/>
-                        </group>
-                    </sheet>
-                    <footer>
-                        <button name="check_report" string="Ver Reporte" type="object" default_focus="1"
-                                class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='report_paciente_form'>
+        <field name="name">report.paciente</field>
+        <field name="model">report.paciente</field>
+        <field name="arch" type="xml">
+            <form string="Participantes">
+                <sheet>
+                    <group>
+                        <field name="programa_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="check_report" string="Ver Reporte" type="object" default_focus="1"
+                            class="oe_highlight"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 
-        <record id="report_paciente_action" model="ir.actions.act_window">
-            <field name="name">Participantes</field>
-            <field name="res_model">report.paciente</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
+    <record id="report_paciente_action" model="ir.actions.act_window">
+        <field name="name">Participantes</field>
+        <field name="res_model">report.paciente</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
-        <menuitem name="Listado de Participantes" parent="menu_reportes" id="menu_report_paciente"
-                  action="report_paciente_action"/>
+    <menuitem name="Listado de Participantes" parent="menu_reportes" id="menu_report_paciente"
+              action="report_paciente_action"/>
 
-        <report
-                id="report_report_paciente"
-                model="report.paciente"
-                string="Participantes"
-                report_type="qweb-html"
-                name="consultas_pnc.report_paciente"
-                menu="False"
-        />
+    <record id="report_report_paciente" model="ir.actions.report">
+        <field name="name">Participantes</field>
+        <field name="model">report.paciente</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">consultas_pnc.report_paciente</field>
+    </record>
 
-        <template id="consultas_pnc.report_paciente">
+    <template id="report_paciente">
+        <t t-call="web.basic_layout">
             <div class="page" align="center">
                 <t t-call="consultas_pnc.styles"/>
 
-                <t t-if="not o or not 'company_id' in o">
-                    <t t-set="company" t-value="res_company"></t>
-                </t>
+                <t t-set="company" t-value="res_company"/>
                 <div>
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
                          style="max-height: 45px;"/>
                 </div>
                 <t t-set="currency" t-value="docs.env.user.company_id.currency_id"/>
@@ -64,7 +58,7 @@
                     <table width="100%" class="tg" t-if="paciente_ids">
                         <tr>
                             <th colspan="7" class="tg-yw4l">
-                                <h4 t-esc="programa_id.name"/>
+                                <h4 t-out="programa_id.name"/>
                             </th>
                         </tr>
                         <tr>
@@ -86,7 +80,7 @@
                             </t>
                             <tr>
                                 <td>
-                                    <t t-esc="count"/>
+                                    <t t-out="count"/>
                                 </td>
                                 <td t-att-class='cl'>
                                     <span t-field="paciente_id.apellidos"/>
@@ -99,13 +93,13 @@
                                     <span t-field="paciente_id.direccion"/>
                                 </td>
                                 <td t-att-class='cl'>
-                                    <span t-esc="','.join(paciente_id.telefonos.mapped('name'))"/>
+                                    <span t-out="','.join(paciente_id.telefonos.mapped('name'))"/>
                                 </td>
                                 <td t-att-class='cl'>
                                     <span t-field="paciente_id.edad"/>
                                 </td>
                                 <td t-att-class='cl'>
-                                    <span t-esc="','.join(paciente_id.enfermedades.mapped('name').mapped('name'))"/>
+                                    <span t-out="','.join(paciente_id.enfermedades.mapped('name').mapped('name'))"/>
                                 </td>
                             </tr>
                             <t t-set='count' t-value='count+1'/>
@@ -116,7 +110,6 @@
                 </t>
 
             </div>
-        </template>
-
-    </data>
-</openerp>
+        </t>
+    </template>
+</odoo>

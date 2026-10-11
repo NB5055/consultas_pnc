@@ -1,89 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
+<odoo>
 <!--========================================================================-->
     <!-- View Formulario Programas-->
 <!--========================================================================-->
-        <record model='ir.ui.view' id='programa_programa_form'>
-            <field name="name">Formulario registro de Programas</field>
-            <field name="model">programa.programa</field>
-            <field name="arch" type="xml">
-                <form string="Registro Programas">
-                    <sheet>
-                        <group col="2" string="Programas">
-                            <field name="name"/>
-                            <field name="program_type"/>
-                            <field name="encargado"/>
-                            <field name="provincia" widget="many2many_tags"/>
-                        </group>
-                        <notebook>
-                            <page string="Médico / Profesor">
-                                <field name="participantes" readonly="1">
-                                    <tree>
-                                        <field name="name"/>
-                                        <field name="job_id"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            <page string="Tratamientos">
-                                <field name="tratamiento_ids">
-                                    <tree>
-                                        <field name="name"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            <page string="Proyecciones">
-                                <field name="proyeccion_ids">
-                                    <tree default_order='tratamiento_id,year'>
-                                        <field name="tratamiento_id"/>
-                                        <field name="proyeccion"/>
-                                        <field name="year"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            <page string="Notas">
-                                <field name="notas"/>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='programa_programa_form'>
+        <field name="name">Formulario registro de Programas</field>
+        <field name="model">programa.programa</field>
+        <field name="arch" type="xml">
+            <form string="Registro Programas">
+                <sheet>
+                    <group col="2" string="Programas">
+                        <field name="name" placeholder="Nombre"/>
+                        <field name="program_type"/>
+                        <field name="encargado"/>
+                        <field name="provincia" widget="many2many_tags"/>
+                    </group>
+                    <notebook>
+                        <page string="Médico / Profesor">
+                            <field name="participantes" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="job_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Tratamientos">
+                            <field name="tratamiento_ids">
+                                <list>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Proyecciones">
+                            <field name="proyeccion_ids">
+                                <list default_order='tratamiento_id,year'>
+                                    <field name="tratamiento_id"/>
+                                    <field name="proyeccion"/>
+                                    <field name="year"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas">
+                            <field name="notas"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <record model='ir.ui.view' id='programa_programa_tree'>
-            <field name="name">Lista de Programas</field>
-            <field name="model">programa.programa</field>
-            <field name="arch" type="xml">
-                <tree string="Programas">
-                    <field name="name"/>
-                    <field name="encargado"/>
-                    <field name="provincia" />
-                </tree>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='programa_programa_tree'>
+        <field name="name">Lista de Programas</field>
+        <field name="model">programa.programa</field>
+        <field name="arch" type="xml">
+            <list string="Programas">
+                <field name="name"/>
+                <field name="encargado"/>
+                <field name="provincia" />
+            </list>
+        </field>
+    </record>
 
-        <record model='ir.ui.view' id='programa_programa_search'>
-            <field name="name">Buscar Programa</field>
-            <field name="model">programa.programa</field>
-            <field name="arch" type="xml">
-                <search string="Programas" >
-                    <field name="name"/>
-                    <field name="encargado"/>
-                    <field name="provincia" />
-                </search>
-            </field>
-        </record>
+    <record model='ir.ui.view' id='programa_programa_search'>
+        <field name="name">Buscar Programa</field>
+        <field name="model">programa.programa</field>
+        <field name="arch" type="xml">
+            <search string="Programas" >
+                <field name="name"/>
+                <field name="encargado"/>
+                <field name="provincia" />
+            </search>
+        </field>
+    </record>
 
-        <record model='ir.actions.act_window' id='programa_programa_act'>
-            <field name="name">Programas</field>
-            <field name="res_model">programa.programa</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Haga Click Para Crear Nuevo Programa.
-              </p>
-            </field>
-        </record>
-    </data>
-</openerp>
+    <record model='ir.actions.act_window' id='programa_programa_act'>
+        <field name="name">Programas</field>
+        <field name="res_model">programa.programa</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Haga Click Para Crear Nuevo Programa.
+          </p>
+        </field>
+    </record>
+</odoo>

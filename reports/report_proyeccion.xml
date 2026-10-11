@@ -1,39 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <report
-                id="menu_report_proyeccion"
-                model="proyeccion.report.programa"
-                string="Proyeccion por Programa"
-                report_type="qweb-html"
-                name="consultas_pnc.report_proyeccion"
-                menu="False"
-        />
+<odoo>
+    <record id="menu_report_proyeccion" model="ir.actions.report">
+        <field name="name">Proyeccion por Programa</field>
+        <field name="model">proyeccion.report.programa</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">consultas_pnc.report_proyeccion</field>
+    </record>
 
-        <template id="consultas_pnc.report_proyeccion">
+    <template id="report_proyeccion">
+        <t t-call="web.basic_layout">
             <div class="page" align="center">
-                <t t-if="not o or not 'company_id' in o">
-                    <t t-set="company" t-value="res_company"></t>
-                </t>
+                <t t-set="company" t-value="res_company"/>
                 <t t-call="consultas_pnc.styles"/>
                 <div>
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
                          style="max-height: 45px;"/>
                 </div>
                 <h3>Patronato Nacional de Ciegos, INC</h3>
                 Estadistica por Programa<br/>
                 Informe Proyecciones y Resultados
                 <p>
-                    <t t-esc="docs.month_string"/>
+                    <t t-out="docs.month_string"/>
                     /
-                    <t t-esc="docs.year"/>
+                    <t t-out="docs.year"/>
                 </p>
 
                 <t t-if="docs.programa_ids">
                     <t t-foreach="docs.programa_ids" t-as="programa">
                         <table class="tg" width="100%">
                             <t t-set='consulta_ids' t-value="docs.get_consultas(programa.id)"/>
-                            <t t-if="len(consulta_ids[0]) > 0">
+                            <t t-if="len(consulta_ids) > 0">
                                 <tr>
                                     <th colspan="7" class="tg-yw4l">
                                         <span t-field="programa.name"/>
@@ -60,77 +56,75 @@
                                 <t t-set="proyeccion_ano" t-value="0"/>
                                 <t t-set="porcentaje_mes" t-value="0.0"/>
                                 <t t-set="porcentaje_ano" t-value="0.0"/>
-                                <t t-foreach="consulta_ids" t-as="consulta_obj">
-                                    <t t-foreach="consulta_obj" t-as="obj">
-                                        <t t-if="(count%2) == 1">
-                                            <t t-set="cl" t-value="'tg-6k2t'"/>
-                                        </t>
-                                        <t t-if="(count%2) != 1">
-                                            <t t-set="cl" t-value="'tg-yw4l'"/>
-                                        </t>
-                                        <tr>
-                                            <td t-att-class='cl'><p t-esc="obj[0]"/></td>
-                                            <td t-att-class='cl'><p t-esc="obj[1]"/></td>
-                                            <td t-att-class='cl'><p t-esc="obj[4]"/></td>
-                                            <td t-att-class='cl'><p t-esc="obj[6]"/></td>
-                                            <td t-att-class='cl'><p t-esc="obj[5]"/></td>
-                                            <td t-att-class='cl'>
-                                                <t t-if="obj[6] > 0 and obj[1] > 0">
-                                                    <span t-esc="'{:,.2f}'.format((float(obj[1]) / float(obj[6]))*100)"/> %
-                                                    <t t-set="porcentaje_mes"
-                                                       t-value="porcentaje_mes + float(((float(obj[1]) / float(obj[6]))*100))"/>
-                                                </t>
-                                                <t t-if="obj[6] &lt;= 0 or obj[1] &lt;= 0">
-                                                    0 %
-                                                </t>
-                                            </td>
-                                            <td t-att-class='cl'>
-                                                <t t-if="obj[5] > 0 and obj[4] > 0">
-                                                    <span t-esc="'{:,.2f}'.format((float(obj[4]) / float(obj[5]))*100)"/> %
-                                                    <t t-set="porcentaje_ano"
-                                                       t-value="porcentaje_ano + float(((float(obj[4]) / float(obj[5]))*100))"/>
-                                                </t>
-                                                <t t-if="obj[5] &lt;= 0 or obj[4] &lt;= 0">
-                                                    0 %
-                                                </t>
-                                            </td>
-                                        </tr>
-
-                                        <t t-set='count' t-value='count+1'/>
-                                        <t t-set="acumulado_mes" t-value="acumulado_mes + int(obj[1] or 0)"/>
-                                        <t t-set="acumulado_ano" t-value="acumulado_ano + int(obj[4] or 0)"/>
-                                        <t t-set="proyeccion_mes"
-                                           t-value="proyeccion_mes + int(obj[6])"/>
-                                        <t t-set="proyeccion_ano"
-                                           t-value="proyeccion_ano + int(obj[5])"/>
+                                <t t-foreach="consulta_ids" t-as="obj">
+                                    <t t-if="(count%2) == 1">
+                                        <t t-set="cl" t-value="'tg-6k2t'"/>
                                     </t>
+                                    <t t-if="(count%2) != 1">
+                                        <t t-set="cl" t-value="'tg-yw4l'"/>
+                                    </t>
+                                    <tr>
+                                        <td t-att-class='cl'><p t-out="obj[0]"/></td>
+                                        <td t-att-class='cl'><p t-out="obj[1]"/></td>
+                                        <td t-att-class='cl'><p t-out="obj[4]"/></td>
+                                        <td t-att-class='cl'><p t-out="obj[6]"/></td>
+                                        <td t-att-class='cl'><p t-out="obj[5]"/></td>
+                                        <td t-att-class='cl'>
+                                            <t t-if="obj[6] > 0 and obj[1] > 0">
+                                                <span t-out="'{:,.2f}'.format((float(obj[1]) / float(obj[6]))*100)"/> %
+                                                <t t-set="porcentaje_mes"
+                                                   t-value="porcentaje_mes + float(((float(obj[1]) / float(obj[6]))*100))"/>
+                                            </t>
+                                            <t t-if="obj[6] &lt;= 0 or obj[1] &lt;= 0">
+                                                0 %
+                                            </t>
+                                        </td>
+                                        <td t-att-class='cl'>
+                                            <t t-if="obj[5] > 0 and obj[4] > 0">
+                                                <span t-out="'{:,.2f}'.format((float(obj[4]) / float(obj[5]))*100)"/> %
+                                                <t t-set="porcentaje_ano"
+                                                   t-value="porcentaje_ano + float(((float(obj[4]) / float(obj[5]))*100))"/>
+                                            </t>
+                                            <t t-if="obj[5] &lt;= 0 or obj[4] &lt;= 0">
+                                                0 %
+                                            </t>
+                                        </td>
+                                    </tr>
+
+                                    <t t-set='count' t-value='count+1'/>
+                                    <t t-set="acumulado_mes" t-value="acumulado_mes + int(obj[1] or 0)"/>
+                                    <t t-set="acumulado_ano" t-value="acumulado_ano + int(obj[4] or 0)"/>
+                                    <t t-set="proyeccion_mes"
+                                       t-value="proyeccion_mes + int(obj[6])"/>
+                                    <t t-set="proyeccion_ano"
+                                       t-value="proyeccion_ano + int(obj[5])"/>
                                 </t>
                             </t>
                             <tr>
                                 <th class="tg-yw4l">Totales</th>
                                 <th class="tg-yw4l">
-                                    <t t-esc="acumulado_mes"/>
+                                    <t t-out="acumulado_mes"/>
                                 </th>
                                 <th class="tg-yw4l">
-                                    <t t-esc="acumulado_ano"/>
+                                    <t t-out="acumulado_ano"/>
                                 </th>
                                 <th class="tg-yw4l">
-                                    <!--<t t-esc="proyeccion_mes"/>-->
+                                    <!--<t t-out="proyeccion_mes"/>-->
                                 </th>
                                 <th class="tg-yw4l">
-                                    <!--<t t-esc="proyeccion_ano"/>-->
+                                    <!--<t t-out="proyeccion_ano"/>-->
                                 </th>
                                 <th class="tg-yw4l">
-                                    <!--<t t-esc="'{:,.2f}'.format(float(porcentaje_mes or 0))"/> %-->
+                                    <!--<t t-out="'{:,.2f}'.format(float(porcentaje_mes or 0))"/> %-->
                                 </th>
                                 <th class="tg-yw4l">
-                                    <!--<t t-esc="'{:,.2f}'.format((porcentaje_ano or 0))"/> %-->
+                                    <!--<t t-out="'{:,.2f}'.format((porcentaje_ano or 0))"/> %-->
                                 </th>
                             </tr>
                         </table>
                     </t>
                 </t>
             </div>
-        </template>
-    </data>
-</openerp>
+        </t>
+    </template>
+</odoo>

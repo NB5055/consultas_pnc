@@ -1,38 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <report
-                id="menu_report_prevencion_ceguera"
-                model="informe.report.prevencion.ceguera"
-                string="Prevencion Ceguera"
-                report_type="qweb-html"
-                name="consultas_pnc.report_prevencion_ceguera"
-                menu="False"
-        />
+<odoo>
+    <record id="menu_report_prevencion_ceguera" model="ir.actions.report">
+        <field name="name">Prevencion Ceguera</field>
+        <field name="model">informe.report.prevencion.ceguera</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">consultas_pnc.report_prevencion_ceguera</field>
+    </record>
 
-        <template id="consultas_pnc.report_prevencion_ceguera">
+    <template id="report_prevencion_ceguera">
+        <t t-call="web.basic_layout">
             <div class="page" align="center">
 
                 <t t-call="consultas_pnc.styles"/>
 
-                <t t-if="not o or not 'company_id' in o">
-                    <t t-set="company" t-value="res_company"></t>
-                </t>
+                <t t-set="company" t-value="res_company"/>
                 <div>
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
                          style="max-height: 45px;"/>
                 </div>
                 <h3>Patronato Nacional de Ciegos, INC</h3>
                 Informe Prevencion Ceguera
                 <p>Desde
-                    <p>Desde <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_inicial,'%Y-%m-%d'))"/> hasta <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_final,'%Y-%m-%d'))"/></p>
+                    <p>Desde <t t-out="docs.fecha_inicial.strftime('%d-%m-%Y')"/> hasta <t t-out="docs.fecha_final.strftime('%d-%m-%Y')"/></p>
                 </p>
 
                 <table width="100%" class="tg">
-                    <t t-foreach="docs.get_data()[0]" t-as="programa">
+                    <t t-foreach="docs.get_data()" t-as="programa">
                         <tr>
                             <th class="tg-yw4l" align="center" colspan="3">
-                                <span t-esc="programa['programa']"/>
+                                <span t-out="programa['programa']"/>
                             </th>
                         </tr>
                         <tr>
@@ -50,13 +46,13 @@
                             </t>
                             <tr>
                                 <td t-att-class='cl'>
-                                    <p t-esc="data[0]"/>
+                                    <p t-out="data[0]"/>
                                 </td>
                                 <td t-att-class='cl'>
-                                    <p t-esc="data[1]"/>
+                                    <p t-out="data[1]"/>
                                 </td>
                                 <td t-att-class='cl'>
-                                    <p t-esc="data[2]"/>
+                                    <p t-out="data[2]"/>
                                 </td>
                             </tr>
                         </t>
@@ -64,6 +60,6 @@
                     </t>
                 </table>
             </div>
-        </template>
-    </data>
-</openerp>
+        </t>
+    </template>
+</odoo>

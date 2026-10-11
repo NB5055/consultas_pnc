@@ -1,5 +1,5 @@
-from openerp import models, fields, api
-from openerp.exceptions import UserError
+from odoo import fields, models
+from odoo.exceptions import UserError
 
 
 class ReportAsistenciaEconomica(models.TransientModel):
@@ -14,16 +14,14 @@ class ReportAsistenciaEconomica(models.TransientModel):
     def _print_report(self, data):
         raise UserError('Error!')
 
-    @api.multi
     def get_asistencias(self):
         asistencia_ids = self.env['ficha.paciente.ayuda.economica'].search([('fecha', '>=', self.fecha_inicial),
                                                                             ('fecha', '<=', self.fecha_final)],
                                                                            order="name asc,fecha asc")
         return asistencia_ids
 
-    @api.multi
     def paciente_asistencia_ids(self, paciente_id):
-        return self.get_asistencias().filtered(lambda self: self.ayuda_economica_id == paciente_id)
+        return self.get_asistencias().filtered(lambda x: x.ayuda_economica_id == paciente_id)
 
     def get_paciente_filtered(self, programa_id):
         return self.paciente_ids.filtered(lambda x: x.programa == programa_id)
@@ -42,17 +40,12 @@ class ReportAsistenciaEconomica(models.TransientModel):
             self.paciente_ids = self.paciente_ids.search([], order="nombre asc")
         if not self.programa_ids:
             self.programa_ids = self.programa_ids.search([], order="name asc")
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'consultas_pnc.report_asistencia_economica',
-            'target': 'new',
-            'report_type': report_type,
-        }
+        action = self.env.ref('consultas_pnc.menu_report_asistencia_Economica').report_action(self, config=False)
+        action['report_type'] = report_type
+        return action
 
-    @api.multi
     def print_report(self):
         return self._check_report('qweb-pdf')
 
-    @api.multi
     def check_report(self):
         return self._check_report('qweb-html')

@@ -1,18 +1,18 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'ConsultasPNC',
-    'version': '1.1',
-    'author': 'Speed Solutions',
+    'version': '20.0.1.0.0',
+    'author': 'Angstrom Mena',
     'category': 'Consultas PNC',
-    'website': 'https://www.speedsolution.com.do',
+    'website': 'https://www.angstrommena.com',
+    'license': 'LGPL-3',
     'summary': """Sistema para manejo de pacientes y citas """
                """Patronato Nacional de Ciegos.""",
     'description': """
 """,
-    'depends': ['hr', 'mail', 'base'],
+    'depends': ['hr', 'mail'],
     'data': [
         'security/consultas_pnc_security.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
         'views/ficha_paciente.xml',
         'views/consultas.xml',
         'views/programas.xml',
@@ -28,13 +28,11 @@
         'reports/report_view.xml',
         'reports/report_proyeccion.xml',
         'reports/report_prevencion_ceguera.xml',
-        'views/webclient_templates.xml',
         'reports/report_asistencia_economica.xml',
         'reports/report_informe_programa_comparativo.xml',
         'reports/report_pacientes.xml',
     ],
     'demo': [],
-
     'installable': True,
     'application': True,
 }

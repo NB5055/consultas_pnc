@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-import consultas
-import ficha_paciente
-import programas
-import regiones_provincias
-import citas
-import hr_employee
-import operativos
+from . import consultas
+from . import ficha_paciente
+from . import programas
+from . import regiones_provincias
+from . import citas
+from . import hr_employee
+from . import operativos

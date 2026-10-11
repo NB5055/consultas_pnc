@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from openerp import fields, models
+from odoo import fields, models
 
 
 class programa_programa(models.Model):
@@ -10,23 +9,21 @@ class programa_programa(models.Model):
 
     sequence = fields.Integer()
     name = fields.Char(string="Nombre", help="Nombre del Programa",
-                       required=True, placeholder="Nombre", track_visibility="onchange")
-    encargado = fields.Many2one("hr.employee", string="Encargado del Programa", track_visibility="onchange")
+                       required=True, tracking=True)
+    encargado = fields.Many2one("hr.employee", string="Encargado del Programa", tracking=True)
     provincia = fields.One2many("region.provincia", "programa_id",
-                                string="""Provincia de Ejecución""", track_visibility="onchange")
+                                string="""Provincia de Ejecución""")
     participantes = fields.One2many("hr.employee", 'programa_id',
-                                    string="Médico / Profesor", track_visibility="onchange")
-    notas = fields.Text(string="Notas", track_visibility="onchange")
-    paciente_id = fields.Many2one("ficha.paciente", track_visibility="onchange")
-    tratamiento_ids = fields.Many2many('consultas.tratamiento', string="Tratamientos", track_visibility="onchange")
+                                    string="Médico / Profesor")
+    notas = fields.Text(string="Notas", tracking=True)
+    paciente_id = fields.Many2one("ficha.paciente", tracking=True)
+    tratamiento_ids = fields.Many2many('consultas.tratamiento', string="Tratamientos")
 
-    proyeccion_ids = fields.One2many("consultas.proyeccion", "programa", string="Proyecciones", track_visibility="onchange")
+    proyeccion_ids = fields.One2many("consultas.proyeccion", "programa", string="Proyecciones")
     program_type = fields.Selection([('prevencion_ceguera', 'Prevencion Ceguera'),
-                                     ('servicio', 'Rehabilitacion')], string="Categoria", track_visibility="onchange")
+                                     ('servicio', 'Rehabilitacion')], string="Categoria", tracking=True)
 
-    _sql_constraints = [
-        ('name_uniq', 'unique(name)', "Este programa ya existe")
-    ]
+    _name_uniq = models.Constraint('unique(name)', "Este programa ya existe")
 
 
 class programa_participantes(models.Model):
@@ -34,8 +31,8 @@ class programa_participantes(models.Model):
     _description = "Empleados Participantes del proyecto"
 
     participante_id = fields.Many2one("hr.employee",
-                                      string="Médico / Profesor", track_visibility="onchange")
+                                      string="Médico / Profesor")
     especialidad = fields.Many2one(related="participante_id.job_id",
                                    string="Especialidad / Cargo",
-                                   readonly=True, track_visibility="onchange")
-    programa_id = fields.Many2one("programa.programa", string="Programa", track_visibility="onchange")
+                                   readonly=True)
+    programa_id = fields.Many2one("programa.programa", string="Programa")

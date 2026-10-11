@@ -1,38 +1,36 @@
 import calendar
-from datetime import datetime as dt
+from datetime import date
 
-from openerp import models, fields, api
-from openerp.exceptions import UserError
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
+from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
-def no_operations(self, obj, programa, year,category=[]):
+def no_operations(self, obj, programa, year, category=None):
     departamento = []
     for ob in obj:
         departamento.append(ob[0])
-    for t in self.env['consultas.tratamiento'].search(category):
+    year_start = date(int(year), 1, 1)
+    year_end = date(int(year), 12, 31)
+    for t in self.env['consultas.tratamiento'].search(category or []):
         if t.name not in departamento and programa in t.programa_ids.ids:
-            acumulado = len(self.env['consultas.tratamiento.line'].search([('consulta_id.programa', '=', programa),
-                                                                           ('name', '=', t.id),
-                                                                           ('consulta_id.fecha', '>=',
-                                                                            str(year) + '-01-01'),
-                                                                           ('consulta_id.fecha', '<=',
-                                                                            str(year) + '-12-31')]))
+            acumulado = self.env['consultas.tratamiento.line'].search_count([('consulta_id.programa', '=', programa),
+                                                                             ('name', '=', t.id),
+                                                                             ('consulta_id.fecha', '>=', year_start),
+                                                                             ('consulta_id.fecha', '<=', year_end)])
 
             acumulado += sum(self.env['operativos'].search([('programa', '=', programa),
-                                                 ('name', '=', t.id),
-                                                 ('fecha', '>=',
-                                                  str(year) + '-01-01'),
-                                                 ('fecha', '<=',
-                                                  str(year) + '-12-31')]).mapped('atendidos'))
+                                                            ('name', '=', t.id),
+                                                            ('fecha', '>=', year_start),
+                                                            ('fecha', '<=', year_end)]).mapped('atendidos'))
 
-            proyeccion = t.proyeccion.filtered(lambda x: year == x.year and programa == x.programa.id)
-            obj.append(tuple((t.name, 0, programa, t.id, acumulado, proyeccion.proyeccion, proyeccion.proyeccion / 10)))
+            proyeccion = t.proyeccion.filtered(lambda x: str(year) == x.year and programa == x.programa.id)
+            proyeccion_year = proyeccion.proyeccion if proyeccion else False
+            obj.append(tuple((t.name, 0, programa, t.id, acumulado, proyeccion_year, (proyeccion_year or 0) // 10)))
+
 
 def discount_report_related(self, obj):
     consulta_updated_ids = []
     for consulta_id in obj:
-        tratamiento_id = self.env['consultas.tratamiento'].browse(consulta_id[3])
         discount_report = self.env['consultas.tratamiento'].search([('discount_report', '=', consulta_id[3])])
         if discount_report:
             for consulta_obj in obj:
@@ -61,6 +59,7 @@ def discount_report_related(self, obj):
             consulta_updated_ids.append(consulta_id)
     return consulta_updated_ids
 
+
 class InformeReport(models.TransientModel):
     _name = "informe.report.programa"
     _description = "Informes"
@@ -74,57 +73,63 @@ class InformeReport(models.TransientModel):
     def _print_report(self, data):
         raise UserError('Error!')
 
-    @api.one
     def get_consultas(self, programa):
-        year = fields.date.today().year
-        start_date = dt.strptime(self.fecha_inicial, DATE_FORMAT)
-        end_date = dt.strptime(self.fecha_final, DATE_FORMAT)
+        self.ensure_one()
+        end_date = self.fecha_final
         end_day = calendar.monthrange(end_date.year, end_date.month)[1]
+        params = {
+            'programa': programa,
+            'fecha_inicial': self.fecha_inicial,
+            'fecha_final': self.fecha_final,
+            'year_start': date(self.fecha_inicial.year, 1, 1),
+            'year_end': date(end_date.year, end_date.month, end_day),
+            'year': str(end_date.year),
+        }
 
         query = """(select ct.name as tratamiento,count(ct.name) as sumatoria,pp.id as programa_id,ct.id as consulta_id,
                            (select count(ct2.name) from consultas_consultas cc
-                    	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
-                    	inner join consultas_tratamiento ct2 on ctl.name = ct2.id
-                    	left join programa_programa pp on cc.programa = pp.id
-                    	where cc.programa = """ + str(programa) + """ and ct2.id = ct.id
-                    	 and cc.fecha >= '""" + str(start_date.year) + """-01-01'
-                    	 and cc.fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
-            end_day) + """'
-                    	group by ct.name) as year,
-                    	(coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(end_date.year) + """'),0)) as proyeccion_year,
-                    	(coalesce(((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(end_date.year) + """') / 10),0)) as proyeccion_mes
+                        inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
+                        inner join consultas_tratamiento ct2 on ctl.name = ct2.id
+                        left join programa_programa pp on cc.programa = pp.id
+                        where cc.programa = %(programa)s and ct2.id = ct.id
+                         and cc.fecha >= %(year_start)s
+                         and cc.fecha <= %(year_end)s
+                        group by ct.name) as year,
+                        (coalesce((select proyeccion from consultas_proyeccion where programa = %(programa)s
+                            and tratamiento_id = ct.id and year = %(year)s),0)) as proyeccion_year,
+                        (coalesce(((select proyeccion from consultas_proyeccion where programa = %(programa)s
+                            and tratamiento_id = ct.id and year = %(year)s) / 10),0)) as proyeccion_mes
                     from consultas_consultas cc
-                    	inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
-                    	inner join consultas_tratamiento ct on ctl.name = ct.id
-                    	left join programa_programa pp on cc.programa = pp.id
-                    	where cc.fecha >= '""" + self.fecha_inicial + """' and cc.fecha <= '""" + self.fecha_final + """'
-                    	and cc.programa = """ + str(programa) + """
-                    	group by ct.name,pp.id,ct.id order by ct.name,pp.id)
+                        inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
+                        inner join consultas_tratamiento ct on ctl.name = ct.id
+                        left join programa_programa pp on cc.programa = pp.id
+                        where cc.fecha >= %(fecha_inicial)s and cc.fecha <= %(fecha_final)s
+                        and cc.programa = %(programa)s
+                        group by ct.name,pp.id,ct.id order by ct.name,pp.id)
                 union
                     (select ct.name  as tratamiento,sum(o.atendidos) as sumatoria,programa as programa,ct.id as consulta_id,
                             (select sum(atendidos) from operativos op
-                                where programa = """ + str(programa) + """ and ct.id = op.name 
-                                and fecha >= '""" + str(start_date.year) + """-01-01' 
-                    	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
-            end_day) + """') as year,
-                            (coalesce((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(end_date.year) + """'),0)) as proyeccion_year,
-                    	(coalesce(((select proyeccion from consultas_proyeccion where programa = """ + str(
-            programa) + """ and tratamiento_id = ct.id and year = '""" + str(end_date.year) + """') / 10),0)) as proyeccion_mes
+                                where programa = %(programa)s and ct.id = op.name
+                                and fecha >= %(year_start)s
+                         and fecha <= %(year_end)s) as year,
+                            (coalesce((select proyeccion from consultas_proyeccion where programa = %(programa)s
+                                and tratamiento_id = ct.id and year = %(year)s),0)) as proyeccion_year,
+                        (coalesce(((select proyeccion from consultas_proyeccion where programa = %(programa)s
+                            and tratamiento_id = ct.id and year = %(year)s) / 10),0)) as proyeccion_mes
                           from operativos o
                           join consultas_tratamiento ct on o.name = ct.id
-                          where fecha >= '""" + self.fecha_inicial + """' and
-                                fecha <= '""" + self.fecha_final + """' and
+                          where fecha >= %(fecha_inicial)s and
+                                fecha <= %(fecha_final)s and
                                 category != 'rh' and
-                                programa = """ + str(programa) + """
+                                programa = %(programa)s
                           group by ct.name,programa,ct.id)
                 """
-        self.env.cr.execute(query)
+        self.env.flush_all()
+        self.env.cr.execute(query, params)
 
         def getKey(item):
-            return item[0]
+            return item[0] or ''
+
         obj = self.env.cr.fetchall()
         no_operations(self, obj, programa, end_date.year)
         obj = discount_report_related(self, obj)
@@ -133,7 +138,7 @@ class InformeReport(models.TransientModel):
     def get_tratamientos(self, consultas):
         tratamiento_ids = []
         for consulta in consultas:
-            for tratamiento in consultas[consulta][0]:
+            for tratamiento in consultas[consulta]:
                 tratamiento_ids.append(tratamiento[3])
         return self.env['consultas.tratamiento'].search([('id', 'in', tratamiento_ids)], order="name")
 
@@ -143,39 +148,29 @@ class InformeReport(models.TransientModel):
             consultas[programa.id] = self.get_consultas(programa.id)
         return consultas
 
-    @api.multi
     def check_report(self):
         if self.comparativo:
             return self.check_report_comparativo('qweb-html')
         else:
             return self.check_report_individual('qweb-html')
 
-    @api.multi
     def print_report(self):
         if self.comparativo:
             return self.check_report_comparativo('qweb-pdf')
         else:
             return self.check_report_individual('qweb-pdf')
 
-    @api.multi
     def check_report_individual(self, report_type):
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'consultas_pnc.report_programa',
-            'target': 'new',
-            'report_type': report_type,
-        }
+        action = self.env.ref('consultas_pnc.menu_report_programa').report_action(self, config=False)
+        action['report_type'] = report_type
+        return action
 
-    @api.multi
     def check_report_comparativo(self, report_type):
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'consultas_pnc.report_programa_comparativo',
-            'target': 'new',
-            'report_type': report_type,
-        }
+        action = self.env.ref('consultas_pnc.menu_report_programa_comparativo').report_action(self, config=False)
+        action['report_type'] = report_type
+        return action
 
     @api.onchange('programa_ids')
     def change_programa_ids(self):
         if self.programa_ids:
-            self.programa_ids[len(self.programa_ids)-1].sudo().write({"sequence": len(self.programa_ids)})
+            self.programa_ids[len(self.programa_ids) - 1]._origin.sudo().write({"sequence": len(self.programa_ids)})

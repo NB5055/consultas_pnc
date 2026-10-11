@@ -1,72 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
-        <record model='ir.ui.view' id='report_asistencia_economica_form'>
-            <field name="name">report.asistencia.economica</field>
-            <field name="model">report.asistencia.economica</field>
-            <field name="arch" type="xml">
-                <form string="Asistencia Economica">
-                    <sheet>
-                        <group col="4">
-                            <field name="fecha_inicial"/>
-                            <field name="fecha_final"/>
-                        </group>
-                        <group>
-                            <field name="paciente_ids" widget="many2many_tags"/>
-                            <field name="programa_ids" widget="many2many_tags"/>
-                        </group>
+    <record model='ir.ui.view' id='report_asistencia_economica_form'>
+        <field name="name">report.asistencia.economica</field>
+        <field name="model">report.asistencia.economica</field>
+        <field name="arch" type="xml">
+            <form string="Asistencia Economica">
+                <sheet>
+                    <group col="4">
+                        <field name="fecha_inicial"/>
+                        <field name="fecha_final"/>
+                    </group>
+                    <group>
+                        <field name="paciente_ids" widget="many2many_tags"/>
+                        <field name="programa_ids" widget="many2many_tags"/>
+                    </group>
 
-                    </sheet>
-                    <footer>
-                        <button name="check_report" string="Ver Reporte" type="object" default_focus="1"
-                                class="oe_highlight"/>
-                        <button name="print_report" string="Imprimir Reporte" type="object" default_focus="1"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
+                </sheet>
+                <footer>
+                    <button name="check_report" string="Ver Reporte" type="object" default_focus="1"
+                            class="oe_highlight"/>
+                    <button name="print_report" string="Imprimir Reporte" type="object" default_focus="1"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 
-        <record id="asistencia_economica_action" model="ir.actions.act_window">
-            <field name="name">Asistencia Economica</field>
-            <field name="res_model">report.asistencia.economica</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
+    <record id="asistencia_economica_action" model="ir.actions.act_window">
+        <field name="name">Asistencia Economica</field>
+        <field name="res_model">report.asistencia.economica</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
-        <menuitem name="Asistencia Economica" parent="menu_reportes" id="menu_asistencia_Economica"
-                  action="asistencia_economica_action"/>
+    <menuitem name="Asistencia Economica" parent="menu_reportes" id="menu_asistencia_Economica"
+              action="asistencia_economica_action"/>
 
-        <report
-                id="menu_report_asistencia_Economica"
-                model="report.asistencia.economica"
-                string="Asistencia Economica"
-                report_type="qweb-html"
-                name="consultas_pnc.report_asistencia_economica"
-                menu="False"
-        />
+    <record id="menu_report_asistencia_Economica" model="ir.actions.report">
+        <field name="name">Asistencia Economica</field>
+        <field name="model">report.asistencia.economica</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">consultas_pnc.report_asistencia_economica</field>
+    </record>
 
-        <template id="consultas_pnc.report_asistencia_economica">
+    <template id="report_asistencia_economica">
+        <t t-call="web.basic_layout">
             <div class="page" align="center">
                 <t t-call="consultas_pnc.styles"/>
 
-                <t t-if="not o or not 'company_id' in o">
-                    <t t-set="company" t-value="res_company"></t>
-                </t>
+                <t t-set="company" t-value="res_company"/>
                 <div>
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
                          style="max-height: 45px;"/>
                 </div>
                 <t t-set="currency" t-value="docs.env.user.company_id.currency_id"/>
                 <h3>Patronato Nacional de Ciegos, INC</h3>
                 Asistencia Economica
                 <p>Desde
-                    <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_inicial,'%Y-%m-%d'))"/>
+                    <t t-out="docs.fecha_inicial.strftime('%d-%m-%Y')"/>
                     hasta
-                    <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_final,'%Y-%m-%d'))"/>
+                    <t t-out="docs.fecha_final.strftime('%d-%m-%Y')"/>
                 </p>
                 <t t-foreach="docs.programa_ids" t-as="programa_id">
                     <t t-set="programa_id" t-value="programa_id"/>
@@ -78,7 +72,7 @@
                                 <tr>
                                     <th colspan="5" class="tg-yw4l">
                                         <span t-field="paciente_id.display_name"/>
-                                        (<span t-esc="programa_id.name"/>)
+                                        (<span t-out="programa_id.name"/>)
                                     </th>
                                 </tr>
                                 <tr>
@@ -99,20 +93,20 @@
                                     </t>
                                     <tr>
                                         <td>
-                                            <t t-esc="count"/>
+                                            <t t-out="count"/>
                                         </td>
                                         <td t-att-class='cl'>
-                                            <p t-esc="asistencia_id.name.name"/>
+                                            <p t-out="asistencia_id.name.name"/>
                                         </td>
                                         <td t-att-class='cl'>
-                                            <p t-esc="asistencia_id.parentesco.name"/>
+                                            <p t-out="asistencia_id.parentesco.name"/>
                                         </td>
                                         <td t-att-class='cl'>
-                                            <p t-esc="asistencia_id.monto"
-                                               t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                            <p t-out="asistencia_id.monto"
+                                               t-options='{"widget": "monetary", "display_currency": currency}'/>
                                         </td>
                                         <td t-att-class='cl'>
-                                            <p t-esc="asistencia_id.fecha"/>
+                                            <p t-out="asistencia_id.fecha"/>
                                         </td>
                                     </tr>
                                     <t t-set='count' t-value='count+1'/>
@@ -124,7 +118,7 @@
                                     </th>
                                     <th class="tg-yw4l" style="text-align:left !important;">
                                         <strong>
-                                            <t t-esc="total"/>
+                                            <t t-out="total"/>
                                         </strong>
                                     </th>
                                     <th></th>
@@ -156,12 +150,11 @@
                         </t>
                         <tr>
                             <td t-att-class='cl'>
-                                <t t-esc="total['programa']"/>
+                                <t t-out="total['programa']"/>
                             </td>
                             <td t-att-class='cl'>
-                                <t t-esc="total['total_programa']"/>
-                                <t t-set="total_general" t-value="total_general + total['total_programa']"
-                                   t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                                <t t-out="total['total_programa']"/>
+                                <t t-set="total_general" t-value="total_general + total['total_programa']"/>
                             </td>
                         </tr>
                         <t t-set='count' t-value='count+1'/>
@@ -171,13 +164,12 @@
                             Total General
                         </th>
                         <th class="tg-yw4l">
-                            <t t-esc="total_general"
-                               t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/>
+                            <t t-out="total_general"
+                               t-options='{"widget": "monetary", "display_currency": currency}'/>
                         </th>
                     </tr>
                 </table>
             </div>
-        </template>
-
-    </data>
-</openerp>
+        </t>
+    </template>
+</odoo>

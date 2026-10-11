@@ -1,5 +1,5 @@
-from openerp import models, fields, api
-from openerp.exceptions import UserError
+from odoo import fields, models
+from odoo.exceptions import UserError
 
 
 class PrevencionCegueraReport(models.TransientModel):
@@ -12,22 +12,23 @@ class PrevencionCegueraReport(models.TransientModel):
     def _print_report(self, data):
         raise UserError('Error!')
 
-    @api.one
     def get_data(self):
+        self.ensure_one()
         programa_ids = self.env['programa.programa'].search_read([], ['name'])
         data = []
+        self.env.flush_all()
         for programa in programa_ids:
-            query = """select cr.name,count(*),sum(o.atendidos) 
-                          from operativos o 
+            query = """select cr.name,count(*),sum(o.atendidos)
+                          from operativos o
                           join consultas_tratamiento cr on o.name = cr.id
-                          where fecha >= '%s' and 
-                                fecha <= '%s' and 
-                                programa = %s  
-                          group by cr.name;""" % (self.fecha_inicial, self.fecha_final, programa.get('id'))
-            self.env.cr.execute(query)
+                          where fecha >= %s and
+                                fecha <= %s and
+                                programa = %s
+                          group by cr.name;"""
+            self.env.cr.execute(query, (self.fecha_inicial, self.fecha_final, programa.get('id')))
 
             def getKey(item):
-                return item[0]
+                return item[0] or ''
 
             obj = self.env.cr.fetchall()
             if obj:
@@ -35,20 +36,10 @@ class PrevencionCegueraReport(models.TransientModel):
                              'data': sorted(obj, key=getKey)})
         return data
 
-    @api.multi
     def check_report(self):
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'consultas_pnc.report_prevencion_ceguera',
-            'target': 'new',
-            'report_type': 'qweb-html',
-        }
+        action = self.env.ref('consultas_pnc.menu_report_prevencion_ceguera').report_action(self, config=False)
+        action['report_type'] = 'qweb-html'
+        return action
 
-    @api.multi
     def print_report(self):
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'consultas_pnc.report_prevencion_ceguera',
-            'target': 'new',
-            'report_type': 'qweb-pdf',
-        }
+        return self.env.ref('consultas_pnc.menu_report_prevencion_ceguera').report_action(self, config=False)

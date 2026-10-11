@@ -1,33 +1,13 @@
 import calendar
-from datetime import datetime as dt
+from datetime import date
 
-from openerp import models, fields, api
-from openerp.exceptions import UserError
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
+from odoo import fields, models
+from odoo.exceptions import UserError
 
-
-# def discount_report_related(self, obj):
-#     consulta_updated_ids = []
-#     for consulta_id in obj:
-#         tratamiento_id = self.env['consultas.tratamiento'].browse(consulta_id[0])
-#         if tratamiento_id.discount_report:
-#             for obj_id in obj:
-#                 if obj_id[0] == tratamiento_id.discount_report.id:
-#                     consulta_id = (consulta_id[0],
-#                                    consulta_id[1],
-#                                    consulta_id[2] - obj_id[2],
-#                                    consulta_id[3] - obj_id[3],
-#                                    consulta_id[4])
-#             consulta_updated_ids.append(consulta_id)
-#
-#         else:
-#             consulta_updated_ids.append(consulta_id)
-#     return consulta_updated_ids
 
 def discount_report_related(self, obj):
     consulta_updated_ids = []
     for consulta_id in obj:
-        tratamiento_id = self.env['consultas.tratamiento'].browse(consulta_id[3])
         discount_report = self.env['consultas.tratamiento'].search([('discount_report', '=', consulta_id[0])])
         if discount_report:
             for consulta_obj in obj:
@@ -51,7 +31,6 @@ def discount_report_related(self, obj):
     return consulta_updated_ids
 
 
-
 class InformeReportConsolidado(models.TransientModel):
     _name = "informe.report.programa.consolidado"
     _description = "Informes"
@@ -62,56 +41,50 @@ class InformeReportConsolidado(models.TransientModel):
     def _print_report(self, data):
         raise UserError('Error!')
 
-    @api.one
     def get_consultas(self):
-        start_date = dt.strptime(self.fecha_inicial, DATE_FORMAT)
-        end_date = dt.strptime(self.fecha_final, DATE_FORMAT)
+        self.ensure_one()
+        end_date = self.fecha_final
         end_day = calendar.monthrange(end_date.year, end_date.month)[1]
+        params = {
+            'fecha_inicial': self.fecha_inicial,
+            'fecha_final': self.fecha_final,
+            'year_start': date(self.fecha_inicial.year, 1, 1),
+            'year_end': date(end_date.year, end_date.month, end_day),
+        }
 
-        query = """select ct.id,ct.name,(coalesce((select sum(atendidos) 
-                        from operativos op where ct.id = op.name and 
-                                     fecha >= '""" + self.fecha_inicial + """' and 
-                                     fecha <= '""" + self.fecha_final + """'),0)+ 
-                    (select count(cc.id) from consultas_consultas cc 
-                        inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id 
-                        where ctl.name = ct.id and ctl.fecha >= '""" + self.fecha_inicial + """' and 
-                                                   ctl.fecha <= '""" + self.fecha_final + """')),
-                    (coalesce((select sum(atendidos) from operativos op 
+        query = """select ct.id,ct.name,(coalesce((select sum(atendidos)
+                        from operativos op where ct.id = op.name and
+                                     fecha >= %(fecha_inicial)s and
+                                     fecha <= %(fecha_final)s),0)+
+                    (select count(cc.id) from consultas_consultas cc
+                        inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
+                        where ctl.name = ct.id and ctl.fecha >= %(fecha_inicial)s and
+                                                   ctl.fecha <= %(fecha_final)s)),
+                    (coalesce((select sum(atendidos) from operativos op
                         where ct.id = op.name
-                        and fecha >= '""" + str(start_date.year) + """-01-01' 
-                    	 and fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
-            end_day) + """'),0)+ 
-                    (select count(cc.id) from consultas_consultas cc 
-                        inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id 
+                        and fecha >= %(year_start)s
+                         and fecha <= %(year_end)s),0)+
+                    (select count(cc.id) from consultas_consultas cc
+                        inner join consultas_tratamiento_line ctl on ctl.consulta_id = cc.id
                         where ctl.name = ct.id
-                        and ctl.fecha >= '""" + str(start_date.year) + """-01-01' 
-                    	 and ctl.fecha <= '""" + str(end_date.year) + """-""" + str(end_date.month) + """-""" + str(
-            end_day) + """')),ct.category
+                        and ctl.fecha >= %(year_start)s
+                         and ctl.fecha <= %(year_end)s)),ct.category
                 from consultas_tratamiento ct group by ct.id"""
 
-        self.env.cr.execute(query)
+        self.env.flush_all()
+        self.env.cr.execute(query, params)
 
         def getKey(item):
-            return item[1]
+            return item[1] or ''
 
         obj = self.env.cr.fetchall()
         obj = discount_report_related(self, obj)
         return sorted(obj, key=getKey)
 
-    @api.multi
     def check_report(self):
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'consultas_pnc.report_programa_consolidado',
-            'target': 'new',
-            'report_type': 'qweb-html',
-        }
+        action = self.env.ref('consultas_pnc.menu_report_programa_consolidado').report_action(self, config=False)
+        action['report_type'] = 'qweb-html'
+        return action
 
-    @api.multi
     def print_report(self):
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'consultas_pnc.report_programa_consolidado',
-            'target': 'new',
-            'report_type': 'qweb-pdf',
-        }
+        return self.env.ref('consultas_pnc.menu_report_programa_consolidado').report_action(self, config=False)

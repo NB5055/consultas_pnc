@@ -1,58 +1,73 @@
-from openerp import models, fields, api
+from odoo import api, fields, models
+from odoo.fields import Command
+
+CATEGORY_GROUPS = {
+    'a': 'consultas_pnc.group_categoria_a',
+    'b': 'consultas_pnc.group_categoria_b',
+    'c': 'consultas_pnc.group_categoria_c',
+}
 
 
 class HrEmloyee(models.Model):
     _inherit = 'hr.employee'
 
-    def select_items(self):
-        return [(str(self.env.ref('consultas_pnc.group_categoria_a').id), 'Categoria A'),
-                (str(self.env.ref('consultas_pnc.group_categoria_b').id), 'Categoria B'),
-                (str(self.env.ref('consultas_pnc.group_categoria_c').id), 'Categoria C')]
-
     programa_id = fields.Many2one("programa.programa", string="Programa")
     provincia_id = fields.Many2one("region.provincia", string="Provincia",
-                                help="Provincia a que Pertenece")
-    user_name = fields.Char(string="User")
-    user_password = fields.Char(string="Password")
-    category_group = fields.Selection(lambda self: self.select_items(), string="Group")
+                                   help="Provincia a que Pertenece")
+    user_name = fields.Char(string="User Name", groups="hr.group_hr_user")
+    user_password = fields.Char(string="Password", store=False, groups="hr.group_hr_user")
+    category_group = fields.Selection([('a', 'Categoria A'),
+                                       ('b', 'Categoria B'),
+                                       ('c', 'Categoria C')], string="Group", groups="hr.group_hr_user")
 
-    @api.model
-    def create(self, vals):
-        employee_id = super(HrEmloyee, self).create(vals)
-        if employee_id.name and (employee_id.user_name or employee_id.work_email):
-            user_id = self.env['res.users'].create({'name': employee_id.name,
-                                                    'login': employee_id.user_name or employee_id.work_email,
-                                                    'password': employee_id.user_password or ''})
-            if employee_id.category_group:
-                user_id.groups_id = [(4, int(employee_id.category_group))]
-            user_id.partner_id.email = employee_id.work_email
-            employee_id.user_id = user_id
-        employee_id.user_password = ""
-        return employee_id
+    def _create_category_user(self, login, password):
+        self.ensure_one()
+        vals = {'name': self.name, 'login': login}
+        if password:
+            vals['password'] = password
+        user_id = self.env['res.users'].create(vals)
+        if self.category_group:
+            user_id.group_ids = [Command.link(self.env.ref(CATEGORY_GROUPS[self.category_group]).id)]
+        user_id.partner_id.email = self.work_email
+        self.user_id = user_id
 
-    @api.multi
+    @api.model_create_multi
+    def create(self, vals_list):
+        vals_list = [dict(vals) for vals in vals_list]
+        passwords = [vals.pop('user_password', False) for vals in vals_list]
+        employees = super(HrEmloyee, self.with_context(pnc_user_sync=False)).create(vals_list)
+        employees = employees.with_context(pnc_user_sync=True)
+        for employee_id, password in zip(employees, passwords):
+            if not employee_id.user_id and employee_id.name and (employee_id.user_name or employee_id.work_email):
+                employee_id._create_category_user(employee_id.user_name or employee_id.work_email, password)
+        return employees
+
     def write(self, vals):
-        employee_id = super(HrEmloyee, self).write(vals)
-        if self.user_id:
-            if 'user_password' in vals:
-                self.user_id.password = vals.get('user_password')
+        vals = dict(vals)
+        password = vals.pop('user_password', False)
+        res = super().write(vals)
+        if not self.env.context.get('pnc_user_sync', True):
+            return res
+        for employee_id in self:
+            if employee_id.user_id:
+                if password:
+                    employee_id.user_id.password = password
 
-            if 'category_group' in vals:
-                self.user_id.groups_id = [(2, self.env.ref('consultas_pnc.group_categoria_a').id)]
-                self.user_id.groups_id = [(2, self.env.ref('consultas_pnc.group_categoria_b').id)]
-                self.user_id.groups_id = [(2, self.env.ref('consultas_pnc.group_categoria_c').id)]
-                self.user_id.groups_id = [(4, int(vals.get('category_group')))]
+                if 'category_group' in vals:
+                    commands = [Command.unlink(self.env.ref(xmlid).id) for xmlid in CATEGORY_GROUPS.values()]
+                    if vals.get('category_group'):
+                        commands.append(Command.link(self.env.ref(CATEGORY_GROUPS[vals['category_group']]).id))
+                    employee_id.user_id.group_ids = commands
 
-            if 'user_name' in vals:
-                self.user_id.login = vals.get('user_name')
-        else:
-            if self.user_name:
-                user_id = self.env['res.users'].create({'name': self.name,
-                                                    'login': self.user_name,
-                                                    'password': self.user_password})
-                if self.category_group:
-                    user_id.groups_id = [(4, int(self.category_group))]
-                user_id.partner_id.email = self.work_email
-                self.user_id = user_id
-        super(HrEmloyee, self).write({'user_password':""})
-        return employee_id
+                if vals.get('user_name'):
+                    employee_id.user_id.login = vals['user_name']
+            elif employee_id.user_name:
+                employee_id._create_category_user(employee_id.user_name, password)
+        return res
+
+
+class HrEmployeePublic(models.Model):
+    _inherit = 'hr.employee.public'
+
+    programa_id = fields.Many2one("programa.programa", readonly=True)
+    provincia_id = fields.Many2one("region.provincia", readonly=True)

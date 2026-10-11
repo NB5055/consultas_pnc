@@ -1,337 +1,320 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-        <!--========================================================================-->
-        <!-- View Formulario consultas consultas-->
-        <!--========================================================================-->
-        <record model='ir.ui.view' id='consultas_consultas_form'>
-            <field name="name">Registro Consultas y Atenciones</field>
-            <field name="model">consultas.consultas</field>
-            <field name="arch" type="xml">
-                <form string="Registro Consultas y Atenciones ">
-                    <sheet>
-                        <group col="4" string="Registro Consultas y Atenciones">
+<odoo>
+    <!--========================================================================-->
+    <!-- View Formulario consultas consultas-->
+    <!--========================================================================-->
+    <record model='ir.ui.view' id='consultas_consultas_form'>
+        <field name="name">Registro Consultas y Atenciones</field>
+        <field name="model">consultas.consultas</field>
+        <field name="arch" type="xml">
+            <form string="Registro Consultas y Atenciones ">
+                <sheet>
+                    <group col="4" string="Registro Consultas y Atenciones">
 
-                            <field name="fecha"/>
-                            <field name="programa"
-                                   required="1"
-                                   domain="[('program_type','=','servicio')]"
-                                   options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
-                            <field name="name" options="{'no_create_edit': True,'no_create': True}"/>
-                            <field name="employee_id"
-                                   options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
-                            <field name="edad" required="1"/>
-                            <field name="sexo" required="1"/>
-                        </group>
-                        <field name="tratamiento" colspan="4"
-                               required="1">
-                            <tree editable="top">
-                                <field name="name" string="Tratamiento / Seguimiento / Referimiento" required="1"
-                                       domain="[('category','=','rh')]"
-                                       options="{'no_create_edit': True,
-                                                             'no_create': True}"/>
-                            </tree>
-                        </field>
-                        <group string="Notas">
-                            <field name="notes" nolabel="1"/>
-                        </group>
-
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
-                </form>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='consultas_consultas_tree'>
-            <field name="name">Registro Consultas y Atenciones</field>
-            <field name="model">consultas.consultas</field>
-            <field name="arch" type="xml">
-                <tree string="Consultas ">
-                    <field name="name"/>
-                    <field name="programa"/>
-                    <field name="fecha"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='consultas_consultas_history_tree'>
-            <field name="name">Historial Consultas y Atenciones</field>
-            <field name="model">consultas.consultas</field>
-            <field name="arch" type="xml">
-                <tree string="Consultas" delete="false" create="false">
-                    <field name="fecha"/>
-                    <field name="programa"/>
-                    <field name="employee_id"/>
-                    <field name="tratamiento"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='consultas_consultas_history_form'>
-            <field name="name">Historial Consultas y Atenciones</field>
-            <field name="model">consultas.consultas</field>
-            <field name="inherit_id" ref="consultas_consultas_form"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <form position="attributes">
-                    <attribute name="create">false</attribute>
-                    <attribute name="delete">false</attribute>
-                    <attribute name="edit">false</attribute>
-                </form>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='consultas_consultas_search'>
-            <field name="name">Registro Consultas y Atenciones</field>
-            <field name="model">consultas.consultas</field>
-            <field name="arch" type="xml">
-                <search string="Consultas ">
-                    <field name="name"/>
-                    <field name="programa"/>
-                    <field name="fecha"/>
-                    <field name="employee_id"/>
-                    <field name="edad"/>
-                    <field name="sexo"/>
-
-                    <group expand="0" string="Group By">
-                        <filter string="Paciente" domain="" context="{'group_by':'name'}"/>
-                        <filter string="Fecha" domain="" context="{'group_by':'fecha'}"/>
-                        <filter string="Programa" domain="" context="{'group_by':'programa'}"/>
-                        <filter string="Sexo" domain="" context="{'group_by':'sexo'}"/>
-                        <filter string="Edad" domain="" context="{'group_by':'edad'}"/>
-                        <filter string="Edad" context="{'group_by':'edad'}"/>
-                        <filter string="Sexo" context="{'group_by':'sexo'}"/>
+                        <field name="fecha"/>
+                        <field name="programa"
+                               required="1"
+                               domain="[('program_type','=','servicio')]"
+                               options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
+                        <field name="name" options="{'no_create_edit': True,'no_create': True}"/>
+                        <field name="employee_id"
+                               options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
+                        <field name="edad" required="1"/>
+                        <field name="sexo" required="1"/>
                     </group>
-                </search>
-            </field>
-        </record>
-
-        <record model='ir.actions.act_window' id='consultas_consultas_act'>
-            <field name="name">Servicios o Atenciones</field>
-            <field name="res_model">consultas.consultas</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_ids"
-                   eval="[(5, 0, 0),
-                      (0, 0, {'view_mode': 'tree', 'view_id': ref('consultas_consultas_tree')}),
-                      (0, 0, {'view_mode': 'form', 'view_id': ref('consultas_consultas_form')})]"/>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Haga Click Para Crear Nuevo Registro Consultas y Atenciones.
-                </p>
-            </field>
-        </record>
-
-
-        <!--========================================================================-->
-        <!-- View Formulario Tratamientos -->
-        <!--========================================================================-->
-        <record model='ir.ui.view' id='consultas_tratamiento_form'>
-            <field name="name">Tratamientos</field>
-            <field name="model">consultas.tratamiento</field>
-            <field name="arch" type="xml">
-                <form string="Tratamientos">
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                            <field name="discount_report"/>
-                            <field name="category"/>
-                        </group>
-                        <notebook>
-                            <page string="Proyeccion">
-                                <field name="proyeccion">
-                                    <tree editable="top">
-                                        <field name="proyeccion"/>
-                                        <field name="year"/>
-                                        <field name="programa"/>
-                                    </tree>
-                                </field>
-                            </page>
-                            <page string="Programas">
-                                <field name="programa_ids">
-                                    <tree>
-                                        <field name="name"/>
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record model='ir.actions.act_window' id='consultas_tratamiento_act'>
-            <field name="name">Tratamientos</field>
-            <field name="res_model">consultas.tratamiento</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Haga Click Para Crear Nuevo Registro.
-                </p>
-            </field>
-        </record>
-
-        <!--========================================================================-->
-        <!-- View Formulario Lineas Tratamientos -->
-        <!--========================================================================-->
-        <record model='ir.ui.view' id='consultas_tratamiento_line_tree'>
-            <field name="name">Tratamiento / Seguimiento / Referimiento</field>
-            <field name="model">consultas.tratamiento.line</field>
-            <field name="arch" type="xml">
-                <tree string="Consultas" delete="false" create="false" edit="false">
-                    <field name="name"/>
-                    <field name="fecha"/>
-                    <field name="paciente_id"/>
-                    <field name="employee_id"/>
-                    <!--<button name="show_consulta" string="Ver" type="object" groups="consultas_pnc.group_categoria_a"/>-->
-                </tree>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='consultas_tratamiento_line_search'>
-            <field name="name">Tratamiento / Seguimiento / Referimiento</field>
-            <field name="model">consultas.tratamiento.line</field>
-            <field name="arch" type="xml">
-                <search string="Tratamiento / Seguimiento">
-                    <field name="name"/>
-                    <field name="paciente_id"/>
-                    <field name="employee_id"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Tratamiento / Seguimiento" domain="" context="{'group_by':'name'}"/>
-                        <filter string="Paciente" domain="" context="{'group_by':'paciente_id'}"/>
-                        <filter name="group_employee_id" string="Médico / Profesor" domain=""
-                                context="{'group_by':'employee_id'}"/>
-                        <filter string="Programa" domain="" context="{'group_by':'programa'}"/>
+                    <field name="tratamiento" colspan="4"
+                           required="1">
+                        <list editable="top">
+                            <field name="name" string="Tratamiento / Seguimiento / Referimiento" required="1"
+                                   domain="[('category','=','rh')]"
+                                   options="{'no_create_edit': True,
+                                                         'no_create': True}"/>
+                        </list>
+                    </field>
+                    <group string="Notas">
+                        <field name="notes" nolabel="1"/>
                     </group>
-                </search>
-            </field>
-        </record>
 
-        <record model='ir.ui.view' id='consultas_tratamiento_line_form'>
-            <field name="name">Registro Consultas y Atenciones</field>
-            <field name="model">consultas.tratamiento.line</field>
-            <field name="arch" type="xml">
-                <form string="Tratamiento / Seguimiento / Referimiento" delete="false" create="false" edit="false">
-                    <sheet>
-                        <group col="4" string="Tratamiento / Seguimiento / Referimiento">
-                            <field name="name"/>
-                            <field name="consulta_id" string="Consulta"/>
-                            <field name="fecha" required="1"/>
-                            <field name="programa"
-                                   domain="[('program_type','=','servicio')]"
-                                   required="1"
-                                   options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
-                            <field name="paciente_id"
-                                   required="1"
-                                   options="{'no_create_edit': True,'no_create': True}"/>
-                            <field name="employee_id"
-                                   required="1"
-                                   options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
-                            <field name="edad"/>
-                            <field name="sexo"/>
-                        </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='consultas_consultas_tree'>
+        <field name="name">Registro Consultas y Atenciones</field>
+        <field name="model">consultas.consultas</field>
+        <field name="arch" type="xml">
+            <list string="Consultas ">
+                <field name="name"/>
+                <field name="programa"/>
+                <field name="fecha"/>
+            </list>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='consultas_consultas_history_tree'>
+        <field name="name">Historial Consultas y Atenciones</field>
+        <field name="model">consultas.consultas</field>
+        <field name="arch" type="xml">
+            <list string="Consultas" delete="false" create="false">
+                <field name="fecha"/>
+                <field name="programa"/>
+                <field name="employee_id"/>
+                <field name="tratamiento"/>
+            </list>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='consultas_consultas_history_form'>
+        <field name="name">Historial Consultas y Atenciones</field>
+        <field name="model">consultas.consultas</field>
+        <field name="inherit_id" ref="consultas_consultas_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="create">false</attribute>
+                <attribute name="delete">false</attribute>
+                <attribute name="edit">false</attribute>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='consultas_consultas_search'>
+        <field name="name">Registro Consultas y Atenciones</field>
+        <field name="model">consultas.consultas</field>
+        <field name="arch" type="xml">
+            <search string="Consultas ">
+                <field name="name"/>
+                <field name="programa"/>
+                <field name="fecha"/>
+                <field name="employee_id"/>
+                <field name="edad"/>
+                <field name="sexo"/>
+
+                <group>
+                    <filter name="group_name" string="Paciente" context="{'group_by':'name'}"/>
+                    <filter name="group_fecha" string="Fecha" context="{'group_by':'fecha'}"/>
+                    <filter name="group_programa" string="Programa" context="{'group_by':'programa'}"/>
+                    <filter name="group_sexo" string="Sexo" context="{'group_by':'sexo'}"/>
+                    <filter name="group_edad" string="Edad" context="{'group_by':'edad'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model='ir.actions.act_window' id='consultas_consultas_act'>
+        <field name="name">Servicios o Atenciones</field>
+        <field name="res_model">consultas.consultas</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                  (0, 0, {'view_mode': 'list', 'view_id': ref('consultas_consultas_tree')}),
+                  (0, 0, {'view_mode': 'form', 'view_id': ref('consultas_consultas_form')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Haga Click Para Crear Nuevo Registro Consultas y Atenciones.
+            </p>
+        </field>
+    </record>
+
+
+    <!--========================================================================-->
+    <!-- View Formulario Tratamientos -->
+    <!--========================================================================-->
+    <record model='ir.ui.view' id='consultas_tratamiento_form'>
+        <field name="name">Tratamientos</field>
+        <field name="model">consultas.tratamiento</field>
+        <field name="arch" type="xml">
+            <form string="Tratamientos">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="discount_report"/>
+                        <field name="category"/>
+                    </group>
+                    <notebook>
+                        <page string="Proyeccion">
+                            <field name="proyeccion">
+                                <list editable="top">
+                                    <field name="proyeccion"/>
+                                    <field name="year"/>
+                                    <field name="programa"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Programas">
+                            <field name="programa_ids">
+                                <list>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.actions.act_window' id='consultas_tratamiento_act'>
+        <field name="name">Tratamientos</field>
+        <field name="res_model">consultas.tratamiento</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Haga Click Para Crear Nuevo Registro.
+            </p>
+        </field>
+    </record>
+
+    <!--========================================================================-->
+    <!-- View Formulario Lineas Tratamientos -->
+    <!--========================================================================-->
+    <record model='ir.ui.view' id='consultas_tratamiento_line_tree'>
+        <field name="name">Tratamiento / Seguimiento / Referimiento</field>
+        <field name="model">consultas.tratamiento.line</field>
+        <field name="arch" type="xml">
+            <list string="Consultas" delete="false" create="false" edit="false">
+                <field name="name"/>
+                <field name="fecha"/>
+                <field name="paciente_id"/>
+                <field name="employee_id"/>
+                <!--<button name="show_consulta" string="Ver" type="object" groups="consultas_pnc.group_categoria_a"/>-->
+            </list>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='consultas_tratamiento_line_search'>
+        <field name="name">Tratamiento / Seguimiento / Referimiento</field>
+        <field name="model">consultas.tratamiento.line</field>
+        <field name="arch" type="xml">
+            <search string="Tratamiento / Seguimiento">
+                <field name="name"/>
+                <field name="paciente_id"/>
+                <field name="employee_id"/>
+                <group>
+                    <filter name="group_name" string="Tratamiento / Seguimiento" context="{'group_by':'name'}"/>
+                    <filter name="group_paciente_id" string="Paciente" context="{'group_by':'paciente_id'}"/>
+                    <filter name="group_employee_id" string="Médico / Profesor"
+                            context="{'group_by':'employee_id'}"/>
+                    <filter name="group_programa" string="Programa" context="{'group_by':'programa'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='consultas_tratamiento_line_form'>
+        <field name="name">Registro Consultas y Atenciones</field>
+        <field name="model">consultas.tratamiento.line</field>
+        <field name="arch" type="xml">
+            <form string="Tratamiento / Seguimiento / Referimiento" delete="false" create="false" edit="false">
+                <sheet>
+                    <group col="4" string="Tratamiento / Seguimiento / Referimiento">
+                        <field name="name"/>
+                        <field name="consulta_id" string="Consulta"/>
+                        <field name="fecha" required="1"/>
+                        <field name="programa"
+                               domain="[('program_type','=','servicio')]"
+                               required="1"
+                               options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
+                        <field name="paciente_id"
+                               required="1"
+                               options="{'no_create_edit': True,'no_create': True}"/>
+                        <field name="employee_id"
+                               required="1"
+                               options="{'no_create_edit': True,'no_open': True,'no_create': True}"/>
+                        <field name="edad"/>
+                        <field name="sexo"/>
+                    </group>
 <!--                        <field name="tratamiento" colspan="4"-->
 <!--                               required="1">-->
-<!--                            <tree editable="top">-->
+<!--                            <list editable="top">-->
 <!--                                <field name="name" string="Tratamiento / Seguimiento / Referimiento" required="1"-->
 <!--                                       domain="[('category','=','rh')]"-->
 <!--                                       options="{'no_create_edit': True,-->
 <!--                                                             'no_create': True}"/>-->
-<!--                            </tree>-->
+<!--                            </list>-->
 <!--                        </field>-->
-                        <group string="Notas">
-                            <field name="notes" nolabel="1"/>
-                        </group>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
-                </form>
-            </field>
-        </record>
-
-
-        <record model='ir.actions.act_window' id='consultas_tratamiento_line_act'>
-            <field name="name">Tratamiento/Seguimiento/Referimiento</field>
-            <field name="res_model">consultas.tratamiento.line</field>
-            <field name="context">{'search_default_group_employee_id': 1}</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <!--========================================================================-->
-        <!-- View Formulario Referimientos-->
-        <!--========================================================================-->
-        <record model='ir.ui.view' id='consultas_referimiento_form'>
-            <field name="name">Referimientos</field>
-            <field name="model">consultas.referimiento</field>
-            <field name="arch" type="xml">
-                <form string="Referimientos">
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                        </group>
-                        <group>
-                            <field name="proyeccion">
-                                <tree editable="top">
-                                    <field name="proyeccion"/>
-                                    <field name="year"/>
-                                    <field name="programa"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record model='ir.actions.act_window' id='consultas_referimiento_act'>
-            <field name="name">Referimientos</field>
-            <field name="res_model">consultas.referimiento</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Haga Click Para Crear Nuevo Registro.
-                </p>
-            </field>
-        </record>
-
-        <!--========================================================================-->
-        <!-- View Formulario Diagnosticos-->
-        <!--========================================================================-->
-        <record model='ir.actions.act_window' id='consultas_diagnostico_act'>
-            <field name="name">Diagnosticos</field>
-            <field name="res_model">consultas.diagnostico</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Haga Click Para Crear Nuevo Registro.
-                </p>
-            </field>
-        </record>
-
-        <!--========================================================================-->
-        <!-- View Formulario consultas proyeccion-->
-        <!--========================================================================-->
-        <record id="consultas_proyeccion_form" model="ir.ui.view">
-            <field name="name">Proyeccion</field>
-            <field name="model">consultas.proyeccion</field>
-            <field name="arch" type="xml">
-                <form string="Proyeccion">
-                    <group>
-                        <field name="tratamiento_id"/>
-                        <field name="proyeccion"/>
-                        <field name="year"/>
+                    <group string="Notas">
+                        <field name="notes" nolabel="1"/>
                     </group>
-                </form>
-            </field>
-        </record>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-    </data>
-</openerp>
+
+    <record model='ir.actions.act_window' id='consultas_tratamiento_line_act'>
+        <field name="name">Tratamiento/Seguimiento/Referimiento</field>
+        <field name="res_model">consultas.tratamiento.line</field>
+        <field name="context">{'search_default_group_employee_id': 1}</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <!--========================================================================-->
+    <!-- View Formulario Referimientos-->
+    <!--========================================================================-->
+    <record model='ir.ui.view' id='consultas_referimiento_form'>
+        <field name="name">Referimientos</field>
+        <field name="model">consultas.referimiento</field>
+        <field name="arch" type="xml">
+            <form string="Referimientos">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
+                        <field name="proyeccion">
+                            <list editable="top">
+                                <field name="proyeccion"/>
+                                <field name="year"/>
+                                <field name="programa"/>
+                            </list>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.actions.act_window' id='consultas_referimiento_act'>
+        <field name="name">Referimientos</field>
+        <field name="res_model">consultas.referimiento</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Haga Click Para Crear Nuevo Registro.
+            </p>
+        </field>
+    </record>
+
+    <!--========================================================================-->
+    <!-- View Formulario Diagnosticos-->
+    <!--========================================================================-->
+    <record model='ir.actions.act_window' id='consultas_diagnostico_act'>
+        <field name="name">Diagnosticos</field>
+        <field name="res_model">consultas.diagnostico</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Haga Click Para Crear Nuevo Registro.
+            </p>
+        </field>
+    </record>
+
+    <!--========================================================================-->
+    <!-- View Formulario consultas proyeccion-->
+    <!--========================================================================-->
+    <record id="consultas_proyeccion_form" model="ir.ui.view">
+        <field name="name">Proyeccion</field>
+        <field name="model">consultas.proyeccion</field>
+        <field name="arch" type="xml">
+            <form string="Proyeccion">
+                <group>
+                    <field name="tratamiento_id"/>
+                    <field name="proyeccion"/>
+                    <field name="year"/>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

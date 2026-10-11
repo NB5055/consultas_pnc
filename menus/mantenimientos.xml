@@ -1,43 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-        <record id="action_partner_form" model="ir.actions.act_window">
-            <field name="name">Patrocinadores</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-        </record>
+<odoo>
+    <record id="action_partner_form" model="ir.actions.act_window">
+        <field name="name">Patrocinadores</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
 
-        <menuitem name="Mantenimientos" id="mantenimientos" sequence="1"
-        groups="consultas_pnc.group_categoria_b,consultas_pnc.group_categoria_a"/>
-            <menuitem name="Ficha Pacientes" parent="mantenimientos" id="ficha_paciente_mant" sequence="2"/>
-                <menuitem action="ficha_paciente_trabajo_act" parent="ficha_paciente_mant" id="ficha_paciente_trabajo_menu"/>
-                <menuitem action="ficha_paciente_parentesco_act" parent="ficha_paciente_mant" id="ficha_paciente_parentesco_menu"/>
-                <menuitem action="ficha_paciente_enfermedades_act" parent="ficha_paciente_mant" id="ficha_paciente_enfermedades_menu"/>
-                <menuitem action="ficha_paciente_ayuda_economica_act" parent="ficha_paciente_mant" id="ficha_paciente_ayuda_economica_menu"/>
-                <menuitem action="ficha_paciente_ayuda_economica_act" parent="ficha_paciente_mant" id="ficha_paciente_ayuda_economica_menu"/>
-                <menuitem action="action_partner_form" parent="ficha_paciente_mant" id="ficha_paciente_patrocinadores" name="Patrocinadores"/>
+    <menuitem name="Mantenimientos" id="mantenimientos" sequence="1"
+              web_icon="consultas_pnc,static/description/icon.png"
+              groups="consultas_pnc.group_categoria_b,consultas_pnc.group_categoria_a,base.group_system"/>
+        <menuitem name="Ficha Pacientes" parent="mantenimientos" id="ficha_paciente_mant" sequence="2"/>
+            <menuitem action="ficha_paciente_trabajo_act" parent="ficha_paciente_mant" id="ficha_paciente_trabajo_menu"/>
+            <menuitem action="ficha_paciente_parentesco_act" parent="ficha_paciente_mant" id="ficha_paciente_parentesco_menu"/>
+            <menuitem action="ficha_paciente_enfermedades_act" parent="ficha_paciente_mant" id="ficha_paciente_enfermedades_menu"/>
+            <menuitem action="ficha_paciente_ayuda_economica_act" parent="ficha_paciente_mant" id="ficha_paciente_ayuda_economica_menu"/>
+            <menuitem action="action_partner_form" parent="ficha_paciente_mant" id="ficha_paciente_patrocinadores" name="Patrocinadores"/>
 
         <menuitem name="Programas" parent="mantenimientos" id="programa_mant" sequence="3"/>
-                <menuitem action="programa_programa_act" id="programa_menu" parent="programa_mant"/>
-            <menuitem name="Ubicacion" parent="mantenimientos" id="ubicacion_mant" sequence="3"/>
-                <menuitem action="region_region_act" id="region_menu" parent="ubicacion_mant"/>
-                <menuitem action="region_subregion_act" id="subregion_menu" parent="ubicacion_mant"/>
-                <menuitem action="region_provincia_act" id="provincias_menu" parent="ubicacion_mant"/>
-            <menuitem name="Consultas" parent="mantenimientos" id="programa_consulta" sequence="3"/>
-                <menuitem action="consultas_diagnostico_act" parent="programa_consulta" id="consulta_diagnostico_menu"/>
-                <!--<menuitem action="consultas_referimiento_act" parent="programa_consulta" id="consulta_referimiento_menu"/>-->
-                <menuitem action="consultas_tratamiento_act" parent="programa_consulta" id="consulta_tratamiento_menu"/>
-            <!--<menuitem name="Asistencia Economica" parent="mantenimientos" id="asistencia_economica"/>-->
-                <!--<menuitem action="" parent="asistencia_economica" name="Conceptos" id="concepto"/>-->
+            <menuitem action="programa_programa_act" id="programa_menu" parent="programa_mant"/>
+        <menuitem name="Ubicacion" parent="mantenimientos" id="ubicacion_mant" sequence="3"/>
+            <menuitem action="region_region_act" id="region_menu" parent="ubicacion_mant"/>
+            <menuitem action="region_subregion_act" id="subregion_menu" parent="ubicacion_mant"/>
+            <menuitem action="region_provincia_act" id="provincias_menu" parent="ubicacion_mant"/>
+        <menuitem name="Consultas" parent="mantenimientos" id="programa_consulta" sequence="3"/>
+            <menuitem action="consultas_diagnostico_act" parent="programa_consulta" id="consulta_diagnostico_menu"/>
+            <menuitem action="consultas_tratamiento_act" parent="programa_consulta" id="consulta_tratamiento_menu"/>
 
-        <record model="ir.ui.menu" id="hr.menu_hr_root">
-          <field name="groups_id" eval="[(6,0,[ref('base.group_no_one'),
-              ref('consultas_pnc.group_categoria_a')])]"/>
-        </record>
-        <record model="ir.ui.menu" id="mail.menu_contacts">
-          <field name="groups_id" eval="[(6,0,[ref('base.group_no_one')])]"/>
-        </record>
-    </data>
-</openerp>
+    <record model="ir.ui.menu" id="hr.menu_hr_root">
+        <field name="group_ids" eval="[(6,0,[ref('base.group_no_one'),
+            ref('consultas_pnc.group_categoria_a')])]"/>
+    </record>
+</odoo>

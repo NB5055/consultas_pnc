@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
+        <record id="res_groups_privilege_consultas_pnc" model="res.groups.privilege">
+            <field name="name">Consultas PNC</field>
+            <field name="category_id" ref="base.module_category_consultas_pnc"/>
+        </record>
+
         <record id="group_categoria_a" model="res.groups">
             <field name="name">Categoria A</field>
-            <field name="category_id" ref="base.module_category_consultas_pnc"/>
+            <field name="privilege_id" ref="res_groups_privilege_consultas_pnc"/>
             <field name="comment">
             Los usuarios de esta categoria son:
                 * Direccion Ejecutiva
@@ -18,7 +23,7 @@
 
         <record id="group_categoria_c" model="res.groups">
             <field name="name">Categoria C</field>
-            <field name="category_id" ref="base.module_category_consultas_pnc"/>
+            <field name="privilege_id" ref="res_groups_privilege_consultas_pnc"/>
 
             <field name="comment">
             Los Usuarios de esta categoria son:
@@ -33,7 +38,7 @@
 
         <record id="group_categoria_b" model="res.groups">
             <field name="name">Categoria B</field>
-            <field name="category_id" ref="base.module_category_consultas_pnc"/>
+            <field name="privilege_id" ref="res_groups_privilege_consultas_pnc"/>
             <field name="comment">
             Los Usuarios de esta categoria son:
                 * Directores de Programas
@@ -44,22 +49,5 @@
                 - Pueden visualizar e imprimir reportes. Solamente de sus programas.
             </field>
         </record>
-
-        <record model="ir.rule" id="prevent_edit_no_admin">
-            <field name="name">Consulta: Editar consultas propias</field>
-            <field name="model_id" ref="model_consultas_consultas"/>
-            <field name="groups" eval="[(4, ref('consultas_pnc.group_categoria_c')),(4, ref('consultas_pnc.group_categoria_b'))]"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
-        </record>
-        <record model="ir.rule" id="allow_edit_admin">
-            <field name="name">Consulta: Editar consultas</field>
-            <field name="model_id" ref="model_consultas_consultas"/>
-            <field name="groups" eval="[(4, ref('consultas_pnc.group_categoria_a'))]"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-        </record>
-
     </data>
-
-
-
-</openerp>
+</odoo>

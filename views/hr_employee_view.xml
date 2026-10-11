@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
-    <data>
-        <record id="view_employee_form_inherit" model="ir.ui.view">
-            <field name="name">hr.employee.form</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-                <field name="coach_id" position="replace">
-                    <field name="coach_id" string="Coordinador"/>
-                </field>
-                <field name="department_id" position="before">
-                    <field name="programa_id"/>
-                    <field name="provincia_id"/>
-                </field>
-                <field name="user_id" position="replace">
-                    <field name="user_name"/>
-                    <field name="user_password"/>
-                    <field name="category_group" attr="{'required': ('user_name','!=',False)}"/>
-                    <field name="user_id" readonly="1"/>
-                </field>
-                <field name="work_email" position="attributes">
-                    <attribute name="required">1</attribute>
-                </field>
-                <field name="work_location" position="attributes">
-                    <attribute name="string">Puesto de Trabajo</attribute>
-                </field>
+<odoo>
+    <record id="view_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <field name="department_id" position="before">
+                <field name="programa_id"/>
+                <field name="provincia_id"/>
             </field>
-        </record>
-
-    </data>
-</openerp>
+            <xpath expr="//group[@name='user']/field[@name='tz']" position="before">
+                <field name="user_name"/>
+                <field name="user_password" password="True"/>
+                <field name="category_group"/>
+            </xpath>
+            <xpath expr="//group[@name='user']//field[@name='user_id'][@groups='base.group_erp_manager']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='user']//field[@name='user_id'][@groups='!base.group_erp_manager']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <field name="work_email" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+            <field name="work_location_id" position="attributes">
+                <attribute name="string">Puesto de Trabajo</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

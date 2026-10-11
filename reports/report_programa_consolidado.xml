@@ -1,121 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <report
-                id="menu_report_programa_consolidado"
-                model="informe.report.programa.consolidado"
-                string="Informe Consolidado"
-                report_type="qweb-html"
-                name="consultas_pnc.report_programa_consolidado"
-                menu="False"
-        />
-        <template id="consultas_pnc.report_programa_consolidado_data">
-            <table width="100%" class="tg">
-                <tr t-if="header_data">
-                    <th class="tg-yw4l" colspan="3">
-                        <span t-esc="header_data"/>
-                    </th>
-                </tr>
-                <tr>
-                    <th class="tg-yw4l" style="text-align:left !important;" rowspan="2">Departamento y/o Servicio</th>
-                    <th class="tg-yw4l-2" colspan="2">Acumulado</th>
-                </tr>
-                <tr>
-                    <th class="tg-yw4l-3">Periodo</th>
-                    <th class="tg-yw4l-3">Total</th>
-                </tr>
-                <t t-set='count' t-value='1'/>
-                <t t-set="total_mes" t-value="0"/>
-                <t t-set="total_ano" t-value="0"/>
-                <t t-foreach="data" t-as="obj">
-                    <t t-if="(count%2) == 1">
-                        <t t-set="cl" t-value="'tg-6k2t'"/>
-                    </t>
-                    <t t-if="(count%2) != 1">
-                        <t t-set="cl" t-value="'tg-yw4l'"/>
-                    </t>
-                    <tr>
-                        <td t-att-class='cl'>
-                            <p t-esc="obj[1]"/>
-                        </td>
-                        <td t-att-class='cl'>
-                            <p t-esc="obj[2]"/>
-                        </td>
-                        <td t-att-class='cl'>
-                            <p t-esc="obj[3]"/>
-                        </td>
-                    </tr>
-                    <t t-set='count' t-value='count+1'/>
-                    <t t-set="total_mes" t-value="total_mes + obj[2]"/>
-                    <t t-set="total_ano" t-value="total_ano + obj[3]"/>
+<odoo>
+    <record id="menu_report_programa_consolidado" model="ir.actions.report">
+        <field name="name">Informe Consolidado</field>
+        <field name="model">informe.report.programa.consolidado</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">consultas_pnc.report_programa_consolidado</field>
+    </record>
+    <template id="report_programa_consolidado_data">
+        <table width="100%" class="tg">
+            <tr t-if="header_data">
+                <th class="tg-yw4l" colspan="3">
+                    <span t-out="header_data"/>
+                </th>
+            </tr>
+            <tr>
+                <th class="tg-yw4l" style="text-align:left !important;" rowspan="2">Departamento y/o Servicio</th>
+                <th class="tg-yw4l-2" colspan="2">Acumulado</th>
+            </tr>
+            <tr>
+                <th class="tg-yw4l-3">Periodo</th>
+                <th class="tg-yw4l-3">Total</th>
+            </tr>
+            <t t-set='count' t-value='1'/>
+            <t t-set="total_mes" t-value="0"/>
+            <t t-set="total_ano" t-value="0"/>
+            <t t-foreach="data" t-as="obj">
+                <t t-if="(count%2) == 1">
+                    <t t-set="cl" t-value="'tg-6k2t'"/>
+                </t>
+                <t t-if="(count%2) != 1">
+                    <t t-set="cl" t-value="'tg-yw4l'"/>
                 </t>
                 <tr>
-                    <th class="tg-yw4l">Totales</th>
-                    <th class="tg-yw4l">
-                        <t t-esc="total_mes"/>
-                    </th>
-                    <th class="tg-yw4l">
-                        <t t-esc="total_ano"/>
-                    </th>
+                    <td t-att-class='cl'>
+                        <p t-out="obj[1]"/>
+                    </td>
+                    <td t-att-class='cl'>
+                        <p t-out="obj[2]"/>
+                    </td>
+                    <td t-att-class='cl'>
+                        <p t-out="obj[3]"/>
+                    </td>
                 </tr>
-            </table>
-        </template>
+                <t t-set='count' t-value='count+1'/>
+                <t t-set="total_mes" t-value="total_mes + obj[2]"/>
+                <t t-set="total_ano" t-value="total_ano + obj[3]"/>
+            </t>
+            <tr>
+                <th class="tg-yw4l">Totales</th>
+                <th class="tg-yw4l">
+                    <t t-out="total_mes"/>
+                </th>
+                <th class="tg-yw4l">
+                    <t t-out="total_ano"/>
+                </th>
+            </tr>
+        </table>
+    </template>
 
-        <template id="consultas_pnc.report_programa_consolidado">
+    <template id="report_programa_consolidado">
+        <t t-call="web.basic_layout">
             <div class="page" align="center">
 
                 <t t-call="consultas_pnc.styles"/>
 
-                <t t-if="not o or not 'company_id' in o">
-                    <t t-set="company" t-value="res_company"></t>
-                </t>
+                <t t-set="company" t-value="res_company"/>
                 <div>
-                    <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo"
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
                          style="max-height: 45px;"/>
                 </div>
                 <h3>Patronato Nacional de Ciegos, INC</h3>
                 Informe Consolidado
                 <p>
                     <p>Desde
-                        <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_inicial,'%Y-%m-%d'))"/>
+                        <t t-out="docs.fecha_inicial.strftime('%d-%m-%Y')"/>
                         hasta
-                        <t t-esc="time.strftime('%d-%m-%Y',time.strptime(docs.fecha_final,'%Y-%m-%d'))"/>
+                        <t t-out="docs.fecha_final.strftime('%d-%m-%Y')"/>
                     </p>
                 </p>
 
-                <t t-set="rh_data" t-value="filter(lambda x:x[4] == 'rh', docs.get_consultas()[0])"/>
-                <t t-set="pc_data" t-value="filter(lambda x:x[4] == 'pc', docs.get_consultas()[0])"/>
-                <t t-set="none_data" t-value="filter(lambda x:x[4] == None, docs.get_consultas()[0])"/>
+                <t t-set="consultas" t-value="docs.get_consultas()"/>
+                    <t t-set="rh_data" t-value="[x for x in consultas if x[4] == 'rh']"/>
+                <t t-set="pc_data" t-value="[x for x in consultas if x[4] == 'pc']"/>
+                <t t-set="none_data" t-value="[x for x in consultas if x[4] == None]"/>
 
                 <t t-if="rh_data">
-                    <t t-call="consultas_pnc.report_programa_consolidado_data">
-                        <t t-set="data" t-value="rh_data"/>
-                        <t t-set="header_data" t-value="'Rehabilitacion'"/>
-                    </t>
+                    <t t-call="consultas_pnc.report_programa_consolidado_data" data="rh_data" header_data="'Rehabilitacion'"/>
                     <br/>
                     <br/>
                     <br/>
                 </t>
                 <t t-if="pc_data">
-                    <t t-call="consultas_pnc.report_programa_consolidado_data">
-                        <t t-set="data" t-value="pc_data"/>
-                        <t t-set="header_data" t-value="'Prevencion Ceguera'"/>
-                    </t>
+                    <t t-call="consultas_pnc.report_programa_consolidado_data" data="pc_data" header_data="'Prevencion Ceguera'"/>
                     <br/>
                     <br/>
                     <br/>
                 </t>
                 <t t-if="none_data">
-                    <t t-call="consultas_pnc.report_programa_consolidado_data">
-                        <t t-set="data" t-value="none_data"/>
-                        <t t-set="header_data" t-value="''"/>
-                    </t>
+                    <t t-call="consultas_pnc.report_programa_consolidado_data" data="none_data" header_data="''"/>
                     <br/>
                     <br/>
                     <br/>
                 </t>
 
             </div>
-        </template>
-    </data>
-</openerp>
+        </t>
+    </template>
+</odoo>
