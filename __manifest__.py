@@ -1,6 +1,6 @@
 {
     'name': 'ConsultasPNC',
-    'version': '20.0.1.1.0',
+    'version': '20.0.1.1.1',
     'author': 'Angstrom Mena',
     'category': 'Consultas PNC',
     'website': 'https://www.angstrommena.com',

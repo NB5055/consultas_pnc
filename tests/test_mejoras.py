@@ -3,7 +3,7 @@ from datetime import date, datetime, timedelta
 from psycopg2 import IntegrityError
 
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
 
 from .common import ConsultasPncCommon
@@ -162,6 +162,17 @@ class TestMejoras(ConsultasPncCommon):
             cita.action_registrar_consulta()
         self.paciente.invalidate_recordset()
         self.assertEqual(self.paciente.citas_count, 1)
+
+    def test_cita_a_consulta_conserva_programa(self):
+        # En el formulario, el programa de la cita manda sobre el de la ficha.
+        cita = self._cita(datetime.now().replace(microsecond=0) + timedelta(days=3),
+                          programa_id=self.programa_2.id)
+        action = cita.action_registrar_consulta()
+        form = Form(self.env['consultas.consultas'].with_context(action['context']),
+                    view='consultas_pnc.consultas_consultas_form')
+        self.assertEqual(form.programa, self.programa_2)
+        form.name = self.paciente
+        self.assertEqual(form.programa, self.programa_2)
 
     def test_cita_validaciones(self):
         inicio = datetime.now().replace(microsecond=0) + timedelta(days=1)

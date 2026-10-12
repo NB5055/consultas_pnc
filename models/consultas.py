@@ -55,7 +55,11 @@ class consultas_consultas(models.Model):
 
     @api.onchange('name')
     def set_programa(self):
-        self.programa = self.name.programa
+        cita = self.env['citas.citas'].browse(self.env.context.get('pnc_cita_id')).exists()
+        if cita and cita.paciente_id == self.name:
+            self.programa = cita.programa_id
+        else:
+            self.programa = self.name.programa
 
     @api.model
     def _get_employee(self):
