@@ -162,6 +162,9 @@ class TestMejoras(ConsultasPncCommon):
             cita.action_registrar_consulta()
         self.paciente.invalidate_recordset()
         self.assertEqual(self.paciente.citas_count, 1)
+        consulta.unlink()
+        self.assertEqual(cita.state, 'pendiente')
+        self.assertFalse(cita.consulta_id)
 
     def test_cita_a_consulta_conserva_programa(self):
         # En el formulario, el programa de la cita manda sobre el de la ficha.

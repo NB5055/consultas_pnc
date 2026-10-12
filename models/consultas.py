@@ -53,6 +53,13 @@ class consultas_consultas(models.Model):
             cita.write({'consulta_id': consultas.id, 'state': 'atendida'})
         return consultas
 
+    def unlink(self):
+        # La cita de una consulta borrada vuelve a quedar por atender.
+        citas = self.env['citas.citas'].search([('consulta_id', 'in', self.ids), ('state', '=', 'atendida')])
+        res = super().unlink()
+        citas.write({'state': 'pendiente'})
+        return res
+
     @api.onchange('name')
     def set_programa(self):
         cita = self.env['citas.citas'].browse(self.env.context.get('pnc_cita_id')).exists()
