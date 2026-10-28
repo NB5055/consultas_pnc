@@ -9,10 +9,36 @@
                 <field name="programa_id"/>
                 <field name="provincia_id"/>
             </field>
+            <field name="parent_id" position="attributes">
+                <attribute name="string">Director</attribute>
+            </field>
+            <field name="parent_id" position="after">
+                <field name="coach_id" string="Coordinador" widget="many2one_avatar_employee"/>
+            </field>
+            <field name="job_title" position="attributes">
+                <attribute name="string">Título del trabajo</attribute>
+            </field>
+            <!-- Pestañas como en la 9: sin Nómina ni Currículum (solo en modo desarrollador),
+                 así la ficha abre en la información pública -->
+            <page name="payroll_information" position="attributes">
+                <attribute name="groups">base.group_no_one</attribute>
+            </page>
+            <page name="resume" position="attributes">
+                <attribute name="groups">base.group_no_one</attribute>
+            </page>
+            <page name="work_information" position="attributes">
+                <attribute name="string">Información pública</attribute>
+            </page>
+            <page name="personal_information" position="attributes">
+                <attribute name="string">Información personal</attribute>
+            </page>
+            <page name="hr_settings" position="attributes">
+                <attribute name="string">Configuración RRHH</attribute>
+            </page>
             <xpath expr="//group[@name='user']/field[@name='tz']" position="before">
-                <field name="user_name"/>
+                <field name="user_name" string="User"/>
                 <field name="user_password" password="True"/>
-                <field name="category_group"/>
+                <field name="category_group" required="user_name"/>
             </xpath>
             <xpath expr="//group[@name='user']//field[@name='user_id'][@groups='base.group_erp_manager']" position="attributes">
                 <attribute name="readonly">1</attribute>

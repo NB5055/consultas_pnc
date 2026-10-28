@@ -15,5 +15,8 @@
     <menuitem action="operativo_act" parent="consultas_consultas_menu" id="operativos"/>
     <menuitem action="consultas_tratamiento_line_analisis_act" parent="menu_reportes"
               id="menu_analisis_atenciones" sequence="1"/>
+    <!-- En la 9 Empleados estaba en la barra junto a Consultas; aquí queda a mano dentro de la app -->
+    <menuitem name="Empleados" parent="menu_root" action="hr.open_view_employee_list_my"
+              id="menu_empleados" sequence="90" groups="hr.group_hr_user"/>
 
 </odoo>
