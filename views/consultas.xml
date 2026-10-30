@@ -39,9 +39,9 @@
                             </list>
                         </field>
                     </group>
-                    <group string="Notas">
-                        <field name="notes" nolabel="1"/>
-                    </group>
+                    <!-- fuera de un group: dentro quedaba como una columna estrecha (150 px) -->
+                    <separator string="Notas"/>
+                    <field name="notes"/>
 
                 </sheet>
                 <chatter/>
@@ -279,9 +279,9 @@
 <!--                                                             'no_create': True}"/>-->
 <!--                            </list>-->
 <!--                        </field>-->
-                    <group string="Notas">
-                        <field name="notes" nolabel="1"/>
-                    </group>
+                    <!-- fuera de un group: dentro quedaba como una columna estrecha (150 px) -->
+                    <separator string="Notas"/>
+                    <field name="notes"/>
                 </sheet>
             </form>
         </field>
